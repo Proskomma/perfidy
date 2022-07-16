@@ -16,7 +16,14 @@ function App() {
             <div className="content">
                 <div className="spec-pane">
                     <div className="spec-inner">
-                        <h2 className="spec-title">Spec
+                        <h2 className="spec-title">
+                            Spec
+                            {" "}
+                            <button
+                                className="run-button"
+                            >
+                                >>
+                            </button>
                             <button
                                 className="add-step-button"
                                 onClick={
@@ -36,6 +43,16 @@ function App() {
                                 }
                             >
                                 +
+                            </button>
+                            <button
+                                className="show-spec-button"
+                                onClick={
+                                    () => {
+                                        alert(JSON.stringify(specSteps, null, 2));
+                                    }
+                                }
+                            >
+                                {"{}"}
                             </button>
                         </h2>
                         {

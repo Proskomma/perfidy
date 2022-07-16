@@ -60,7 +60,7 @@ header {
 .add-step-button {
     float: right;
     background-color: transparent;
-    color: white;
+    color: #FF00FF;
     font-weight: bold;
     font-size: x-large
 }
@@ -73,11 +73,27 @@ header {
     font-size: medium
 }
 
+.show-spec-button {
+    float: left;
+    background-color: transparent;
+    color: #FF00FF;
+    font-weight: bold;
+    font-size: x-large
+}
+
+.run-button {
+    background-color: transparent;
+    color: #FF00FF;
+    font-weight: bold;
+    font-size: x-large
+}
+
 .step-spec {
     margin-top: 1em;
     font-size: large;
     background-color: #282c34;
-    padding: 0.5em
+    padding: 0.5em;
+    border: 1px solid #FF00FF;
 }
 
 .step-spec-id {
@@ -86,13 +102,16 @@ header {
 }
 
 .step-spec-field {
-    font-size: medium;
+    font-size: small;
     margin-top: 0.25em
 }
 
 .step-spec-field-label {
+    display: block;
+    float: left;
+    text-align: right;
     font-style: italic;
-    width: 10em;
+    width: 7em;
     padding-right: 1em;
     vertical-align: top
 

@@ -22,6 +22,26 @@ function SourceStepSpecDetails({spec, updateCallback}) {
                 }
             </select>
         </div>
+        <div className="step-spec-field">
+            <label className="step-spec-field-label" htmlFor={`outputType-${spec.id}`}>Output Type</label>
+            <select
+                name={`outputType-${spec.id}`}
+                onChange={
+                    e => {
+                        const newSpec = {
+                            ...spec,
+                            outputType: e.target.value
+                        }
+                        updateCallback(newSpec);
+                    }
+                }
+                defaultValue={spec.outputType}
+            >
+                {
+                    ['text', 'json', 'perf'].map((op, n) => <option key={n} value={op}>{op}</option>)
+                }
+            </select>
+        </div>
         {
             spec.sourceLocation === 'local' &&
             <div className="step-spec-field">

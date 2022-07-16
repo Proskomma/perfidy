@@ -4,27 +4,25 @@ const stepTemplates = {
             type: "Source",
             sourceLocation: "local",
             localValue: "",
-            outputTypes: {
-                value: "json"
-            }
+            outputType: "json"
         },
         http: {
             type: "Source",
             sourceLocation: "http",
             httpUrl: "",
-            outputTypes: {
-                value: "json"
-            }
+            outputType: "json"
         }
     },
     Display: {
         text: {
             type: "Display",
-            inputType: "text"
+            inputType: "text",
+            inputSource: ""
         },
         json: {
             type: "Display",
-            inputType: "json"
+            inputType: "json",
+            inputSource: ""
         }
     }
 }

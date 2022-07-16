@@ -1,6 +1,7 @@
 import React from 'react';
 
 import SourceStepSpecDetails from "./SourceStepSpecDetails";
+import DisplayStepSpecDetails from "./DisplayStepSpecDetails";
 
 function StepSpec({spec, deleteCallback, updateCallback}) {
     return <div className="step-spec">
@@ -12,19 +13,6 @@ function StepSpec({spec, deleteCallback, updateCallback}) {
             >
                 x
             </button>
-        </div>
-        <div className="step-spec-field">
-            <label className="step-spec-field-label" htmlFor={`title-${spec.id}`}>Title</label>
-            <input
-                name={`title-${spec.id}`}
-                type="text"
-                value={spec.title}
-                onChange={
-                    e => {
-                        spec.title = e.target.value;
-                        updateCallback(spec)
-                    }
-                }/>
         </div>
         <div className="step-spec-field">
             <label className="step-spec-field-label" htmlFor={`type-${spec.id}`}>Type</label>
@@ -43,6 +31,19 @@ function StepSpec({spec, deleteCallback, updateCallback}) {
                 }
             </select>
         </div>
+        <div className="step-spec-field">
+            <label className="step-spec-field-label" htmlFor={`title-${spec.id}`}>Title</label>
+            <input
+                name={`title-${spec.id}`}
+                type="text"
+                value={spec.title}
+                onChange={
+                    e => {
+                        spec.title = e.target.value;
+                        updateCallback(spec)
+                    }
+                }/>
+        </div>
         {
             spec.type === "Source"
             &&
@@ -51,8 +52,14 @@ function StepSpec({spec, deleteCallback, updateCallback}) {
                 updateCallback={updateCallback}
             />
         }
-        {spec.type === "Transform" && <p>TRANSFORM</p>}
-        {spec.type === "Display" && <p>DISPLAY</p>}
+        {
+            spec.type === "Display" &&
+            <DisplayStepSpecDetails
+                spec={spec}
+                updateCallback={updateCallback}
+            />
+        }
+        {spec.type === "Transform" && <p>DISPLAY</p>}
     </div>
 }
 
