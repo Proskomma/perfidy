@@ -8,13 +8,16 @@ function SourceStepSpecDetails({spec, updateCallback}) {
                 name={`sourceLocation-${spec.id}`}
                 onChange={
                     e => {
-                        spec.sourceLocation = e.target.value;
-                        if (spec.sourceLocation === 'local') {
-                            delete spec.httpUrl;
-                        } else {
-                            delete spec.localValue;
+                        const newSpec = {
+                            ...spec,
+                            sourceLocation: e.target.value
                         }
-                        updateCallback(spec)
+                        if (newSpec.sourceLocation === 'local') {
+                            newSpec.localValue = "";
+                        } else {
+                            newSpec.httpUrl = "";
+                        }
+                        updateCallback(newSpec);
                     }
                 }
                 defaultValue={spec.sourceLocation}
@@ -32,8 +35,11 @@ function SourceStepSpecDetails({spec, updateCallback}) {
                     name={`localValue-${spec.id}`}
                     onChange={
                         e => {
-                            spec.localValue = e.target.value;
-                            updateCallback(spec)
+                            const newSpec = {
+                                ...spec,
+                                localValue: e.target.value || ""
+                            }
+                            updateCallback(newSpec)
                         }
                     }
                     defaultValue={spec.localValue}
@@ -48,8 +54,11 @@ function SourceStepSpecDetails({spec, updateCallback}) {
                     name={`httpUrl-${spec.id}`}
                     onChange={
                         e => {
-                            spec.httpUrl = e.target.value;
-                            updateCallback(spec)
+                            const newSpec = {
+                                ...spec,
+                                httpUrl: e.target.value || ""
+                            }
+                            updateCallback(newSpec)
                         }
                     }
                     value={spec.localValue}

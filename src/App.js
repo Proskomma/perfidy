@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 
 import StepSpec from "./components/StepSpec";
+import stepTemplates from "./lib/stepTemplates";
 
 import './App.css';
 
@@ -10,7 +11,6 @@ function App() {
     return (
         <div className="App">
             <header className="App-header">
-
                 <h1 className="program-title"><img className="logo" src={"favicon.ico"} alt="Perfidy Logo"/>Perfidy</h1>
             </header>
             <div className="content">
@@ -27,9 +27,7 @@ function App() {
                                                 {
                                                     id: nextStepId,
                                                     title: `New Step ${nextStepId}`,
-                                                    type: "Source",
-                                                    sourceLocation: "local",
-                                                    localValue: ""
+                                                    ...stepTemplates.Source.local
                                                 }
                                             ]
                                         );
@@ -46,8 +44,21 @@ function App() {
                                     <StepSpec
                                         key={n}
                                         spec={ss}
-                                        deleteCallback={deleteId => setSpecSteps(specSteps.filter(v => v.id !== deleteId))}
-                                        updateCallback = {newSpec => setSpecSteps(specSteps.map(v => v.id === newSpec.id ? newSpec : v))}
+                                        deleteCallback={
+                                            deleteId => setSpecSteps(specSteps.filter(v => v.id !== deleteId))
+                                        }
+                                        updateCallback = {
+                                            newSpec => {
+                                                const newTemplate =
+                                                    stepTemplates[newSpec.type][newSpec.type === "Source" ? newSpec.sourceLocation : newSpec.httpUrl];
+                                                for (const key of Object.keys(newSpec)) {
+                                                    if (!['id', 'title'].includes(key) && !Object.keys(newTemplate).includes(key)) {
+                                                        delete newSpec[key];
+                                                    }
+                                                }
+                                                setSpecSteps(specSteps.map(v => v.id === newSpec.id ? newSpec : v));
+                                            }
+                                        }
                                     />
                             )
                         }
