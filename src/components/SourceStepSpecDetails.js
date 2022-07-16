@@ -1,6 +1,14 @@
 import React from "react";
 
 function SourceStepSpecDetails({spec, updateCallback}) {
+    const jsonValueColor = content => {
+        try {
+            JSON.parse(content);
+            return "white";
+        } catch (err) {
+            return "red";
+        }
+    }
     return <>
         <div className="step-spec-field">
             <label className="step-spec-field-label" htmlFor={`sourceLocation-${spec.id}`}>Source Location</label>
@@ -45,7 +53,13 @@ function SourceStepSpecDetails({spec, updateCallback}) {
         {
             spec.sourceLocation === 'local' &&
             <div className="step-spec-field">
-                <label className="step-spec-field-label" htmlFor={`localValue-${spec.id}`}>Value</label>
+                <label
+                    className="step-spec-field-label"
+                    htmlFor={`localValue-${spec.id}`}
+                    style={{color: jsonValueColor(spec.localValue)}}
+                >
+                    Value
+                </label>
                 <textarea
                     name={`localValue-${spec.id}`}
                     onChange={

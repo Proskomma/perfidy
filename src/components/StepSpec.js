@@ -6,6 +6,8 @@ import DisplayStepSpecDetails from "./DisplayStepSpecDetails";
 function StepSpec({spec, deleteCallback, updateCallback}) {
     return <div className="step-spec">
         <div className="step-spec-id">
+            {spec.type}
+            {" "}
             {spec.id}
             <button
                 className="delete-step-button"
@@ -21,6 +23,7 @@ function StepSpec({spec, deleteCallback, updateCallback}) {
                 onChange={
                     e => {
                         spec.type = e.target.value;
+                        spec.title = `${spec.type} ${spec.id}`;
                         updateCallback(spec)
                     }
                 }
@@ -59,7 +62,7 @@ function StepSpec({spec, deleteCallback, updateCallback}) {
                 updateCallback={updateCallback}
             />
         }
-        {spec.type === "Transform" && <p>DISPLAY</p>}
+        {spec.type === "Transform" && <p>TRANSFORM</p>}
     </div>
 }
 

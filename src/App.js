@@ -8,6 +8,8 @@ import './App.css';
 function App() {
     const [specSteps, setSpecSteps] = useState([]);
     const [nextStepId, setNextStepId] = useState(1);
+    const [results, setResults] = useState([]);
+    const [runIssues, setRunIssues] = useState([]);
     return (
         <div className="App">
             <header className="App-header">
@@ -33,7 +35,7 @@ function App() {
                                                 ...specSteps,
                                                 {
                                                     id: nextStepId,
-                                                    title: `New Step ${nextStepId}`,
+                                                    title: `Source ${nextStepId}`,
                                                     ...stepTemplates.Source.local
                                                 }
                                             ]
@@ -48,6 +50,7 @@ function App() {
                                 className="show-spec-button"
                                 onClick={
                                     () => {
+                                        console.log(JSON.stringify(specSteps, null, 2));
                                         alert(JSON.stringify(specSteps, null, 2));
                                     }
                                 }
@@ -67,7 +70,9 @@ function App() {
                                         updateCallback = {
                                             newSpec => {
                                                 const newTemplate =
-                                                    stepTemplates[newSpec.type][newSpec.type === "Source" ? (newSpec.sourceLocation || 'local') : (newSpec.inputType || 'text')];
+                                                    stepTemplates[newSpec.type][newSpec.type === "Source" ?
+                                                        (newSpec.sourceLocation || 'local') :
+                                                        (newSpec.inputType || 'text')];
                                                 for (const key of Object.keys(newSpec)) {
                                                     if (!['id', 'title'].includes(key) && !Object.keys(newTemplate).includes(key)) {
                                                         delete newSpec[key];
@@ -75,7 +80,7 @@ function App() {
                                                 }
                                                 for (const key of Object.keys(newTemplate)) {
                                                     if (!Object.keys(newSpec).includes(key)) {
-                                                        newSpec.key = newTemplate.key;
+                                                        newSpec[key] = newTemplate[key];
                                                     }
                                                 }
                                                 setSpecSteps(specSteps.map(v => v.id === newSpec.id ? newSpec : v));
@@ -89,6 +94,12 @@ function App() {
                 <div className="result-pane">
                     <div className="result-inner">
                         <h2 className="result-title">Result</h2>
+                        {
+                            runIssues.length > 0 &&
+                            <div className="run-issues">
+                                {runIssues.map((ri, n) => <p key={n}>{ri}</p>)}
+                            </div>
+                        }
                     </div>
                 </div>
             </div>
