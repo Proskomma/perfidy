@@ -12,11 +12,6 @@ function SourceStepSpecDetails({spec, updateCallback}) {
                             ...spec,
                             sourceLocation: e.target.value
                         }
-                        if (newSpec.sourceLocation === 'local') {
-                            newSpec.localValue = "";
-                        } else {
-                            newSpec.httpUrl = "";
-                        }
                         updateCallback(newSpec);
                     }
                 }
@@ -38,8 +33,8 @@ function SourceStepSpecDetails({spec, updateCallback}) {
                             const newSpec = {
                                 ...spec,
                                 localValue: e.target.value || ""
-                            }
-                            updateCallback(newSpec)
+                            };
+                            updateCallback(newSpec);
                         }
                     }
                     defaultValue={spec.localValue}
@@ -57,11 +52,11 @@ function SourceStepSpecDetails({spec, updateCallback}) {
                             const newSpec = {
                                 ...spec,
                                 httpUrl: e.target.value || ""
-                            }
-                            updateCallback(newSpec)
+                            };
+                            updateCallback(newSpec);
                         }
                     }
-                    value={spec.localValue}
+                    value={spec.httpUrl}
                 />
             </div>
         }

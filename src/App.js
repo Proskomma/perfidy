@@ -50,10 +50,15 @@ function App() {
                                         updateCallback = {
                                             newSpec => {
                                                 const newTemplate =
-                                                    stepTemplates[newSpec.type][newSpec.type === "Source" ? newSpec.sourceLocation : newSpec.httpUrl];
+                                                    stepTemplates[newSpec.type][newSpec.type === "Source" ? (newSpec.sourceLocation || 'local') : (newSpec.inputType || 'text')];
                                                 for (const key of Object.keys(newSpec)) {
                                                     if (!['id', 'title'].includes(key) && !Object.keys(newTemplate).includes(key)) {
                                                         delete newSpec[key];
+                                                    }
+                                                }
+                                                for (const key of Object.keys(newTemplate)) {
+                                                    if (!Object.keys(newSpec).includes(key)) {
+                                                        newSpec.key = newTemplate.key;
                                                     }
                                                 }
                                                 setSpecSteps(specSteps.map(v => v.id === newSpec.id ? newSpec : v));
