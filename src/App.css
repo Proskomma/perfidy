@@ -29,6 +29,7 @@ header {
 .spec-pane, .result-pane {
     display: inline-block;
     min-width: 50vw;
+    max-width: 50vw;
     vertical-align: top
 }
 
@@ -81,13 +82,6 @@ header {
     font-size: x-large
 }
 
-.run-button {
-    background-color: transparent;
-    color: #FF00FF;
-    font-weight: bold;
-    font-size: x-large
-}
-
 .step-spec {
     margin-top: 1em;
     font-size: large;
@@ -117,6 +111,48 @@ header {
 
 }
 
-.run-issues {
+.run-button {
+    float: left;
+    background-color: transparent;
+    color: #00FFFF;
+    font-weight: bold;
+    font-size: x-large
+}
+
+.clear-results-button {
+    float: right;
+    background-color: transparent;
+    color: #00FFFF;
+    font-weight: bold;
+    font-size: x-large
+}
+
+.display-result {
+    margin-top: 1em;
+    font-size: large;
+    background-color: #282c34;
+    padding: 0.5em;
+    border: 1px solid #00FFFF;
+}
+
+.display-result-id {
+    font-size: large;
+    color: #00FFFF
+}
+
+.display-result-value {
+    margin-top: 10px;
+    font-size: medium;
+    font-family: monospace
+}
+
+.no-value {
+    font-weight: bold;
     color: red
 }
+
+.run-issues {
+    color: red;
+    font-size: small
+}
+

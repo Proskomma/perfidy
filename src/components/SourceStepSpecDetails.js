@@ -56,7 +56,7 @@ function SourceStepSpecDetails({spec, updateCallback}) {
                 <label
                     className="step-spec-field-label"
                     htmlFor={`localValue-${spec.id}`}
-                    style={{color: jsonValueColor(spec.localValue)}}
+                    style={{color: spec.outputType === 'json' ? jsonValueColor(spec.localValue) : "white"}}
                 >
                     Value
                 </label>
