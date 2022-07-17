@@ -52,7 +52,7 @@ function App() {
         let unsatisfiedInputs = new Set([]);
         for (const specStep of [...specSteps].reverse()) {
             if (specStep.type === 'Display') {
-                displays.push({
+                displays.unshift({
                     id: specStep.id,
                     inputType: specStep.inputType,
                     inputSource: specStep.inputSource,
@@ -83,7 +83,7 @@ function App() {
             }
         }
         setResults(displays);
-        setRunIssues(newRunIssues);
+        setRunIssues([...newRunIssues]);
     }
 
     const clearResultsCallback = () => {
