@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import Axios from "axios";
 
 import StepSpec from "./components/StepSpec";
 import stepTemplates from "./lib/stepTemplates";
@@ -46,7 +47,7 @@ function App() {
 
     const deleteCallback = deleteId => setSpecSteps(specSteps.filter(v => v.id !== deleteId));
 
-    const runCallback = () => {
+    const runCallback = async () => {
         let newRunIssues = [];
         let displays = [];
         let unsatisfiedInputs = new Set([]);
@@ -66,14 +67,29 @@ function App() {
                             newRunIssues.push(`Source '${specStep.id}' is of wrong type for Display '${display.id}' (${specStep.outputType} vs ${display.inputType})`);
                             continue;
                         }
+                        if (specStep.sourceLocation === 'http') {
+                            try {
+                                const response = await Axios.get(specStep.httpUrl);
+                                if (response.status !== 200) {
+                                    newRunIssues.push(`Status code ${response.status} when fetching content by HTTP(S) for Source '${specStep.id}'`);
+                                    continue;
+                                }
+                                specStep.value = response.data;
+                            } catch (err) {
+                                newRunIssues.push(`Exception when fetching content by HTTP(S) for Source '${specStep.id}': ${err}`);
+                                continue;
+                            }
+                        } else {
+                            specStep.value = specStep.localValue;
+                        }
                         if (specStep.outputType === 'json') {
                             try {
-                                display.value = JSON.parse(specStep.localValue);
+                                display.value = JSON.parse(specStep.value);
                             } catch (err) {
                                 newRunIssues.push(`Source '${specStep.id}' outputs JSON but does not contain valid JSON`);
                             }
                         } else {
-                            display.value = specStep.localValue;
+                            display.value = specStep.value;
                         }
                     }
                     unsatisfiedInputs.delete(`Source ${specStep.id}`);
@@ -94,7 +110,7 @@ function App() {
     return (
         <div className="App">
             <header className="App-header">
-                <h1 className="program-title"><img className="logo" src={"favicon.ico"} alt="Perfidy Logo"/>Perfidy</h1>
+                <h1 className="program-title"><img className="logo" src={"favicon.ico"} alt="Perfidy Logo"/>Perfidy <span className="smaller-program-title">- a PERF IDE</span></h1>
             </header>
             <div className="content">
                 <div className="spec-pane">
