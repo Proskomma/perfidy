@@ -2,6 +2,7 @@ import React from 'react';
 
 import SourceStepSpecDetails from "./SourceStepSpecDetails";
 import DisplayStepSpecDetails from "./DisplayStepSpecDetails";
+import TransformStepSpecDetails from "./TransformStepSpecDetails";
 
 function StepSpec({spec, deleteCallback, updateCallback}) {
     return <div className="step-spec">
@@ -62,7 +63,13 @@ function StepSpec({spec, deleteCallback, updateCallback}) {
                 updateCallback={updateCallback}
             />
         }
-        {spec.type === "Transform" && <p>TRANSFORM</p>}
+        {
+            spec.type === "Transform" &&
+            <TransformStepSpecDetails
+                spec={spec}
+                updateCallback={updateCallback}
+            />
+        }
     </div>
 }
 

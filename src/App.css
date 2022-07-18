@@ -109,7 +109,24 @@ header {
 
 .step-spec-field {
     font-size: small;
-    margin-top: 0.25em
+    margin-top: 0.25em;
+}
+
+.step-spec-field-heading {
+    display: block;
+    text-align: right;
+    font-weight: bold;
+    font-style: italic;
+    width: 7em;
+    padding-right: 1em;
+    vertical-align: top
+}
+
+.step-spec-field-text {
+    display: block;
+    text-align: left;
+    padding-left: 8em;
+    vertical-align: top
 }
 
 .step-spec-field-label {
@@ -120,7 +137,6 @@ header {
     width: 7em;
     padding-right: 1em;
     vertical-align: top
-
 }
 
 .run-button {

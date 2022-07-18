@@ -46,7 +46,7 @@ function SourceStepSpecDetails({spec, updateCallback}) {
                 defaultValue={spec.outputType}
             >
                 {
-                    ['text', 'json', 'perf'].map((op, n) => <option key={n} value={op}>{op}</option>)
+                    ['text', 'json'].map((op, n) => <option key={n} value={op}>{op}</option>)
                 }
             </select>
         </div>

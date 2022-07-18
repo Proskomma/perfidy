@@ -4,13 +4,53 @@ const stepTemplates = {
             type: "Source",
             sourceLocation: "local",
             localValue: "",
-            outputType: "json"
+            outputType: "text"
         },
         http: {
             type: "Source",
             sourceLocation: "http",
             httpUrl: "",
-            outputType: "json"
+            outputType: "text"
+        }
+    },
+    Transform: {
+        usfm2perf: {
+            name: "usfm2perf",
+            type: "Transform",
+            description: "Loads a USFM file into Proskomma and exports it as PERF",
+            inputs: [
+                {
+                    name: "usfm",
+                    type: "text",
+                    source: ""
+                }
+            ],
+            outputs: [
+                {
+                    name: "perf",
+                    type: "json",
+                }
+            ],
+            code: () => true
+        },
+        usx2perf: {
+            name: "usx2perf",
+            type: "Transform",
+            description: "Loads a USX file into Proskomma and exports it as PERF",
+            inputs: [
+                {
+                    name: "usx",
+                    type: "text",
+                    source: ""
+                }
+            ],
+            outputs: [
+                {
+                    name: "perf",
+                    type: "json",
+                }
+            ],
+            code: () => true
         }
     },
     Display: {

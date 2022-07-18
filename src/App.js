@@ -28,10 +28,13 @@ function App() {
     }
 
     const updateCallback = newSpec => {
+        const newSpecSubtypes = {
+            Source: newSpec.sourceLocation || 'local',
+            Transform: newSpec.name || 'usfm2perf',
+            Display: newSpec.inputType || 'text',
+        }
         const newTemplate =
-            stepTemplates[newSpec.type][newSpec.type === "Source" ?
-                (newSpec.sourceLocation || 'local') :
-                (newSpec.inputType || 'text')];
+            stepTemplates[newSpec.type][newSpecSubtypes[newSpec.type]];
         for (const key of Object.keys(newSpec)) {
             if (!['id', 'title'].includes(key) && !Object.keys(newTemplate).includes(key)) {
                 delete newSpec[key];
@@ -51,6 +54,9 @@ function App() {
         let newRunIssues = [];
         let displays = [];
         let unsatisfiedInputs = new Set([]);
+        if (specSteps.length === 0) {
+            newRunIssues.push('No spec steps specified!');
+        }
         for (const specStep of [...specSteps].reverse()) {
             if (specStep.type === 'Display') {
                 displays.unshift({
@@ -110,7 +116,7 @@ function App() {
     return (
         <div className="App">
             <header className="App-header">
-                <h1 className="program-title"><img className="logo" src={"favicon.ico"} alt="Perfidy Logo"/>Perfidy <span className="smaller-program-title">- a PERF IDE</span></h1>
+                <h1 className="program-title"><img className="logo" src={"favicon.ico"} alt="Perfidy Logo"/>Perfidy <span className="smaller-program-title">- an IDE for PERF</span></h1>
             </header>
             <div className="content">
                 <div className="spec-pane">
