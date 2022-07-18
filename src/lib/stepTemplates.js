@@ -1,3 +1,6 @@
+import usfm2perf from '../transforms/usfm2perf';
+import usx2perf from '../transforms/usx2perf';
+
 const stepTemplates = {
     Source: {
         local: {
@@ -31,7 +34,7 @@ const stepTemplates = {
                     type: "json",
                 }
             ],
-            code: () => true
+            code: usfm2perf
         },
         usx2perf: {
             name: "usx2perf",
@@ -50,7 +53,7 @@ const stepTemplates = {
                     type: "json",
                 }
             ],
-            code: () => true
+            code: usx2perf
         }
     },
     Display: {
