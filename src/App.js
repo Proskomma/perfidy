@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import {useProskomma} from 'proskomma-react-hooks';
 
 import StepSpec from "./components/StepSpec";
 import stepTemplates from "./lib/stepTemplates";
@@ -12,6 +13,8 @@ function App() {
     const [nextStepId, setNextStepId] = useState(1);
     const [results, setResults] = useState([]);
     const [runIssues, setRunIssues] = useState([]);
+
+    const {proskomma} = useProskomma({verbose: true});
 
     const addStepCallback = () => {
         setSpecSteps(
@@ -109,7 +112,8 @@ function App() {
                                 onClick={() => runCallback({
                                     specSteps,
                                     setResults,
-                                    setRunIssues
+                                    setRunIssues,
+                                    proskomma
                                 })}
                             >
                                 >>

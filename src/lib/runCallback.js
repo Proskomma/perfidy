@@ -1,6 +1,6 @@
 import Axios from "axios";
 
-const runCallback = async ({specSteps, setResults, setRunIssues}) => {
+const runCallback = async ({specSteps, setResults, setRunIssues, proskomma}) => {
     let newRunIssues = [];
     let outputs = [];
     let transforms = [];
@@ -15,17 +15,17 @@ const runCallback = async ({specSteps, setResults, setRunIssues}) => {
         unsatisfiedInputs,
         transforms
     });
-    for (const sourceStep of [...specSteps].filter(st => st.type === "Source")) {
-        for (const display of outputs.filter(d => d.inputSource === `Source ${sourceStep.id}`)) {
-            display.value = sourceStep.value;
-        }
-    }
+    evaluateSpec({
+        specSteps,
+        outputs,
+        proskomma
+    });
     setResults(outputs);
     Array.from(unsatisfiedInputs).forEach(ui => newRunIssues.push(`Unsatisfied input ${ui}`));
     setRunIssues([...newRunIssues]);
 }
 
-const checkSpec = async ({specSteps, outputs, newRunIssues, unsatisfiedInputs, transforms}) => {
+const checkSpec = async ({specSteps, outputs, newRunIssues, unsatisfiedInputs}) => {
     for (const specStep of [...specSteps].reverse()) {
         if (specStep.type === 'Display') {
             outputs.unshift({
@@ -42,12 +42,6 @@ const checkSpec = async ({specSteps, outputs, newRunIssues, unsatisfiedInputs, t
             }
         }
         if (specStep.type === 'Transform') {
-            transforms.unshift({
-                type: "Transform",
-                id: specStep.id,
-                inputs: specStep.inputs,
-                value: null
-            });
             for (const input of specStep.inputs) {
                 if (input.source.trim().length === 0) {
                     newRunIssues.push(`No input source specified for ${input.source.trim()} for Transform '${specStep.id}'`)
@@ -95,5 +89,65 @@ const checkSpec = async ({specSteps, outputs, newRunIssues, unsatisfiedInputs, t
     }
 }
 
+const evaluateSpec = ({specSteps, outputs, proskomma}) => {
+    // Copy source value to transforms and displays
+    for (const sourceStep of [...specSteps].filter(st => st.type === "Source")) {
+        for (const display of outputs.filter(d => d.inputSource === `Source ${sourceStep.id}`)) {
+            display.value = sourceStep.value;
+        }
+        for (const transformStep of [...specSteps].filter(st => st.type === "Transform")) {
+            for (const input of transformStep.inputs) {
+                delete input.value;
+                if (input.source === `Source ${sourceStep.id}`) {
+                    input.value = sourceStep.value;
+                }
+            }
+            delete transformStep.result;
+        }
+    }
+    // Propagate values between transforms until nothing changes
+    let changed = true;
+    while (changed) {
+        changed = false;
+        for (const transformStep of [...specSteps].filter(st => st.type === "Transform")) {
+            if (transformStep.inputs.filter(i => !i.value).length === 0 && !transformStep.result) {
+                console.log(`Evaluate ${transformStep.title}`);
+                const inputOb = {};
+                for (const input of transformStep.inputs) {
+                    inputOb[input.name] = input.value;
+                }
+                transformStep.result = transformStep.code({...inputOb, proskomma});
+                for (const consumingTransform of [...specSteps].filter(st => st.type === "Transform")) {
+                    for (const consumingInput of consumingTransform.inputs) {
+                        for (const resolvedOutput of Object.keys(inputOb)) {
+                            if (consumingInput.source === `Transform ${transformStep.id} ${resolvedOutput}`) {
+                                consumingInput.value = inputOb[resolvedOutput];
+                            }
+                        }
+                    }
+                }
+                changed = true;
+            }
+        }
+    }
+    // Copy transform values to displays
+    for (const transformStep of
+        [...specSteps]
+            .filter(st => st.type === "Transform")
+            .filter(st => st.result)
+        ) {
+        for (const resultField of Object.keys(transformStep.result)) {
+            const resultFieldOutputString = `Transform ${transformStep.id} ${resultField}`
+            for (const display of outputs) {
+                console.log(resultFieldOutputString, display.inputSource);
+                if (resultFieldOutputString === display.inputSource) {
+                    console.log(`Copying ${resultFieldOutputString}`)
+                    display.value = transformStep.result[resultField];
+                }
+            }
+        }
+
+    }
+}
 
 export default runCallback;
