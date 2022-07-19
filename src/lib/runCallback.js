@@ -8,6 +8,24 @@ const runCallback = async ({specSteps, setResults, setRunIssues}) => {
     if (specSteps.length === 0) {
         newRunIssues.push('No spec steps specified!');
     }
+    await checkSpec({
+        specSteps,
+        outputs,
+        newRunIssues,
+        unsatisfiedInputs,
+        transforms
+    });
+    for (const sourceStep of [...specSteps].filter(st => st.type === "Source")) {
+        for (const display of outputs.filter(d => d.inputSource === `Source ${sourceStep.id}`)) {
+            display.value = sourceStep.value;
+        }
+    }
+    setResults(outputs);
+    Array.from(unsatisfiedInputs).forEach(ui => newRunIssues.push(`Unsatisfied input ${ui}`));
+    setRunIssues([...newRunIssues]);
+}
+
+const checkSpec = async ({specSteps, outputs, newRunIssues, unsatisfiedInputs, transforms}) => {
     for (const specStep of [...specSteps].reverse()) {
         if (specStep.type === 'Display') {
             outputs.unshift({
@@ -64,13 +82,10 @@ const runCallback = async ({specSteps, setResults, setRunIssues}) => {
                         newRunIssues.push(`Source '${specStep.id}' outputs JSON but does not contain valid JSON`);
                     }
                 }
-                // Move this to generic eval section
                 for (const display of outputs.filter(d => d.inputSource === `Source ${specStep.id}`)) {
                     if (display.inputType !== specStep.outputType) {
                         newRunIssues.push(`Source '${specStep.id}' is of wrong type for Display '${display.id}' (${specStep.outputType} vs ${display.inputType})`);
-                        continue;
                     }
-                    display.value = specStep.value;
                 }
                 unsatisfiedInputs.delete(`Source ${specStep.id}`);
             } else {
@@ -78,9 +93,7 @@ const runCallback = async ({specSteps, setResults, setRunIssues}) => {
             }
         }
     }
-    setResults(outputs);
-    Array.from(unsatisfiedInputs).forEach(ui => newRunIssues.push(`Unsatisfied input ${ui}`));
-    setRunIssues([...newRunIssues]);
 }
+
 
 export default runCallback;
