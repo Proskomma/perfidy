@@ -32,6 +32,7 @@ const checkSpec = async ({specSteps, outputs, newRunIssues, unsatisfiedInputs}) 
         if (specStep.type === 'Display') {
             outputs.unshift({
                 type: "Display",
+                title: specStep.title,
                 id: specStep.id,
                 inputType: specStep.inputType,
                 inputSource: specStep.inputSource.trim(),

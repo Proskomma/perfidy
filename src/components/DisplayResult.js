@@ -17,10 +17,17 @@ function DisplayResult({result}) {
         }
     }
 
+    const renderTitle = r => {
+        let ret = `${r.title} (#${result.id})`;
+        if (r.title !== ret) {
+            ret = `${r.title} (#${result.id})`;
+        }
+        return ret;
+    }
+
     return <div className="display-result">
         <div className="display-result-id">
-            {"Display "}
-            {result.id}
+            {renderTitle(result)}
         </div>
         <div className="display-result-value">
             <div>{renderValue(result)}</div>

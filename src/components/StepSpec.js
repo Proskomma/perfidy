@@ -7,9 +7,23 @@ import TransformStepSpecDetails from "./TransformStepSpecDetails";
 function StepSpec({spec, deleteCallback, updateCallback}) {
     return <div className="step-spec">
         <div className="step-spec-id">
+            <label className="step-spec-field-label" htmlFor={`title-${spec.id}`}>
             {spec.type}
             {" "}
             {spec.id}
+            </label>
+            <span>
+                <input
+                    name={`title-${spec.id}`}
+                    type="text"
+                    value={spec.title}
+                    onChange={
+                        e => {
+                            spec.title = e.target.value;
+                            updateCallback(spec)
+                        }
+                    }/>
+            </span>
             <button
                 className="delete-step-button"
                 onClick={() => deleteCallback(spec.id)}
@@ -34,19 +48,6 @@ function StepSpec({spec, deleteCallback, updateCallback}) {
                     ['Source', 'Transform', 'Display'].map((op, n) => <option key={n} value={op}>{op}</option>)
                 }
             </select>
-        </div>
-        <div className="step-spec-field">
-            <label className="step-spec-field-label" htmlFor={`title-${spec.id}`}>Title</label>
-            <input
-                name={`title-${spec.id}`}
-                type="text"
-                value={spec.title}
-                onChange={
-                    e => {
-                        spec.title = e.target.value;
-                        updateCallback(spec)
-                    }
-                }/>
         </div>
         {
             spec.type === "Source"

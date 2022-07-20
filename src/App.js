@@ -5,6 +5,7 @@ import StepSpec from "./components/StepSpec";
 import stepTemplates from "./lib/stepTemplates";
 import runCallback from "./lib/runCallback";
 import DisplayResult from "./components/DisplayResult";
+import DisplayIssues from "./components/DisplayIssues";
 
 import './App.css';
 
@@ -129,16 +130,14 @@ function App() {
                             </button>
                         </h2>
                         {
+                            runIssues.length > 0 &&
+                            <DisplayIssues issues={runIssues} />
+                        }
+                        {
                             results.map(
                                 (r, n) =>
                                     <DisplayResult key={n} result={r}/>
                             )
-                        }
-                        {
-                            runIssues.length > 0 &&
-                            <div className="run-issues">
-                                {runIssues.map((ri, n) => <p key={n}>{ri}</p>)}
-                            </div>
                         }
                     </div>
                 </div>
