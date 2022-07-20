@@ -8222,7 +8222,7 @@ prop-types@^15.7.2, prop-types@^15.8.1:
     object-assign "^4.1.1"
     react-is "^16.13.1"
 
-proskomma-json-tools@^0.4.0:
+proskomma-json-tools@^0.4.0, proskomma-json-tools@^0.4.1:
   version "0.4.1"
   resolved "https://registry.yarnpkg.com/proskomma-json-tools/-/proskomma-json-tools-0.4.1.tgz#0f7f48521506e6d440e109a432425b3c875d4235"
   integrity sha512-GTpQe5bGrZ86Pl46oaR4H5fMnISyRseEiJ9fFKLG+hNLs2b5YJfr+XbicuCoAnsE5jcGrt9pxK4ue0S2nVYmAw==

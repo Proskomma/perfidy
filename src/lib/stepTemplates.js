@@ -1,5 +1,6 @@
 import usfm2perf from '../transforms/usfm2perf';
 import usx2perf from '../transforms/usx2perf';
+import perf2usfm from '../transforms/perf2usfm';
 
 const stepTemplates = {
     Source: {
@@ -50,6 +51,11 @@ const stepTemplates = {
                     name: "usx",
                     type: "text",
                     source: ""
+                },
+                {
+                    name: "selectors",
+                    type: "json",
+                    source: ""
                 }
             ],
             outputs: [
@@ -59,6 +65,25 @@ const stepTemplates = {
                 }
             ],
             code: usx2perf
+        },
+        perf2usfm: {
+            name: "perf2usfm",
+            type: "Transform",
+            description: "Converts a PERF document into USFM",
+            inputs: [
+                {
+                    name: "perf",
+                    type: "json",
+                    source: ""
+                },
+             ],
+            outputs: [
+                {
+                    name: "usfm",
+                    type: "text",
+                }
+            ],
+            code: perf2usfm
         }
     },
     Display: {
