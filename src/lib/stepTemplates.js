@@ -26,6 +26,11 @@ const stepTemplates = {
                     name: "usfm",
                     type: "text",
                     source: ""
+                },
+                {
+                    name: "selectors",
+                    type: "json",
+                    source: ""
                 }
             ],
             outputs: [

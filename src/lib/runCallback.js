@@ -26,6 +26,7 @@ const runCallback = async ({specSteps, setResults, setRunIssues, proskomma}) => 
 }
 
 const checkSpec = async ({specSteps, outputs, newRunIssues, unsatisfiedInputs}) => {
+    console.log("\n** Check **");
     for (const specStep of [...specSteps].reverse()) {
         if (specStep.type === 'Display') {
             outputs.unshift({
@@ -56,6 +57,7 @@ const checkSpec = async ({specSteps, outputs, newRunIssues, unsatisfiedInputs}) 
             if (unsatisfiedInputs.has(`Source ${specStep.id}`)) {
                 if (specStep.sourceLocation === 'http') {
                     try {
+                        console.log(`Fetching HTTP content for Source ${specStep.id}`);
                         const response = await Axios.get(specStep.httpUrl);
                         if (response.status !== 200) {
                             newRunIssues.push(`Status code ${response.status} when fetching content by HTTP(S) for Source '${specStep.id}'`);
@@ -70,6 +72,7 @@ const checkSpec = async ({specSteps, outputs, newRunIssues, unsatisfiedInputs}) 
                     specStep.value = specStep.localValue;
                 }
                 if (specStep.outputType === 'json') {
+                    console.log(`Parsing JSON content for Source ${specStep.id}`);
                     try {
                         specStep.value = JSON.parse(specStep.value);
                     } catch (err) {
@@ -90,15 +93,26 @@ const checkSpec = async ({specSteps, outputs, newRunIssues, unsatisfiedInputs}) 
 }
 
 const evaluateSpec = ({specSteps, outputs, proskomma}) => {
+    console.log("** Evaluate **");
+    // Remove old values
+    for (const transformStep of [...specSteps].filter(st => st.type === "Transform")) {
+        for (const input of transformStep.inputs) {
+            delete input.value;
+        }
+    }
+    for (const display of outputs) {
+        delete display.value;
+    }
     // Copy source value to transforms and displays
     for (const sourceStep of [...specSteps].filter(st => st.type === "Source")) {
         for (const display of outputs.filter(d => d.inputSource === `Source ${sourceStep.id}`)) {
+            console.log(`Linking Source ${sourceStep.id} output to Display ${display.id} input`);
             display.value = sourceStep.value;
         }
         for (const transformStep of [...specSteps].filter(st => st.type === "Transform")) {
             for (const input of transformStep.inputs) {
-                delete input.value;
                 if (input.source === `Source ${sourceStep.id}`) {
+                    console.log(`Linking Source ${sourceStep.id} output to Transform ${transformStep.id} ${input.name} input`);
                     input.value = sourceStep.value;
                 }
             }
@@ -121,6 +135,7 @@ const evaluateSpec = ({specSteps, outputs, proskomma}) => {
                     for (const consumingInput of consumingTransform.inputs) {
                         for (const resolvedOutput of Object.keys(inputOb)) {
                             if (consumingInput.source === `Transform ${transformStep.id} ${resolvedOutput}`) {
+                                console.log(`Linking Source ${transformStep.id} ${resolvedOutput} output to Transform ${consumingTransform.id} ${consumingInput.name} input`);
                                 consumingInput.value = inputOb[resolvedOutput];
                             }
                         }
@@ -148,6 +163,7 @@ const evaluateSpec = ({specSteps, outputs, proskomma}) => {
         }
 
     }
+    console.log("****");
 }
 
 export default runCallback;
