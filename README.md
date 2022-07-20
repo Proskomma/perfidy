@@ -1,2 +1,2 @@
 # perfidy
-A playground for Proskomma's PERF
+A Proskomma's PERF low-code playground.
