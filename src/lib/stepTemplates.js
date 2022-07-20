@@ -1,6 +1,7 @@
 import usfm2perf from '../transforms/usfm2perf';
 import usx2perf from '../transforms/usx2perf';
 import perf2usfm from '../transforms/perf2usfm';
+import perfUniqueWordCount from '../transforms/perfUniqueWordCount';
 
 const stepTemplates = {
     Source: {
@@ -76,7 +77,7 @@ const stepTemplates = {
                     type: "json",
                     source: ""
                 },
-             ],
+            ],
             outputs: [
                 {
                     name: "usfm",
@@ -84,6 +85,25 @@ const stepTemplates = {
                 }
             ],
             code: perf2usfm
+        },
+        perfUniqueWordCount: {
+            name: "perfUniqueWordCount",
+            type: "Transform",
+            description: "Counts the occurence of each word in a PERF document",
+            inputs: [
+                {
+                    name: "perf",
+                    type: "json",
+                    source: ""
+                },
+            ],
+            outputs: [
+                {
+                    name: "words",
+                    type: "json",
+                }
+            ],
+            code: perfUniqueWordCount
         }
     },
     Display: {

@@ -108,13 +108,13 @@ const evaluateSpec = ({specSteps, outputs, proskomma}) => {
     // Copy source value to transforms and displays
     for (const sourceStep of [...specSteps].filter(st => st.type === "Source")) {
         for (const display of outputs.filter(d => d.inputSource === `Source ${sourceStep.id}`)) {
-            console.log(`Linking Source ${sourceStep.id} output to Display ${display.id} input`);
+            console.log(`Copying Source ${sourceStep.id} output to Display ${display.id} input`);
             display.value = sourceStep.value;
         }
         for (const transformStep of [...specSteps].filter(st => st.type === "Transform")) {
             for (const input of transformStep.inputs) {
                 if (input.source === `Source ${sourceStep.id}`) {
-                    console.log(`Linking Source ${sourceStep.id} output to Transform ${transformStep.id} ${input.name} input`);
+                    console.log(`Copying Source ${sourceStep.id} output to Transform ${transformStep.id} ${input.name} input`);
                     input.value = sourceStep.value;
                 }
             }
@@ -134,12 +134,10 @@ const evaluateSpec = ({specSteps, outputs, proskomma}) => {
                 }
                 transformStep.result = transformStep.code({...inputOb, proskomma});
                 for (const consumingTransform of [...specSteps].filter(st => st.type === "Transform")) {
-                    console.log(consumingTransform.id)
                     for (const consumingInput of consumingTransform.inputs) {
                         for (const resolvedOutput of Object.keys(transformStep.result)) {
-                            console.log(consumingInput.source, "/", `Transform ${transformStep.id} ${resolvedOutput}`);
                             if (consumingInput.source === `Transform ${transformStep.id} ${resolvedOutput}`) {
-                                console.log(`Linking Source ${transformStep.id} ${resolvedOutput} output to Transform ${consumingTransform.id} ${consumingInput.name} input`);
+                                console.log(`Copying Source ${transformStep.id} ${resolvedOutput} output to Transform ${consumingTransform.id} ${consumingInput.name} input`);
                                 consumingInput.value = transformStep.result[resolvedOutput];
                             }
                         }
