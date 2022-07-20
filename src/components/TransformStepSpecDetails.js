@@ -37,7 +37,10 @@ function TransformStepSpecDetails({spec, updateCallback}) {
                                 e => {
                                     const newSpec = {
                                         ...spec,
-                                        inputs: spec.inputs.map((i, n2) => n2 === n ? {...i, source: e.target.value} : i),
+                                        inputs: spec.inputs.map((i, n2) => n2 === n ? {
+                                            ...i,
+                                            source: e.target.value
+                                        } : i),
                                     }
                                     updateCallback(newSpec);
                                 }
@@ -47,12 +50,10 @@ function TransformStepSpecDetails({spec, updateCallback}) {
                     </div>
             )
         }
-        <div className="step-spec-field step-spec-field-heading">Output(s):</div>
-        {
-            spec.outputs.map(
-                (o, n) => <div key={n} className="step-spec-field step-spec-field-text">{`${o.name} (${o.type})`}</div>
-            )
-        }
+        <div className="step-spec-field-label">Output</div>
+        <div className="step-spec-field step-spec-field-text">
+            {spec.outputs.map((o, n) => `${o.name} (${o.type})`).join(', ')}
+        </div>
     </>
 }
 
