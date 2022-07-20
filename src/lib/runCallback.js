@@ -7,19 +7,20 @@ const runCallback = async ({specSteps, setResults, setRunIssues, proskomma}) => 
     let unsatisfiedInputs = new Set([]);
     if (specSteps.length === 0) {
         newRunIssues.push('No spec steps specified!');
+    } else {
+        await checkSpec({
+            specSteps,
+            outputs,
+            newRunIssues,
+            unsatisfiedInputs,
+            transforms
+        });
+        evaluateSpec({
+            specSteps,
+            outputs,
+            proskomma
+        });
     }
-    await checkSpec({
-        specSteps,
-        outputs,
-        newRunIssues,
-        unsatisfiedInputs,
-        transforms
-    });
-    evaluateSpec({
-        specSteps,
-        outputs,
-        proskomma
-    });
     setResults(outputs);
     Array.from(unsatisfiedInputs).forEach(ui => newRunIssues.push(`Unsatisfied input ${ui}`));
     setRunIssues([...newRunIssues]);

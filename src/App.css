@@ -185,3 +185,7 @@ header {
     font-size: small
 }
 
+button:disabled {
+    color: #555
+}
+

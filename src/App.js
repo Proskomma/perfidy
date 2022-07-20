@@ -115,6 +115,7 @@ function App() {
                                     setRunIssues,
                                     proskomma
                                 })}
+                                disabled={results.length > 0}
                             >
                                 >>
                             </button>
@@ -122,6 +123,7 @@ function App() {
                             <button
                                 className="clear-results-button"
                                 onClick={clearResultsCallback}
+                                disabled={results.length === 0}
                             >
                                 X
                             </button>
