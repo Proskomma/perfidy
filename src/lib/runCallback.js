@@ -47,7 +47,7 @@ const checkSpec = async ({specSteps, outputs, newRunIssues, unsatisfiedInputs}) 
         if (specStep.type === 'Transform') {
             for (const input of specStep.inputs) {
                 if (input.source.trim().length === 0) {
-                    newRunIssues.push(`No input source specified for ${input.source.trim()} for Transform '${specStep.id}'`)
+                    newRunIssues.push(`No input source specified for ${input.source.trim()} for Transform ${specStep.id}`)
                 } else {
                     unsatisfiedInputs.add(`${input.source}`);
                 }
@@ -62,12 +62,12 @@ const checkSpec = async ({specSteps, outputs, newRunIssues, unsatisfiedInputs}) 
                         console.log(`Fetching HTTP content for Source ${specStep.id}`);
                         const response = await Axios.get(specStep.httpUrl);
                         if (response.status !== 200) {
-                            newRunIssues.push(`Status code ${response.status} when fetching content by HTTP(S) for Source '${specStep.id}'`);
+                            newRunIssues.push(`Status code ${response.status} when fetching content by HTTP(S) for Source ${specStep.id}`);
                             continue;
                         }
                         specStep.value = response.data;
                     } catch (err) {
-                        newRunIssues.push(`Exception when fetching content by HTTP(S) for Source '${specStep.id}': ${err}`);
+                        newRunIssues.push(`Exception when fetching content by HTTP(S) for Source ${specStep.id}: ${err}`);
                         continue;
                     }
                 } else {
@@ -78,17 +78,17 @@ const checkSpec = async ({specSteps, outputs, newRunIssues, unsatisfiedInputs}) 
                     try {
                         specStep.value = JSON.parse(specStep.value);
                     } catch (err) {
-                        newRunIssues.push(`Source '${specStep.id}' outputs JSON but does not contain valid JSON`);
+                        newRunIssues.push(`Source ${specStep.id} outputs JSON but does not contain valid JSON`);
                     }
                 }
                 for (const display of outputs.filter(d => d.inputSource === `Source ${specStep.id}`)) {
                     if (display.inputType !== specStep.outputType) {
-                        newRunIssues.push(`Source '${specStep.id}' is of wrong type for Display '${display.id}' (${specStep.outputType} vs ${display.inputType})`);
+                        newRunIssues.push(`Source ${specStep.id} is of wrong type for Display ${display.id} (${specStep.outputType} vs ${display.inputType})`);
                     }
                 }
                 unsatisfiedInputs.delete(`Source ${specStep.id}`);
             } else {
-                newRunIssues.push(`Source '${specStep.id}' is unused`)
+                newRunIssues.push(`Source ${specStep.id} is unused`)
             }
         }
     }
@@ -127,7 +127,7 @@ const evaluateSpec = ({specSteps, outputs, proskomma}) => {
         changed = false;
         for (const transformStep of [...specSteps].filter(st => st.type === "Transform")) {
             if (transformStep.inputs.filter(i => !i.value).length === 0 && !transformStep.result) {
-                console.log(`Evaluate ${transformStep.title}`);
+                console.log(`Evaluating Transform ${transformStep.id}`);
                 const inputOb = {};
                 for (const input of transformStep.inputs) {
                     inputOb[input.name] = input.value;
@@ -156,9 +156,8 @@ const evaluateSpec = ({specSteps, outputs, proskomma}) => {
         for (const resultField of Object.keys(transformStep.result)) {
             const resultFieldOutputString = `Transform ${transformStep.id} ${resultField}`
             for (const display of outputs) {
-                console.log(resultFieldOutputString, display.inputSource);
                 if (resultFieldOutputString === display.inputSource) {
-                    console.log(`Copying ${resultFieldOutputString}`)
+                    console.log(`Copying ${resultFieldOutputString} to Display ${display.id}`)
                     display.value = transformStep.result[resultField];
                 }
             }

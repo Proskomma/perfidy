@@ -4,7 +4,7 @@ import ReactJson from 'react-json-view';
 function DisplayResult({result}) {
 
     const renderValue = r => {
-        if (result.value === null) {
+        if (result.value === null || result.value === undefined) {
             return <span className="no-value">NO VALUE</span>
         }
         if (typeof result.value !== 'string') {
@@ -18,7 +18,7 @@ function DisplayResult({result}) {
     }
 
     const renderTitle = r => {
-        let ret = `${r.title} (#${result.id})`;
+        let ret = `Display ${result.id}`;
         if (r.title !== ret) {
             ret = `${r.title} (#${result.id})`;
         }
