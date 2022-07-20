@@ -20,7 +20,7 @@ function TransformStepSpecDetails({spec, updateCallback}) {
                 }
             </select>
         </div>
-        <div className="step-spec-field step-spec-field-heading">Input(s):</div>
+        <div className="step-spec-field step-spec-field-heading">Input:</div>
         {
             spec.inputs.map(
                 (i, n) =>
@@ -50,7 +50,7 @@ function TransformStepSpecDetails({spec, updateCallback}) {
                     </div>
             )
         }
-        <div className="step-spec-field-label">Output</div>
+        <div className="step-spec-field-label" style={{fontWeight: "bold"}}>Output:</div>
         <div className="step-spec-field step-spec-field-text">
             {spec.outputs.map((o, n) => `${o.name} (${o.type})`).join(', ')}
         </div>

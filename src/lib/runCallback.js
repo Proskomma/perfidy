@@ -47,7 +47,7 @@ const checkSpec = async ({specSteps, outputs, newRunIssues, unsatisfiedInputs}) 
         if (specStep.type === 'Transform') {
             for (const input of specStep.inputs) {
                 if (input.source.trim().length === 0) {
-                    newRunIssues.push(`No input source specified for ${input.source.trim()} for Transform ${specStep.id}`)
+                    newRunIssues.push(`No input source specified for ${input.name} for Transform ${specStep.id}`)
                 } else {
                     unsatisfiedInputs.add(`${input.source}`);
                 }
