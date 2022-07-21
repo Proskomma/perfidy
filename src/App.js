@@ -7,6 +7,7 @@ import stepTemplates from "./lib/stepTemplates";
 import runCallback from "./lib/runCallback";
 import DisplayResult from "./components/DisplayResult";
 import DisplayIssues from "./components/DisplayIssues";
+import LoadSteps from "./components/LoadSteps";
 
 import './App.css';
 
@@ -116,20 +117,34 @@ function App() {
                             >
                                 +S
                             </button>
+                            <LoadSteps setSpecSteps={setSpecSteps}/>
                             <button
-                                className="show-spec-button"
+                                className="spec-button"
                                 onClick={
                                     () => {
-                                        const clean = cleanSteps(specSteps);
-                                        console.log(JSON.stringify(clean, null, 2));
-                                        alert(JSON.stringify(clean, null, 2));
+                                        const a = document.createElement('a');
+                                        a.download = 'mySpecSteps.json';
+                                        const blob = new Blob(
+                                            [JSON.stringify(
+                                                cleanSteps(specSteps),
+                                                null,
+                                                2
+                                            )
+                                            ],
+                                            {type: 'application/json'}
+                                        );
+                                        a.href = URL.createObjectURL(blob);
+                                        a.addEventListener('click', (e) => {
+                                            setTimeout(() => URL.revokeObjectURL(a.href), 30 * 1000);
+                                        });
+                                        a.click();
                                     }
                                 }
                             >
-                                {"{}"}
+                                {"P>"}
                             </button>
                             <button
-                                className="show-spec-button"
+                                className="spec-button"
                                 onClick={
                                     () => setExpandSpecs(!expandSpecs)
                                 }
@@ -177,7 +192,7 @@ function App() {
                         </h2>
                         {
                             runIssues.length > 0 &&
-                            <DisplayIssues issues={runIssues} />
+                            <DisplayIssues issues={runIssues}/>
                         }
                         {
                             runIssues.length === 0 &&
