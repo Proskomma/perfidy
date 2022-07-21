@@ -1,11 +1,7 @@
-import React, {useState} from 'react';
+import React from 'react';
 import ReactJson from 'react-json-view';
 
-import TextWindow from "./TextWindow";
-
 function DisplayResult({result}) {
-
-    const [displayTextWindow, setDisplayTextWindow] = useState(false);
 
     const renderValue = r => {
         if (result.value === null || result.value === undefined) {
@@ -32,26 +28,29 @@ function DisplayResult({result}) {
         <div className="display-result-id">
             {renderTitle(result)}
             <button
-                className="open-result-button"
-                onClick={()=> setDisplayTextWindow(!displayTextWindow)}
-                disabled={typeof result.value !== 'string'}
+                className="result-button"
+                onClick={
+                    () => {
+                        const a = document.createElement('a');
+                        a.download = `myResult.${typeof result.value === 'string' ? 'txt': 'json'}`;
+                        const blob = new Blob(
+                            [typeof result.value === 'string' ? result.value : JSON.stringify(result.value, null, 2)],
+                            {type: 'application/json'}
+                        );
+                        a.href = URL.createObjectURL(blob);
+                        a.addEventListener('click', (e) => {
+                            setTimeout(() => URL.revokeObjectURL(a.href), 30 * 1000);
+                        });
+                        a.click();
+                    }
+                }
             >
-                ^
+                {"R>"}
             </button>
         </div>
         <div className="display-result-value">
             {renderValue(result)}
         </div>
-        {
-            displayTextWindow &&
-            typeof result.value === 'string' &&
-            <TextWindow
-                title={result.title}
-            >
-                <h1>{result.title}</h1>
-                {result.value.split(/[\n\r]/).map((l, n) => <pre key={n}>{l}</pre>)}
-            </TextWindow>
-        }
     </div>
 }
 
