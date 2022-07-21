@@ -2,6 +2,7 @@ import usfm2perf from '../transforms/usfm2perf';
 import usx2perf from '../transforms/usx2perf';
 import perf2usfm from '../transforms/perf2usfm';
 import perfUniqueWordCount from '../transforms/perfUniqueWordCount';
+import wordSearch from "../transforms/wordSearch";
 
 const stepTemplates = {
     Source: {
@@ -23,6 +24,7 @@ const stepTemplates = {
         usx2perf,
         perf2usfm,
         perfUniqueWordCount,
+        wordSearch,
     },
     Display: {
         text: {

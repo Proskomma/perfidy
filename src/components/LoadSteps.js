@@ -3,7 +3,7 @@ import {useRef} from 'react';
 
 import stepTemplates from "../lib/stepTemplates";
 
-function LoadSteps({setSpecSteps}) {
+function LoadSteps({setSpecSteps, setNextStepId}) {
 
     const inputRef = useRef(null);
 
@@ -36,6 +36,8 @@ function LoadSteps({setSpecSteps}) {
                 .filter(st => st.type === "Transform")
                 .forEach(st => st.code = stepTemplates.Transform[st.name].code);
             setSpecSteps(loadedJson);
+            const lastId = Math.max(...loadedJson.map(st => parseInt(st.id)));
+            setNextStepId(lastId + 1);
         });
         reader.readAsText(fileObj);
 

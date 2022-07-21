@@ -140,7 +140,10 @@ function App() {
                             </span>
                             <span className=" spec-button tooltip">
                                 <span className="tooltiptext rtooltiptext">Load Steps from File</span>
-                            <LoadSteps setSpecSteps={setSpecSteps}/>
+                            <LoadSteps
+                                setSpecSteps={setSpecSteps}
+                                setNextStepId={setNextStepId}
+                            />
                             </span>
                             <span className=" spec-button tooltip">
                                 <span className="tooltiptext rtooltiptext">Save Steps to File</span>
