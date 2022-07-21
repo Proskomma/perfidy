@@ -14,17 +14,28 @@ function App() {
     const [nextStepId, setNextStepId] = useState(1);
     const [results, setResults] = useState([]);
     const [runIssues, setRunIssues] = useState([]);
+    const [expandSpecs, setExpandSpecs] = useState(false);
 
-    const {proskomma} = useProskomma({verbose: true});
+    const {proskomma} = useProskomma({verbose: false});
 
-    const addStepCallback = () => {
+    const defaultTemplate = stepType => {
+        if (stepType === "Source") {
+            return stepTemplates.Source.local;
+        } else if (stepType === "Transform") {
+            return stepTemplates.Transform.usfm2perf;
+        } else {
+            return stepTemplates.Display.text;
+        }
+    }
+
+    const addStepCallback = stepType => {
         setSpecSteps(
             [
                 ...specSteps,
                 {
                     id: nextStepId,
-                    title: `Source ${nextStepId}`,
-                    ...stepTemplates.Source.local
+                    title: `${stepType} ${nextStepId}`,
+                    ...defaultTemplate(stepType)
                 }
             ]
         );
@@ -76,9 +87,21 @@ function App() {
                             {" "}
                             <button
                                 className="add-step-button"
-                                onClick={addStepCallback}
+                                onClick={() => addStepCallback('Display')}
                             >
-                                +
+                                +D
+                            </button>
+                            <button
+                                className="add-step-button"
+                                onClick={() => addStepCallback('Transform')}
+                            >
+                                +T
+                            </button>
+                            <button
+                                className="add-step-button"
+                                onClick={() => addStepCallback('Source')}
+                            >
+                                +S
                             </button>
                             <button
                                 className="show-spec-button"
@@ -91,6 +114,14 @@ function App() {
                             >
                                 {"{}"}
                             </button>
+                            <button
+                                className="show-spec-button"
+                                onClick={
+                                    () => setExpandSpecs(!expandSpecs)
+                                }
+                            >
+                                {expandSpecs ? "><" : "<>"}
+                            </button>
                         </h2>
                         {
                             specSteps.map(
@@ -98,6 +129,7 @@ function App() {
                                     <StepSpec
                                         key={n}
                                         spec={ss}
+                                        expand={expandSpecs}
                                         deleteCallback={deleteCallback}
                                         updateCallback={updateCallback}
                                     />
@@ -116,7 +148,7 @@ function App() {
                                     setRunIssues,
                                     proskomma
                                 })}
-                                disabled={results.length > 0}
+                                disabled={results.length > 0 || runIssues.length > 0}
                             >
                                 >>
                             </button>
@@ -124,7 +156,7 @@ function App() {
                             <button
                                 className="clear-results-button"
                                 onClick={clearResultsCallback}
-                                disabled={results.length === 0}
+                                disabled={results.length === 0 && runIssues.length === 0}
                             >
                                 X
                             </button>

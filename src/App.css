@@ -74,20 +74,20 @@ header {
 
 .spec-title {
     margin-top: 10px;
-    color: #FF00FF;
+    color: white;
     text-align: center
 }
 
 .result-title {
     margin-top: 10px;
-    color: #00FFFF;
+    color: white;
     text-align: center
 }
 
 .add-step-button {
     float: right;
     background-color: transparent;
-    color: #FF00FF;
+    color: white;
     font-weight: bold;
     font-size: x-large
 }
@@ -100,10 +100,19 @@ header {
     font-size: medium
 }
 
+.minimize-step-button {
+    float: right;
+    background-color: transparent;
+    color: white;
+    font-weight: bold;
+    font-size: medium;
+    margin-right: 1em;
+}
+
 .show-spec-button {
     float: left;
     background-color: transparent;
-    color: #FF00FF;
+    color: white;
     font-weight: bold;
     font-size: x-large
 }
@@ -153,10 +162,14 @@ header {
     vertical-align: top
 }
 
+.step-spec-collapsed {
+    text-align: center;
+}
+
 .run-button {
     float: left;
     background-color: transparent;
-    color: #00FFFF;
+    color: white;
     font-weight: bold;
     font-size: x-large
 }
@@ -164,7 +177,7 @@ header {
 .clear-results-button {
     float: right;
     background-color: transparent;
-    color: #00FFFF;
+    color: white;
     font-weight: bold;
     font-size: x-large
 }

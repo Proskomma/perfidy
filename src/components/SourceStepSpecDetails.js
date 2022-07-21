@@ -61,6 +61,8 @@ function SourceStepSpecDetails({spec, updateCallback}) {
                     Value
                 </label>
                 <textarea
+                    rows="1"
+                    cols="30"
                     name={`localValue-${spec.id}`}
                     onChange={
                         e => {
@@ -79,7 +81,9 @@ function SourceStepSpecDetails({spec, updateCallback}) {
             spec.sourceLocation === 'http' &&
             <div className="step-spec-field">
                 <label className="step-spec-field-label" htmlFor={`httpUrl-${spec.id}`}>URL</label>
-                <input
+                <textarea
+                    rows="1"
+                    cols="30"
                     name={`httpUrl-${spec.id}`}
                     onChange={
                         e => {
