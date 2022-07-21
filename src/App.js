@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {useProskomma} from 'proskomma-react-hooks';
+import deepCopy from 'deep-copy-all';
 
 import StepSpec from "./components/StepSpec";
 import stepTemplates from "./lib/stepTemplates";
@@ -14,9 +15,21 @@ function App() {
     const [nextStepId, setNextStepId] = useState(1);
     const [results, setResults] = useState([]);
     const [runIssues, setRunIssues] = useState([]);
-    const [expandSpecs, setExpandSpecs] = useState(false);
+    const [expandSpecs, setExpandSpecs] = useState(true);
 
     const {proskomma} = useProskomma({verbose: false});
+
+    const cleanSteps = steps => {
+        const ret = deepCopy(steps);
+        for (const step of ret) {
+            delete step.value;
+            delete step.result;
+            if (step.inputs) {
+                step.inputs.forEach(i => delete i.value);
+            }
+        }
+        return ret;
+    }
 
     const defaultTemplate = stepType => {
         if (stepType === "Source") {
@@ -107,8 +120,9 @@ function App() {
                                 className="show-spec-button"
                                 onClick={
                                     () => {
-                                        console.log(JSON.stringify(specSteps, null, 2));
-                                        alert(JSON.stringify(specSteps, null, 2));
+                                        const clean = cleanSteps(specSteps);
+                                        console.log(JSON.stringify(clean, null, 2));
+                                        alert(JSON.stringify(clean, null, 2));
                                     }
                                 }
                             >
@@ -166,6 +180,7 @@ function App() {
                             <DisplayIssues issues={runIssues} />
                         }
                         {
+                            runIssues.length === 0 &&
                             results.map(
                                 (r, n) =>
                                     <DisplayResult key={n} result={r}/>

@@ -15,11 +15,16 @@ const runCallback = async ({specSteps, setResults, setRunIssues, proskomma}) => 
             unsatisfiedInputs,
             transforms
         });
-        evaluateSpec({
-            specSteps,
-            outputs,
-            proskomma
-        });
+        if (newRunIssues.length > 0) {
+            newRunIssues.forEach(ri => console.log(`* ${ri}`));
+            console.log("Issues found - abandoning");
+        } else {
+            evaluateSpec({
+                specSteps,
+                outputs,
+                proskomma
+            });
+        }
     }
     setResults(outputs);
     Array.from(unsatisfiedInputs).forEach(ui => newRunIssues.push(`Unsatisfied input ${ui}`));

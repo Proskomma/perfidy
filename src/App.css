@@ -59,8 +59,8 @@ header {
     height: 850px;
     margin-left: 15px;
     margin-right: 7px;
-    border-top: solid 2px #FF00FF;
-    border-bottom: solid 2px #FF00FF;
+    border-top: solid 2px #009900;
+    border-bottom: solid 2px #009900;
 }
 
 .result-inner {
@@ -68,8 +68,8 @@ header {
     height: 850px;
     margin-left: 7px;
     margin-right: 15px;
-    border-top: solid 2px #00FFFF;
-    border-bottom: solid 2px #00FFFF;
+    border-top: solid 2px #009900;
+    border-bottom: solid 2px #009900;
 }
 
 .spec-title {
@@ -87,7 +87,7 @@ header {
 .add-step-button {
     float: right;
     background-color: transparent;
-    color: white;
+    color: #AAA;
     font-weight: bold;
     font-size: x-large
 }
@@ -95,7 +95,15 @@ header {
 .delete-step-button {
     float: right;
     background-color: transparent;
-    color: white;
+    color: #AAA;
+    font-weight: bold;
+    font-size: medium
+}
+
+.open-result-button {
+    float: right;
+    background-color: transparent;
+    color: #AAA;
     font-weight: bold;
     font-size: medium
 }
@@ -103,7 +111,7 @@ header {
 .minimize-step-button {
     float: right;
     background-color: transparent;
-    color: white;
+    color: #AAA;
     font-weight: bold;
     font-size: medium;
     margin-right: 1em;
@@ -112,7 +120,7 @@ header {
 .show-spec-button {
     float: left;
     background-color: transparent;
-    color: white;
+    color: #AAA;
     font-weight: bold;
     font-size: x-large
 }
@@ -122,11 +130,11 @@ header {
     font-size: small;
     background-color: #282c34;
     padding: 0.25em;
-    border: 1px solid #FF00FF;
+    border: 1px solid #009900;
 }
 
 .step-spec-id {
-    color: #FF00FF;
+    color: #00FF00;
     font-size: small;
 }
 
@@ -169,7 +177,7 @@ header {
 .run-button {
     float: left;
     background-color: transparent;
-    color: white;
+    color: #AAA;
     font-weight: bold;
     font-size: x-large
 }
@@ -177,7 +185,7 @@ header {
 .clear-results-button {
     float: right;
     background-color: transparent;
-    color: white;
+    color: #AAA;
     font-weight: bold;
     font-size: x-large
 }
@@ -187,12 +195,12 @@ header {
     font-size: large;
     background-color: #282c34;
     padding: 0.25em;
-    border: 1px solid #00FFFF;
+    border: 1px solid #009900;
 }
 
 .display-result-id {
     font-size: large;
-    color: #00FFFF
+    color: #00FF00
 }
 
 .display-result-value {
@@ -204,11 +212,11 @@ header {
 
 .no-value {
     font-weight: bold;
-    color: red
+    color: #FF6666;
 }
 
 .run-issues {
-    color: red;
+    color: #FF6666;
     font-size: small
 }
 
@@ -233,7 +241,7 @@ select {
     font-size: large;
     background-color: #282c34;
     padding: 0.5em;
-    border: 1px solid #FF0000;
+    border: 1px solid #990000;
 }
 
 .display-issue {
@@ -241,5 +249,5 @@ select {
 }
 
 .display-issues-title {
-    color: red
+    color: #FF6666
 }
