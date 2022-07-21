@@ -137,7 +137,12 @@ const evaluateSpec = ({specSteps, outputs, proskomma}) => {
                 for (const input of transformStep.inputs) {
                     inputOb[input.name] = input.value;
                 }
-                transformStep.result = transformStep.code({...inputOb, proskomma});
+                try {
+                    transformStep.result = transformStep.code({...inputOb, proskomma});
+                } catch (err) {
+                    const errMsg = `Error evaluating Transform ${transformStep.id} (name=${transformStep.name}, type=${typeof transformStep.code}): ${err}`;
+                    throw new Error(errMsg);
+                }
                 for (const consumingTransform of [...specSteps].filter(st => st.type === "Transform")) {
                     for (const consumingInput of consumingTransform.inputs) {
                         for (const resolvedOutput of Object.keys(transformStep.result)) {
