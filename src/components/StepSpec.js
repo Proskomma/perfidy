@@ -23,6 +23,8 @@ function StepSpec({spec, deleteCallback, updateCallback, expand}) {
             !expand &&
             !hasFocus &&
             <span onClick={() => setHasFocus(!hasFocus)}>
+                {spec.type}
+                {" Step => "}
                 {renderTitle(spec)}
             </span>
         }

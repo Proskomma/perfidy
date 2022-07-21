@@ -19,92 +19,10 @@ const stepTemplates = {
         }
     },
     Transform: {
-        usfm2perf: {
-            name: "usfm2perf",
-            type: "Transform",
-            description: "Loads a USFM file into Proskomma and exports it as PERF",
-            inputs: [
-                {
-                    name: "usfm",
-                    type: "text",
-                    source: ""
-                },
-                {
-                    name: "selectors",
-                    type: "json",
-                    source: ""
-                }
-            ],
-            outputs: [
-                {
-                    name: "perf",
-                    type: "json",
-                }
-            ],
-            code: usfm2perf
-        },
-        usx2perf: {
-            name: "usx2perf",
-            type: "Transform",
-            description: "Loads a USX file into Proskomma and exports it as PERF",
-            inputs: [
-                {
-                    name: "usx",
-                    type: "text",
-                    source: ""
-                },
-                {
-                    name: "selectors",
-                    type: "json",
-                    source: ""
-                }
-            ],
-            outputs: [
-                {
-                    name: "perf",
-                    type: "json",
-                }
-            ],
-            code: usx2perf
-        },
-        perf2usfm: {
-            name: "perf2usfm",
-            type: "Transform",
-            description: "Converts a PERF document into USFM",
-            inputs: [
-                {
-                    name: "perf",
-                    type: "json",
-                    source: ""
-                },
-            ],
-            outputs: [
-                {
-                    name: "usfm",
-                    type: "text",
-                }
-            ],
-            code: perf2usfm
-        },
-        perfUniqueWordCount: {
-            name: "perfUniqueWordCount",
-            type: "Transform",
-            description: "Counts the occurence of each word in a PERF document",
-            inputs: [
-                {
-                    name: "perf",
-                    type: "json",
-                    source: ""
-                },
-            ],
-            outputs: [
-                {
-                    name: "words",
-                    type: "json",
-                }
-            ],
-            code: perfUniqueWordCount
-        }
+        usfm2perf,
+        usx2perf,
+        perf2usfm,
+        perfUniqueWordCount,
     },
     Display: {
         text: {
