@@ -251,3 +251,39 @@ select {
 .display-issues-title {
     color: #FF6666
 }
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 100px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 3px;
+    padding: 5px 0;
+
+    /* Position the tooltip */
+    position: absolute;
+    z-index: 1;
+    top: -5px;
+}
+
+.tooltip .ltooltiptext {
+    right: 100%;
+}
+
+.tooltip .rtooltiptext {
+    left: 100%;
+}
+
+.tooltiptext {
+    font-size: small;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+}

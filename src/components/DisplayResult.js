@@ -27,12 +27,14 @@ function DisplayResult({result}) {
     return <div className="display-result">
         <div className="display-result-id">
             {renderTitle(result)}
+            <span className=" result-button tooltip">
+                                <span className="tooltiptext ltooltiptext">Save Result to File</span>
             <button
                 className="result-button"
                 onClick={
                     () => {
                         const a = document.createElement('a');
-                        a.download = `myResult.${typeof result.value === 'string' ? 'txt': 'json'}`;
+                        a.download = `myResult.${typeof result.value === 'string' ? 'txt' : 'json'}`;
                         const blob = new Blob(
                             [typeof result.value === 'string' ? result.value : JSON.stringify(result.value, null, 2)],
                             {type: 'application/json'}
@@ -47,6 +49,7 @@ function DisplayResult({result}) {
             >
                 {"R>"}
             </button>
+            </span>
         </div>
         <div className="display-result-value">
             {renderValue(result)}

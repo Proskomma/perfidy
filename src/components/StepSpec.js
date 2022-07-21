@@ -47,12 +47,17 @@ function StepSpec({spec, deleteCallback, updateCallback, expand}) {
                         }
                     }/>
             </span>
+                    <span className="delete-step-button tooltip">
+                                <span className="tooltiptext ltooltiptext">Delete Step</span>
                     <button
                         className="delete-step-button"
                         onClick={() => deleteCallback(spec.id)}
                     >
                         x
                     </button>
+                    </span>
+                    <span className="minimize-step-button tooltip">
+                                <span className="tooltiptext ltooltiptext">Collapse Step</span>
                     <button
                         className="minimize-step-button"
                         onClick={() => setHasFocus(false)}
@@ -60,6 +65,7 @@ function StepSpec({spec, deleteCallback, updateCallback, expand}) {
                     >
                         _
                     </button>
+                    </span>
                 </div>
                 {
                     spec.type === "Source"

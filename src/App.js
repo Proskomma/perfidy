@@ -88,36 +88,62 @@ function App() {
         <div className="App">
             <header className="App-header">
                 <h1 className="program-title">
-                    <img className="logo" src={"favicon.ico"} alt="Perfidy Logo"/>
-                    {'Perfidy '}
+<span className="tooltip">
+                                <span className="tooltiptext rtooltiptext">Logo, ready for First PERF World Dev Conference</span>
+    <img className="logo" src={"favicon.ico"} alt="Perfidy Logo"/>
+</span>
+                    <span className="tooltip">
+                                <span className="tooltiptext rtooltiptext">The state of being deceitful and untrustworthy</span>
+                        {'Perfidy '}
+                    </span>
+                    <span className="tooltip">
+                                <span
+                                    className="tooltiptext rtooltiptext">It's called Perfidy because... oh never mind</span>
                     <span className="smaller-program-title"> - an IDE for PERF</span>
+                    </span>
                 </h1>
             </header>
             <div className="content">
                 <div className="spec-pane">
                     <div className="spec-inner">
                         <h2 className="spec-title">
-                            Spec
-                            {" "}
+                    <span className="tooltip">
+                                <span className="tooltiptext rtooltiptext">Build your Pipeline Here</span>
+                        {"Spec "}
+                    </span>
+                            <span className=" add-step-button tooltip">
+                                <span className="tooltiptext ltooltiptext">Add a Display Step</span>
                             <button
                                 className="add-step-button"
                                 onClick={() => addStepCallback('Display')}
                             >
                                 +D
                             </button>
+                            </span>
+                            <span className=" add-step-button tooltip">
+                                <span className="tooltiptext ltooltiptext">Add a Transform Step</span>
                             <button
                                 className="add-step-button"
                                 onClick={() => addStepCallback('Transform')}
                             >
                                 +T
                             </button>
+                            </span>
+                            <span className=" add-step-button tooltip">
+                                <span className="tooltiptext ltooltiptext">Add a Source Step</span>
                             <button
                                 className="add-step-button"
                                 onClick={() => addStepCallback('Source')}
                             >
                                 +S
                             </button>
+                            </span>
+                            <span className=" spec-button tooltip">
+                                <span className="tooltiptext rtooltiptext">Load Steps from File</span>
                             <LoadSteps setSpecSteps={setSpecSteps}/>
+                            </span>
+                            <span className=" spec-button tooltip">
+                                <span className="tooltiptext rtooltiptext">Save Steps to File</span>
                             <button
                                 className="spec-button"
                                 onClick={
@@ -143,6 +169,9 @@ function App() {
                             >
                                 {"P>"}
                             </button>
+                            </span>
+                            <span className=" spec-button tooltip">
+                                <span className="tooltiptext rtooltiptext">Expand All Steps</span>
                             <button
                                 className="spec-button"
                                 onClick={
@@ -151,6 +180,7 @@ function App() {
                             >
                                 {expandSpecs ? "><" : "<>"}
                             </button>
+                            </span>
                         </h2>
                         {
                             specSteps.map(
@@ -169,6 +199,8 @@ function App() {
                 <div className="result-pane">
                     <div className="result-inner">
                         <h2 className="result-title">
+                            <span className=" run-button tooltip">
+                                <span className="tooltiptext rtooltiptext">Run the steps</span>
                             <button
                                 className="run-button"
                                 onClick={() => runCallback({
@@ -181,7 +213,13 @@ function App() {
                             >
                                 >>
                             </button>
-                            {"Result "}
+                            </span>
+                            <span className="tooltip">
+                                <span className="tooltiptext rtooltiptext">See the Results of your Pipeline Here</span>
+                                {"Result "}
+                            </span>
+                            <span className=" clear-results-button tooltip">
+                                <span className="tooltiptext ltooltiptext">Delete the results</span>
                             <button
                                 className="clear-results-button"
                                 onClick={clearResultsCallback}
@@ -189,6 +227,7 @@ function App() {
                             >
                                 X
                             </button>
+                            </span>
                         </h2>
                         {
                             runIssues.length > 0 &&
