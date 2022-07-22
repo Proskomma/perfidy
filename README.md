@@ -20,7 +20,7 @@ A Perfidy pipeline is a way to pass data from multiple places through multiple f
 Together, these steps form a directed graph through which data moves, being transformed along the way.
 
 #### Demo Pipeline
-Load `demo_pipeline.json` from the root of the repo using the `>P` button.
+Load `demo_pipeline.json` from the `pipelines` directory of the repo using the `>P` button.
 
 #### Workflow
 - Create or load a pipeline in the `Spec` pane

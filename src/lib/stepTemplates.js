@@ -4,6 +4,7 @@ import perf2usfm from '../transforms/perf2usfm';
 import perfUniqueWordCount from '../transforms/perfUniqueWordCount';
 import wordSearch from "../transforms/wordSearch";
 import justTheBible from "../transforms/justTheBible";
+import proskommaQuery from "../../pipelines/proskommaQuery";
 
 const stepTemplates = {
     Source: {
@@ -27,6 +28,7 @@ const stepTemplates = {
         perfUniqueWordCount,
         wordSearch,
         justTheBible,
+        proskommaQuery,
     },
     Display: {
         text: {
