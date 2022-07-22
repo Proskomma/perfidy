@@ -34,7 +34,7 @@ The transform file should export the metadata object, which should be imported i
 #### Overview
 PerfRender is a streaming, event-based model that is similar in some ways to SAX in the XML world. PerfRender tree-walks the PERF JSON and generates events for each feature of the PERF. 
 
-Streaming tends to be very fast, because there is very little setup and tear-down compared to building a complete document tree in memory. It also used much less memory, because document trees tend to involve large numbers of 64-bit pointers that typically take at least 10x as much working memory as the serialized document. (PerfRender itself runs against a JSON document that has been loaded into memory. However, the same API can be run against Proskomma, which provides all the PERF events without ever constructing a tree.)
+Streaming tends to be very fast, because there is very little setup and tear-down compared to building a complete document tree in memory. It also used much less working memory, because document trees tend to involve large numbers of 64-bit pointers that typically take at least 10x as much working memory as the serialized document. (PerfRender itself runs against a JSON document that has been loaded into memory. However, the same API can be run against Proskomma, which provides all the PERF events without ever constructing a tree.)
 
 Unlike SAX, which generates events based on basic XML syntax, PerfRender's events are related to the specific structure of PERF:
 - startDocument
@@ -63,4 +63,64 @@ Any output and any state not provided in the PerfRender context must be managed 
 
 In many cases the amount of additional state that needs to be tracked is quite limited, and that state can be structured for maximum convenience and efficiency for the task in hand. For tasks where the required state begins to look like reconstructing the entire JSON tree, it may make sense to consider a non-streaming approach.
 
+#### Defining Actions
 
+Actions are defined within an object which has one key per PerfRender event:
+```
+{
+    startDocument: [...],
+    startSequence: [...],
+    ...
+]
+```
+Any events not included in this object will be ignored. The value in each case is an array of action objects, each of which has a description, a test and an action:
+```
+{
+    startDocument: [
+        {
+            description: "My first startDocument Action",
+            test: () => true
+            action: () => {console.log("Hello, Streaming World!")}
+        },
+        {...},
+        ...
+    ]
+}
+```
+`description` is required and is used by some debugging utilities.
+
+`test` is a boolean function that controls whether the action will be executed.
+
+`action` is a function that does the actual work.
+
+The `test` and `action` functions both accept an 'environment' object:
+```{config, context, workspace, output}```
+
+`config` is an object that allows runtime-specific values to be passed into the render process.
+
+`context` is a read-only object that caches information about the current content and the containers that enclose it.
+
+`workspace` is an object that may be used to preserve state between callbacks. It is not returned at the end of the rendering.
+
+`output` is an object that is populated by reference and which will be available after the rendering process.
+
+A typical way to structure a program would be
+- Set up state storage and output structures in a `startDocument` action
+- Track state (such as 'current chapter') in `workspace` using the appropriate action (`mark` for chapters)
+- Build most output incrementally using an action for the appropriate event
+- Finalize output (eg perform any necessary aggregation) in an `endDocument` action
+
+#### Conditional Execution
+
+For each event, the renderer takes each action in turn.
+- If the `test` function returns a falsy value, it continues to the next action.
+- If the `test` function returns a truthy value, the corresponding `action` is executed. Then,
+  - if the `action` function returns a truthy value, the renderer continues to the next action for this event.
+  - Otherwise, it ignores any following actions for this event.
+
+This mechanism supports multiple ways to structure the code, eg
+- One action per event, with an always-true test, and all the business logic in the action. This provides maximum flexibility at the price of potentially large and deeply-nested action functions.
+- Multiple actions per event, each with a specific test (except for maybe the last, 'default' action), all of which return a falsy value. This provides a way to structure an `if/then/else` workflow.
+- Multiple actions per event, some or all of which return truthy values. This provides a way to execute zero or more sets of code in order depending on the context.
+
+Note - in the case of multiple actions returning falsy values - that conditions in the `test` function do not have the same semantics as tests inside the `action` function. A failing `test` in this case will mean that subsequent actions will be tested, whereas a failing test inside an action will mean that no subsequent actions will be tested.
