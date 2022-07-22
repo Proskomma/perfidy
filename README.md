@@ -10,27 +10,22 @@ npm start
 ### UI Documentation
 This is currently at an advanced conceptual stage. In the meantime there are tooltips for all buttons.
 
-### Workflow
+### About Pipelines
+#### Workflow
 - Create or load a pipeline in the `Spec` pane
 - Run it using the `>>` button at the top of the `Result` pane (console shows progress)
 - If there are issues, fix them, delete the results and try again
 - If there are no issues, eyeball the results and maybe save them
 - Maybe save your pipeline
 
-### Demo Pipeline
+#### Demo Pipeline
 Load `demo_pipeline.json` from the root of the repo using the `>P` button.
 
-### Adding or Modifying PERF-Based Transforms
-Transforms are defined in the `transforms` directory and declared to the UI in `lib/stepTemplates`. These code changes should hot-load in the React dev server, but __you will probably need to refresh the web page__ so that the latest templates are used to build the pipeline. (Saved data should still load as long as you don't change existing template names or signatures.)
+### Development
+#### TLDR
+See the example transforms in the `transforms` directory which, together, illustrate
+most of the features.
 
-We recommend following the internal format of the existing PERF-based transform files such as `perf2usfm.js`. There are three main parts:
-- An object containing the PerfRender actions
-- A function called `<transformName>Code` that takes an object containing the declared inputs as its sole argument, and which returns an object. containing the declared outputs as its value. This function will typically instantiate and call the render class.
-- An object with various metadata, with the transform function as the value of `code`
-
-The transform file should export the metadata object, which should be imported into `stepTemplates.js` and added to the list of transforms.
-
-### The PerfRender Processing Model
 #### Overview
 PerfRender is a streaming, event-based model that is similar in some ways to SAX in the XML world. PerfRender tree-walks the PERF JSON and generates events for each feature of the PERF. 
 
@@ -63,7 +58,17 @@ Any output and any state not provided in the PerfRender context must be managed 
 
 In many cases the amount of additional state that needs to be tracked is quite limited, and that state can be structured for maximum convenience and efficiency for the task in hand. For tasks where the required state begins to look like reconstructing the entire JSON tree, it may make sense to consider a non-streaming approach.
 
-#### Defining Actions
+#### Adding or Modifying PERF-Based Transforms
+Transforms are defined in the `transforms` directory and declared to the UI in `lib/stepTemplates`. These code changes should hot-load in the React dev server, but __you will probably need to refresh the web page__ so that the latest templates are used to build the pipeline. (Saved data should still load as long as you don't change existing template names or signatures.)
+
+We recommend following the internal format of the existing PERF-based transform files such as `perf2usfm.js`. There are three main parts:
+- An object containing the PerfRender actions
+- A function called `<transformName>Code` that takes an object containing the declared inputs as its sole argument, and which returns an object. containing the declared outputs as its value. This function will typically instantiate and call the render class.
+- An object with various metadata, with the transform function as the value of `code`
+
+The transform file should export the metadata object, which should be imported into `stepTemplates.js` and added to the list of transforms.
+
+#### Actions Structure
 
 Actions are defined within an object which has one key per PerfRender event:
 ```
@@ -94,7 +99,9 @@ Any events not included in this object will be ignored. The value in each case i
 `action` is a function that does the actual work.
 
 The `test` and `action` functions both accept an 'environment' object:
-```{config, context, workspace, output}```
+```
+{config, context, workspace, output}
+```
 
 `config` is an object that allows runtime-specific values to be passed into the render process.
 
@@ -104,7 +111,7 @@ The `test` and `action` functions both accept an 'environment' object:
 
 `output` is an object that is populated by reference and which will be available after the rendering process.
 
-A typical way to structure a program would be
+A typical way to structure a set of actions would be
 - Set up state storage and output structures in a `startDocument` action
 - Track state (such as 'current chapter') in `workspace` using the appropriate action (`mark` for chapters)
 - Build most output incrementally using an action for the appropriate event
@@ -124,3 +131,21 @@ This mechanism supports multiple ways to structure the code, eg
 - Multiple actions per event, some or all of which return truthy values. This provides a way to execute zero or more sets of code in order depending on the context.
 
 Note - in the case of multiple actions returning falsy values - that conditions in the `test` function do not have the same semantics as tests inside the `action` function. A failing `test` in this case will mean that subsequent actions will be tested, whereas a failing test inside an action will mean that no subsequent actions will be tested.
+
+`proskomma-json-tools` exports a `mergeActions` function which may be used to combine multiple action objects.
+
+#### Development Aids
+PerfRender may be instantiated with an optional `debugLevel` value between 0 and 2:
+```
+new ProskommaRenderFromJson({debugLevel:2, ...});
+```
+- Level 0 produces no output
+- Level 1 outputs executed actions to the console
+- Level 2 shows all events regardless of whether actions were executed
+
+Note that the sheer volume of output at level 2 may slow down rendering dramatically.
+
+PerfRenderer also has a utility function to describe the actions for an event in pseudo-code (which may or may not be easier to skim than the source code):
+```
+console.log(cl.describeRenderActions('text'));
+```
