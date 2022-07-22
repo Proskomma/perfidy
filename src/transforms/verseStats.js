@@ -11,6 +11,15 @@ const processVerse = (workspace, output) => {
     workspace.verseContent = [];
 }
 
+const processVerseMarks = (workspace, output) => {
+    if (!output.stats.cvData[workspace.chapter]) {
+        output.stats.cvData[workspace.chapter] = {
+            verseNumbers: []
+        };
+    }
+    output.stats.cvData[workspace.chapter].verseNumbers.push(parseInt(workspace.verses));
+}
+
 const verseStatsActions = {
     startDocument: [
         {
@@ -23,6 +32,7 @@ const verseStatsActions = {
                 workspace.verses = null;
                 output.stats = {};
                 output.stats.lengthFrequencies = {};
+                output.stats.cvData = {};
             }
         },
     ],
@@ -34,16 +44,20 @@ const verseStatsActions = {
             action: ({context, workspace, output}) => {
                 const element = context.sequences[0].element;
                 if (element.subType === 'chapter') {
-                    workspace.chapter = element.atts['number'];
-                    if (workspace.chapter > 1) {
+                    if (element.atts['number'] > 1) {
                         processVerse(workspace, output);
                     }
+                    workspace.chapter = element.atts['number'];
                     workspace.verses = 0
                 } else if (element.subType === 'verses') {
-                    if (workspace.verses > 1 || workspace.verseLength > 0) {
-                        workspace.verses = element.atts['number'];
+                    if (workspace.verses > 0 || workspace.verseLength > 0) {
+                        if (workspace.verses === 0) {
+                            processVerseMarks(workspace, output); // verse 0
+                        }
                         processVerse(workspace, output);
                     }
+                    workspace.verses = element.atts['number'];
+                    processVerseMarks(workspace, output);
                 }
             }
         },
@@ -64,7 +78,7 @@ const verseStatsActions = {
     ],
     endSequence: [
         {
-            description: "Count last Verse",
+            description: "Count last Verse; Produce aggregate stats",
             test: () => true,
             action: ({workspace, output}) => {
                 processVerse(workspace, output);
@@ -76,6 +90,12 @@ const verseStatsActions = {
                     .map(tpl => parseInt(tpl[0]) * tpl[1])
                     .reduce((a, b) => a + b);
                 output.stats.mean = output.stats.total / output.stats.nVerses;
+                for (const cvChapter of Object.keys(output.stats.cvData)) {
+                    output.stats.cvData[cvChapter].firstVerse = Math.min(...output.stats.cvData[cvChapter].verseNumbers);
+                    output.stats.cvData[cvChapter].lastVerse = Math.max(...output.stats.cvData[cvChapter].verseNumbers);
+                    delete output.stats.cvData[cvChapter].verseNumbers;
+
+                }
 
 
             }
