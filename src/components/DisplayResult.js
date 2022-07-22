@@ -8,10 +8,9 @@ function DisplayResult({result}) {
             return <span className="no-value">NO VALUE</span>
         }
         if (typeof result.value !== 'string') {
-            // return <pre>{JSON.stringify(result.value, null, 2)}</pre>;
-            return <ReactJson src={result.value} theme="monokai"/>;
-        } else if (result.value.length > 256) {
-            return result.value.slice(0, 256) + ` ... [${result.value.length} bytes]`;
+            return <ReactJson src={JSON.parse(JSON.stringify(result.value))} theme="monokai" collapsed={2} />;
+        } else if (result.value.length > 1024) {
+            return result.value.slice(0, 1024) + ` ... [${result.value.length} bytes]`;
         } else {
             return result.value;
         }
@@ -28,9 +27,32 @@ function DisplayResult({result}) {
     return <div className="display-result">
         <div className="display-result-id">
             {renderTitle(result)}
+            <span className=" result-button tooltip">
+                                <span className="tooltiptext ltooltiptext">Save Result to File</span>
+            <button
+                className="result-button"
+                onClick={
+                    () => {
+                        const a = document.createElement('a');
+                        a.download = `myResult.${typeof result.value === 'string' ? 'txt' : 'json'}`;
+                        const blob = new Blob(
+                            [typeof result.value === 'string' ? result.value : JSON.stringify(result.value, null, 2)],
+                            {type: 'application/json'}
+                        );
+                        a.href = URL.createObjectURL(blob);
+                        a.addEventListener('click', (e) => {
+                            setTimeout(() => URL.revokeObjectURL(a.href), 30 * 1000);
+                        });
+                        a.click();
+                    }
+                }
+            >
+                {"R>"}
+            </button>
+            </span>
         </div>
         <div className="display-result-value">
-            <div>{renderValue(result)}</div>
+            {renderValue(result)}
         </div>
     </div>
 }

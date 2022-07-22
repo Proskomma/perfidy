@@ -51,7 +51,7 @@ header {
 
 .spec-inner, .result-inner {
     background-color: #3A3D45;
-    padding: 5px;
+    padding: 0px 5px 5px;
 }
 
 .spec-inner {
@@ -59,8 +59,8 @@ header {
     height: 850px;
     margin-left: 15px;
     margin-right: 7px;
-    border-top: solid 2px #FF00FF;
-    border-bottom: solid 2px #FF00FF;
+    border-top: solid 2px #009900;
+    border-bottom: solid 2px #009900;
 }
 
 .result-inner {
@@ -68,56 +68,74 @@ header {
     height: 850px;
     margin-left: 7px;
     margin-right: 15px;
-    border-top: solid 2px #00FFFF;
-    border-bottom: solid 2px #00FFFF;
+    border-top: solid 2px #009900;
+    border-bottom: solid 2px #009900;
 }
 
 .spec-title {
-    margin-top: 10px;
-    color: #FF00FF;
+    margin-top: 5px;
+    margin-bottom: 0px;
+    color: white;
     text-align: center
 }
 
 .result-title {
-    margin-top: 10px;
-    color: #00FFFF;
+    margin-top: 5px;
+    margin-bottom: 0px;
+    color: white;
     text-align: center
 }
 
 .add-step-button {
     float: right;
     background-color: transparent;
-    color: #FF00FF;
+    color: #AAA;
     font-weight: bold;
-    font-size: x-large
+    font-size: large
 }
 
 .delete-step-button {
     float: right;
     background-color: transparent;
-    color: white;
+    color: #AAA;
     font-weight: bold;
     font-size: medium
 }
 
-.show-spec-button {
+.result-button {
+    float: right;
+    background-color: transparent;
+    color: #AAA;
+    font-weight: bold;
+    font-size: medium
+}
+
+.minimize-step-button {
+    float: right;
+    background-color: transparent;
+    color: #AAA;
+    font-weight: bold;
+    font-size: medium;
+}
+
+.spec-button {
     float: left;
     background-color: transparent;
-    color: #FF00FF;
+    color: #AAA;
     font-weight: bold;
-    font-size: x-large
+    font-size: large
 }
 
 .step-spec {
-    margin-top: 0.5em;
+    margin-top: 0.25em;
     font-size: small;
     background-color: #282c34;
     padding: 0.25em;
-    border: 1px solid #FF00FF;
+    border: 1px solid #009900;
 }
 
 .step-spec-id {
-    color: #FF00FF;
+    color: #00FF00;
     font-size: small;
 }
 
@@ -153,33 +171,37 @@ header {
     vertical-align: top
 }
 
+.step-spec-collapsed {
+    text-align: center;
+}
+
 .run-button {
     float: left;
     background-color: transparent;
-    color: #00FFFF;
+    color: #AAA;
     font-weight: bold;
-    font-size: x-large
+    font-size: large
 }
 
 .clear-results-button {
     float: right;
     background-color: transparent;
-    color: #00FFFF;
+    color: #AAA;
     font-weight: bold;
-    font-size: x-large
+    font-size: large
 }
 
 .display-result {
-    margin-top: 0.5em;
+    margin-top: 0.25em;
     font-size: large;
     background-color: #282c34;
     padding: 0.25em;
-    border: 1px solid #00FFFF;
+    border: 1px solid #009900;
 }
 
 .display-result-id {
     font-size: large;
-    color: #00FFFF
+    color: #00FF00
 }
 
 .display-result-value {
@@ -191,11 +213,11 @@ header {
 
 .no-value {
     font-weight: bold;
-    color: red
+    color: #FF6666;
 }
 
 .run-issues {
-    color: red;
+    color: #FF6666;
     font-size: small
 }
 
@@ -220,7 +242,7 @@ select {
     font-size: large;
     background-color: #282c34;
     padding: 0.5em;
-    border: 1px solid #FF0000;
+    border: 1px solid #990000;
 }
 
 .display-issue {
@@ -228,5 +250,56 @@ select {
 }
 
 .display-issues-title {
-    color: red
+    color: #FF6666
+}
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 100px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 3px;
+    padding: 5px 0;
+
+    /* Position the tooltip */
+    position: absolute;
+    z-index: 1;
+    top: -5px;
+}
+
+.tooltip .ltooltiptext {
+    right: 100%;
+}
+
+.tooltip .rtooltiptext {
+    left: 100%;
+}
+
+.tooltiptext {
+    font-size: small;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+}
+
+.collapsed-button-left, .collapsed-button-right {
+    background-color: transparent;
+    color: #AAA;
+    font-weight: bold;
+    font-size: x-small
+}
+
+.collapsed-button-left {
+    float: left;
+}
+
+.collapsed-button-right {
+    float: right;
 }

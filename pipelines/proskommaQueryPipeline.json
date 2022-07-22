@@ -1,0 +1,74 @@
+[
+  {
+    "id": 1,
+    "title": "USFM from DCS",
+    "type": "Source",
+    "sourceLocation": "http",
+    "outputType": "text",
+    "httpUrl": "https://git.door43.org/unfoldingWord/en_ust/raw/branch/master/08-RUT.usfm"
+  },
+  {
+    "id": 2,
+    "title": "Selectors",
+    "type": "Source",
+    "sourceLocation": "local",
+    "localValue": "{\n\"org\": \"dcs\",\n\"lang\": \"en\",\n\"abbr\": \"ust\"\n}",
+    "outputType": "json"
+  },
+  {
+    "id": 3,
+    "title": "GraphQL Query",
+    "type": "Source",
+    "sourceLocation": "local",
+    "localValue": "{documents {id }}",
+    "outputType": "text"
+  },
+  {
+    "id": 4,
+    "title": "Run Query on Document",
+    "name": "proskommaQuery",
+    "type": "Transform",
+    "description": "Loads a USFM file into Proskomma, runs a query, and exports the GraphQL data and error objects",
+    "inputs": [
+      {
+        "name": "usfm",
+        "type": "text",
+        "source": "Source 1"
+      },
+      {
+        "name": "selectors",
+        "type": "json",
+        "source": "Source 2"
+      },
+      {
+        "name": "query",
+        "type": "text",
+        "source": "Source 3"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "data",
+        "type": "json"
+      },
+      {
+        "name": "errors",
+        "type": "json"
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "title": "Query Result Data",
+    "type": "Display",
+    "inputType": "json",
+    "inputSource": "Transform 4 data"
+  },
+  {
+    "id": 6,
+    "title": "Query Result Errors",
+    "type": "Display",
+    "inputType": "text",
+    "inputSource": "Transform 4 errors"
+  }
+]

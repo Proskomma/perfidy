@@ -13,7 +13,7 @@ function TransformStepSpecDetails({spec, updateCallback}) {
                         updateCallback(newSpec);
                     }
                 }
-                defaultValue={"usfm2perf"}
+                defaultValue={spec.name}
             >
                 {
                     Object.keys(stepTemplates["Transform"]).map((op, n) => <option key={n} value={op}>{op}</option>)
@@ -37,15 +37,15 @@ function TransformStepSpecDetails({spec, updateCallback}) {
                                 e => {
                                     const newSpec = {
                                         ...spec,
-                                        inputs: spec.inputs.map((i, n2) => n2 === n ? {
-                                            ...i,
+                                        inputs: spec.inputs.map((i2, n2) => n2 === n ? {
+                                            ...i2,
                                             source: e.target.value
-                                        } : i),
+                                        } : i2),
                                     }
                                     updateCallback(newSpec);
                                 }
                             }
-                            defaultValue={spec.inputSource}
+                            defaultValue={i.source}
                         />
                     </div>
             )
