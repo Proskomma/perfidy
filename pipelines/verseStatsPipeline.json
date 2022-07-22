@@ -1,0 +1,81 @@
+[
+  {
+    "id": 2,
+    "title": "PSA USFM from DCS",
+    "type": "Source",
+    "sourceLocation": "http",
+    "outputType": "text",
+    "httpUrl": "https://git.door43.org/unfoldingWord/en_ust/raw/branch/master/19-PSA.usfm"
+  },
+  {
+    "id": 4,
+    "title": "UST Selectors",
+    "type": "Source",
+    "sourceLocation": "local",
+    "localValue": "{\n\"org\": \"dcs\",\n\"lang\": \"en\",\n\"abbr\": \"ust\"\n}",
+    "outputType": "json"
+  },
+  {
+    "id": 1,
+    "title": "PSA to PERF",
+    "name": "usfm2perf",
+    "type": "Transform",
+    "description": "Loads a USFM file into Proskomma and exports it as PERF",
+    "inputs": [
+      {
+        "name": "usfm",
+        "type": "text",
+        "source": "Source 2"
+      },
+      {
+        "name": "selectors",
+        "type": "json",
+        "source": "Source 4"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "perf",
+        "type": "json"
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "title": "Verse Stats on PSA",
+    "name": "verseStats",
+    "type": "Transform",
+    "description": "Produces statistics related to verse length from a PERF document",
+    "inputs": [
+      {
+        "name": "perf",
+        "type": "json",
+        "source": "Transform 1 perf"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "lengths",
+        "type": "json"
+      },
+      {
+        "name": "stats",
+        "type": "json"
+      }
+    ]
+  },
+  {
+    "id": 8,
+    "title": "Stats for PSA",
+    "type": "Display",
+    "inputType": "json",
+    "inputSource": "Transform 6 stats"
+  },
+  {
+    "id": 9,
+    "title": "PSA PERF",
+    "type": "Display",
+    "inputType": "json",
+    "inputSource": "Transform 1 perf"
+  }
+]
