@@ -11,15 +11,23 @@ npm start
 This is currently at an advanced conceptual stage. In the meantime there are tooltips for all buttons.
 
 ### About Pipelines
+#### Overview
+A Perfidy pipeline is a way to pass data from multiple places through multiple functions and then view multiple results. The pipeline consists of three types of step:
+- __Sources__, each of which provides exactly one piece of text or JSON data, either locally (ie from a textbox) or from an HTTP source
+- __Displays__, each of which displays exactly one piece of text or JSON data
+- __Transforms__, each of which has one or more input (from a source or from the output of another transform) and one or more output (which could be used by a display or another transform)
+
+Together, these steps form a directed graph through which data moves, being transformed along the way.
+
+#### Demo Pipeline
+Load `demo_pipeline.json` from the root of the repo using the `>P` button.
+
 #### Workflow
 - Create or load a pipeline in the `Spec` pane
 - Run it using the `>>` button at the top of the `Result` pane (console shows progress)
 - If there are issues, fix them, delete the results and try again
 - If there are no issues, eyeball the results and maybe save them
 - Maybe save your pipeline
-
-#### Demo Pipeline
-Load `demo_pipeline.json` from the root of the repo using the `>P` button.
 
 ### Development
 #### TLDR
