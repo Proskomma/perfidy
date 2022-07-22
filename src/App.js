@@ -228,7 +228,7 @@ function App() {
                                 })}
                                 disabled={results.length > 0 || runIssues.length > 0}
                             >
-                                >>
+            
                             </button>
                             </span>
                             <span className="tooltip">
