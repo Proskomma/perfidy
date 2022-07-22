@@ -51,7 +51,7 @@ header {
 
 .spec-inner, .result-inner {
     background-color: #3A3D45;
-    padding: 5px;
+    padding: 0px 5px 5px;
 }
 
 .spec-inner {
@@ -73,13 +73,15 @@ header {
 }
 
 .spec-title {
-    margin-top: 10px;
+    margin-top: 5px;
+    margin-bottom: 0px;
     color: white;
     text-align: center
 }
 
 .result-title {
-    margin-top: 10px;
+    margin-top: 5px;
+    margin-bottom: 0px;
     color: white;
     text-align: center
 }
@@ -89,7 +91,7 @@ header {
     background-color: transparent;
     color: #AAA;
     font-weight: bold;
-    font-size: x-large
+    font-size: large
 }
 
 .delete-step-button {
@@ -114,7 +116,6 @@ header {
     color: #AAA;
     font-weight: bold;
     font-size: medium;
-    margin-right: 1em;
 }
 
 .spec-button {
@@ -122,11 +123,11 @@ header {
     background-color: transparent;
     color: #AAA;
     font-weight: bold;
-    font-size: x-large
+    font-size: large
 }
 
 .step-spec {
-    margin-top: 0.5em;
+    margin-top: 0.25em;
     font-size: small;
     background-color: #282c34;
     padding: 0.25em;
@@ -179,7 +180,7 @@ header {
     background-color: transparent;
     color: #AAA;
     font-weight: bold;
-    font-size: x-large
+    font-size: large
 }
 
 .clear-results-button {
@@ -187,11 +188,11 @@ header {
     background-color: transparent;
     color: #AAA;
     font-weight: bold;
-    font-size: x-large
+    font-size: large
 }
 
 .display-result {
-    margin-top: 0.5em;
+    margin-top: 0.25em;
     font-size: large;
     background-color: #282c34;
     padding: 0.25em;
@@ -286,4 +287,19 @@ select {
 
 .tooltip:hover .tooltiptext {
     visibility: visible;
+}
+
+.collapsed-button-left, .collapsed-button-right {
+    background-color: transparent;
+    color: #AAA;
+    font-weight: bold;
+    font-size: x-small
+}
+
+.collapsed-button-left {
+    float: left;
+}
+
+.collapsed-button-right {
+    float: right;
 }

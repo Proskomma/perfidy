@@ -4,7 +4,7 @@ import SourceStepSpecDetails from "./SourceStepSpecDetails";
 import DisplayStepSpecDetails from "./DisplayStepSpecDetails";
 import TransformStepSpecDetails from "./TransformStepSpecDetails";
 
-function StepSpec({spec, deleteCallback, updateCallback, expand}) {
+function StepSpec({spec, deleteCallback, updateCallback, moveCallback, expand, position, nSteps}) {
 
     const [hasFocus, setHasFocus] = useState(false);
 
@@ -22,11 +22,49 @@ function StepSpec({spec, deleteCallback, updateCallback, expand}) {
         {
             !expand &&
             !hasFocus &&
-            <span onClick={() => setHasFocus(!hasFocus)}>
+            <>
+                <div className="collapsed-button-left tooltip">
+                    <span className="tooltiptext rtooltiptext">Move Step Up</span>
+                    <button
+                        className="collapsed-button-left"
+                        disabled={position === 0}
+                        onClick={() => moveCallback(position, 'up')}
+                    >
+                        ^
+                    </button>
+                </div>
+                <div className="collapsed-button-left tooltip">
+                    <span className="tooltiptext rtooltiptext">Move Step Down</span>
+                    <button
+                        className="collapsed-button-left"
+                        disabled={position === nSteps - 1}
+                        onClick={() => moveCallback(position, 'down')}
+                    >
+                        v
+                    </button>
+                </div>
                 {spec.type}
-                {" Step => "}
+                {": "}
                 {renderTitle(spec)}
-            </span>
+                <div className="collapsed-button-right tooltip">
+                    <span className="tooltiptext ltooltiptext">Delete this Step</span>
+                    <button
+                        className="collapsed-button-right"
+                        onClick={() => deleteCallback(spec.id)}
+                    >
+                        x
+                    </button>
+                </div>
+                <div className="collapsed-button-right tooltip">
+                    <span className="tooltiptext ltooltiptext">Expand this Step</span>
+                    <button
+                        className="collapsed-button-right"
+                        onClick={() => setHasFocus(!hasFocus)}
+                    >
+                        …
+                    </button>
+                </div>
+            </>
         }
         {
             (expand || hasFocus) &&

@@ -77,6 +77,17 @@ function App() {
         setSpecSteps(specSteps.map(v => v.id === newSpec.id ? newSpec : v));
     }
 
+    const moveCallback = (specPosition, direction) => {
+        let specs = [...specSteps];
+        specs.splice(specPosition, 1);
+        if (direction === "up") {
+            specs.splice(specPosition - 1, 0, specSteps[specPosition]);
+        } else {
+            specs.splice(specPosition + 1, 0, specSteps[specPosition]);
+        }
+        setSpecSteps(specs);
+    }
+
     const deleteCallback = deleteId => setSpecSteps(specSteps.filter(v => v.id !== deleteId));
 
     const clearResultsCallback = () => {
@@ -194,6 +205,9 @@ function App() {
                                         expand={expandSpecs}
                                         deleteCallback={deleteCallback}
                                         updateCallback={updateCallback}
+                                        moveCallback={moveCallback}
+                                        position={n}
+                                        nSteps={specSteps.length}
                                     />
                             )
                         }
