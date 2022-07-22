@@ -3,6 +3,7 @@ import usx2perf from '../transforms/usx2perf';
 import perf2usfm from '../transforms/perf2usfm';
 import perfUniqueWordCount from '../transforms/perfUniqueWordCount';
 import wordSearch from "../transforms/wordSearch";
+import justTheBible from "../transforms/justTheBible";
 
 const stepTemplates = {
     Source: {
@@ -25,6 +26,7 @@ const stepTemplates = {
         perf2usfm,
         perfUniqueWordCount,
         wordSearch,
+        justTheBible,
     },
     Display: {
         text: {

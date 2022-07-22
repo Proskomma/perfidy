@@ -41,6 +41,13 @@
     ]
   },
   {
+    "id": 14,
+    "title": "Original PERF",
+    "type": "Display",
+    "inputType": "json",
+    "inputSource": "Transform 3 perf"
+  },
+  {
     "id": 4,
     "title": "Roundtrip USFM",
     "name": "perf2usfm",
@@ -133,5 +140,32 @@
     "type": "Display",
     "inputType": "json",
     "inputSource": "Transform 10 matches"
+  },
+  {
+    "id": 12,
+    "title": "Simplify PERF",
+    "name": "justTheBible",
+    "type": "Transform",
+    "description": "Returns PERF stripped of most markup",
+    "inputs": [
+      {
+        "name": "perf",
+        "type": "json",
+        "source": "Transform 3 perf"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "perf",
+        "type": "json"
+      }
+    ]
+  },
+  {
+    "id": 13,
+    "title": "Simplified PERF",
+    "type": "Display",
+    "inputType": "json",
+    "inputSource": "Transform 12 perf"
   }
 ]

@@ -8,7 +8,7 @@ function DisplayResult({result}) {
             return <span className="no-value">NO VALUE</span>
         }
         if (typeof result.value !== 'string') {
-            return <ReactJson src={result.value} theme="monokai"/>;
+            return <ReactJson src={result.value} theme="monokai" collapsed={2}/>;
         } else if (result.value.length > 1024) {
             return result.value.slice(0, 1024) + ` ... [${result.value.length} bytes]`;
         } else {
