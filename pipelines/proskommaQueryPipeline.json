@@ -59,14 +59,14 @@
   },
   {
     "id": 5,
-    "title": "Result Data",
+    "title": "Query Result Data",
     "type": "Display",
     "inputType": "json",
     "inputSource": "Transform 4 data"
   },
   {
     "id": 6,
-    "title": "Result Errors",
+    "title": "Query Result Errors",
     "type": "Display",
     "inputType": "text",
     "inputSource": "Transform 4 errors"
