@@ -9,6 +9,7 @@ import proskommaQuery from "../transforms/proskommaQuery";
 import validate from "../transforms/validate";
 import diffText from "../transforms/diffText";
 import diffJson from "../transforms/diffJson";
+import mergePerfText from "../transforms/mergePerfText";
 
 const stepTemplates = {
     Transform: {
@@ -22,7 +23,8 @@ const stepTemplates = {
         proskommaQuery,
         validate,
         diffText,
-        diffJson
+        diffJson,
+        mergePerfText
     },
     Source: {
         local: {
