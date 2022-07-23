@@ -1,0 +1,124 @@
+[
+  {
+    "id": 1,
+    "title": "First Text",
+    "type": "Source",
+    "sourceLocation": "local",
+    "localValue": "Dear Frank,\nThank-you for a lovely day. I really enjoyed it.\nKindest regards,\nMark",
+    "outputType": "text"
+  },
+  {
+    "id": 2,
+    "title": "Second Text",
+    "type": "Source",
+    "sourceLocation": "local",
+    "localValue": "Dear Frank,\nThank-you for a great day. I really enjoyed it.\nKind regards,\nMark",
+    "outputType": "text"
+  },
+  {
+    "id": 4,
+    "title": "Text Diff Type",
+    "type": "Source",
+    "sourceLocation": "local",
+    "localValue": "words",
+    "outputType": "text"
+  },
+  {
+    "id": 3,
+    "title": "Do Text Diff",
+    "name": "diffText",
+    "type": "Transform",
+    "inputs": [
+      {
+        "name": "text1",
+        "type": "text",
+        "source": "Source 1"
+      },
+      {
+        "name": "text2",
+        "type": "text",
+        "source": "Source 2"
+      },
+      {
+        "name": "diffType",
+        "type": "text",
+        "source": "Source 4"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "diff",
+        "type": "json"
+      }
+    ],
+    "description": "TEXT=>TEXT: Text Diff using NPM 'diff'"
+  },
+  {
+    "id": 5,
+    "title": "Text Diff Report",
+    "type": "Display",
+    "inputType": "json",
+    "inputSource": "Transform 3 diff"
+  },
+  {
+    "id": 6,
+    "title": "First JSON",
+    "type": "Source",
+    "sourceLocation": "local",
+    "localValue": "{\n  \"org\": \"dcs\",\n  \"lang\": \"en\",\n  \"abbr\": \"ust\"\n}",
+    "outputType": "json"
+  },
+  {
+    "id": 7,
+    "title": "Second JSON",
+    "type": "Source",
+    "sourceLocation": "local",
+    "localValue": "{\n  \"org\": \"dcs\",\n  \"lang\": \"en\",\n  \"abbr\": \"ult\"\n}",
+    "outputType": "json"
+  },
+  {
+    "id": 10,
+    "title": "JSON Diff Type",
+    "type": "Source",
+    "sourceLocation": "local",
+    "localValue": "objects",
+    "outputType": "text"
+  },
+  {
+    "id": 8,
+    "title": "Do JSON Diff",
+    "name": "diffJson",
+    "type": "Transform",
+    "inputs": [
+      {
+        "name": "json1",
+        "type": "json",
+        "source": "Source 6"
+      },
+      {
+        "name": "json2",
+        "type": "json",
+        "source": "Source 7"
+      },
+      {
+        "name": "diffType",
+        "type": "text",
+        "source": "Source 10"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "diff",
+        "type": "json"
+      }
+    ],
+    "description": "JSON,JSON=>JSON: JSON Diff using NPM 'diff'"
+  },
+  {
+    "id": 9,
+    "title": "JSON Diff Report",
+    "type": "Display",
+    "inputType": "json",
+    "inputSource": "Transform 8 diff"
+  }
+]

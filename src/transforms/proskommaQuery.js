@@ -8,7 +8,7 @@ const proskommaQueryCode = function ({usfm, selectors, query, proskomma}) {
         const result = proskomma.gqlQuerySync(query);
         ret = {
             data: result.data || {},
-            errors: result.errors || {}
+            errors: result.errors || []
         };
     } catch (err) {
         ret = {data: {}, errors: {sys: `Exception: ${err}`}};
