@@ -1,0 +1,151 @@
+[
+  {
+    "id": 2,
+    "title": "USFM from DCS",
+    "type": "Source",
+    "sourceLocation": "http",
+    "outputType": "text",
+    "httpUrl": "https://git.door43.org/unfoldingWord/en_ust/raw/branch/master/57-TIT.usfm"
+  },
+  {
+    "id": 8,
+    "title": "Selectors",
+    "type": "Source",
+    "sourceLocation": "local",
+    "localValue": "{\n\"org\": \"dcs\",\n\"lang\": \"en\",\n\"abbr\": \"ust\"\n}",
+    "outputType": "json"
+  },
+  {
+    "id": 7,
+    "title": "Make PERF",
+    "name": "usfm2perf",
+    "type": "Transform",
+    "inputs": [
+      {
+        "name": "usfm",
+        "type": "text",
+        "source": "Source 2"
+      },
+      {
+        "name": "selectors",
+        "type": "json",
+        "source": "Source 8"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "perf",
+        "type": "json"
+      }
+    ],
+    "description": "USFM=>PERF: Conversion via Proskomma"
+  },
+  {
+    "id": 3,
+    "title": "Schema Type",
+    "type": "Source",
+    "sourceLocation": "local",
+    "localValue": "constraint",
+    "outputType": "text"
+  },
+  {
+    "id": 4,
+    "title": "Schema Key",
+    "type": "Source",
+    "sourceLocation": "local",
+    "localValue": "perfDocument",
+    "outputType": "text"
+  },
+  {
+    "id": 5,
+    "title": "Schema Version",
+    "type": "Source",
+    "sourceLocation": "local",
+    "localValue": "0.2.1",
+    "outputType": "text"
+  },
+  {
+    "id": 1,
+    "title": "Validate PERF",
+    "name": "validate",
+    "type": "Transform",
+    "inputs": [
+      {
+        "name": "data",
+        "type": "json",
+        "source": "Transform 7 perf"
+      },
+      {
+        "name": "type",
+        "type": "text",
+        "source": "Source 3"
+      },
+      {
+        "name": "key",
+        "type": "text",
+        "source": "Source 4"
+      },
+      {
+        "name": "version",
+        "type": "text",
+        "source": "Source 5"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "validation",
+        "type": "json"
+      }
+    ],
+    "description": "PERF=>JSON: Validates using Proskomma JSON Tools"
+  },
+  {
+    "id": 6,
+    "title": "Validation Report for PERF",
+    "type": "Display",
+    "inputType": "json",
+    "inputSource": "Transform 1 validation"
+  },
+  {
+    "id": 9,
+    "title": "Validate Selectors as PERF",
+    "name": "validate",
+    "type": "Transform",
+    "inputs": [
+      {
+        "name": "data",
+        "type": "json",
+        "source": "Source 8"
+      },
+      {
+        "name": "type",
+        "type": "text",
+        "source": "Source 3"
+      },
+      {
+        "name": "key",
+        "type": "text",
+        "source": "Source 4"
+      },
+      {
+        "name": "version",
+        "type": "text",
+        "source": "Source 5"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "validation",
+        "type": "json"
+      }
+    ],
+    "description": "PERF=>JSON: Validates using Proskomma JSON Tools"
+  },
+  {
+    "id": 10,
+    "title": "Validation Report for Selectors as PERF",
+    "type": "Display",
+    "inputType": "json",
+    "inputSource": "Transform 9 validation"
+  }
+]

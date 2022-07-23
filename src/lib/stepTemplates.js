@@ -1,13 +1,25 @@
 import usfm2perf from '../transforms/usfm2perf';
 import usx2perf from '../transforms/usx2perf';
 import perf2usfm from '../transforms/perf2usfm';
-import perfUniqueWordCount from '../transforms/perfUniqueWordCount';
+import wordFrequency from '../transforms/wordFrequency';
 import wordSearch from "../transforms/wordSearch";
 import justTheBible from "../transforms/justTheBible";
 import verseStats from "../transforms/verseStats";
 import proskommaQuery from "../transforms/proskommaQuery";
+import validate from "../transforms/validate";
 
 const stepTemplates = {
+    Transform: {
+        usfm2perf,
+        usx2perf,
+        perf2usfm,
+        wordFrequency,
+        wordSearch,
+        justTheBible,
+        verseStats,
+        proskommaQuery,
+        validate
+    },
     Source: {
         local: {
             type: "Source",
@@ -21,16 +33,6 @@ const stepTemplates = {
             httpUrl: "",
             outputType: "text"
         }
-    },
-    Transform: {
-        usfm2perf,
-        usx2perf,
-        perf2usfm,
-        perfUniqueWordCount,
-        wordSearch,
-        justTheBible,
-        verseStats,
-        proskommaQuery,
     },
     Display: {
         text: {
