@@ -303,3 +303,15 @@ select {
 .collapsed-button-right {
     float: right;
 }
+
+.transform-help-content {
+    float: right;
+    width: 150px;
+    background-color: transparent;
+    color: #fff;
+    text-align: center;
+    border-radius: 3px;
+    padding: 5px;
+    position: relative;
+    right: 2em;
+}

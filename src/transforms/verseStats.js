@@ -84,20 +84,17 @@ const verseStatsActions = {
                 processVerse(workspace, output);
                 output.stats.nVerses = Object.values(output.stats.lengthFrequencies).reduce((a, b) => a + b);
                 const lengthInts = Object.keys(output.stats.lengthFrequencies).map(k => parseInt(k));
-                output.stats.max = Math.max(...lengthInts);
-                output.stats.min = Math.min(...lengthInts);
-                output.stats.total = Object.entries(output.stats.lengthFrequencies)
+                output.stats.maxVerseLength = Math.max(...lengthInts);
+                output.stats.minVerseLength = Math.min(...lengthInts);
+                output.stats.nWords = Object.entries(output.stats.lengthFrequencies)
                     .map(tpl => parseInt(tpl[0]) * tpl[1])
                     .reduce((a, b) => a + b);
-                output.stats.mean = output.stats.total / output.stats.nVerses;
+                output.stats.meanVerseLength = output.stats.nWords / output.stats.nVerses;
                 for (const cvChapter of Object.keys(output.stats.cvData)) {
                     output.stats.cvData[cvChapter].firstVerse = Math.min(...output.stats.cvData[cvChapter].verseNumbers);
                     output.stats.cvData[cvChapter].lastVerse = Math.max(...output.stats.cvData[cvChapter].verseNumbers);
                     delete output.stats.cvData[cvChapter].verseNumbers;
-
                 }
-
-
             }
         }
     ]
