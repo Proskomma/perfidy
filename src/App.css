@@ -310,8 +310,7 @@ select {
     background-color: transparent;
     color: #fff;
     text-align: center;
-    border-radius: 3px;
-    padding: 5px;
     position: relative;
-    right: 2em;
+    right: 0em;
+    top: 10px;
 }

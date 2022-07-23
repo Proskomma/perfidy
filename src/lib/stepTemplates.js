@@ -7,6 +7,8 @@ import justTheBible from "../transforms/justTheBible";
 import verseStats from "../transforms/verseStats";
 import proskommaQuery from "../transforms/proskommaQuery";
 import validate from "../transforms/validate";
+import diffText from "../transforms/diffText";
+import diffJson from "../transforms/diffJson";
 
 const stepTemplates = {
     Transform: {
@@ -18,7 +20,9 @@ const stepTemplates = {
         justTheBible,
         verseStats,
         proskommaQuery,
-        validate
+        validate,
+        diffText,
+        diffJson
     },
     Source: {
         local: {
