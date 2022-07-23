@@ -62,7 +62,7 @@ const wordSearchCode = function ({perf, searchString}) {
 const wordSearch = {
     name: "wordSearch",
     type: "Transform",
-    description: "Searches for a word in a PERF document",
+    description: "PERF=>JSON: Searches for a word",
     inputs: [
         {
             name: "perf",

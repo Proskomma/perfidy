@@ -79,7 +79,7 @@ const justTheBibleCode = function ({perf}) {
 const justTheBible = {
     name: "justTheBible",
     type: "Transform",
-    description: "Returns PERF stripped of most markup",
+    description: "PERF=>PERF: Strips most markup",
     inputs: [
         {
             name: "perf",

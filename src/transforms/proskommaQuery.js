@@ -20,7 +20,7 @@ const proskommaQueryCode = function ({usfm, selectors, query, proskomma}) {
 const proskommaQuery = {
     name: "proskommaQuery",
     type: "Transform",
-    description: "Loads a USFM file into Proskomma, runs a query, and exports the GraphQL data and error objects",
+    description: "USFM=>JSON: Loads a USFM file into Proskomma, runs a query, and exports the GraphQL data and error objects",
     inputs: [
         {
             name: "usfm",

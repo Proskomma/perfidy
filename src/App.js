@@ -69,6 +69,7 @@ function App() {
                 delete newSpec[key];
             }
         }
+        delete newSpec.description;
         for (const key of Object.keys(newTemplate)) {
             if (!Object.keys(newSpec).includes(key)) {
                 newSpec[key] = newTemplate[key];

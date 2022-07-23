@@ -110,7 +110,7 @@ const verseStatsCode = function ({perf}) {
 const verseStats = {
     name: "verseStats",
     type: "Transform",
-    description: "Generates verse statistics",
+    description: "PERF=>JSON: Generates verse statistics",
     inputs: [
         {
             name: "perf",

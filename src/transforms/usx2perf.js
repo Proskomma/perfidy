@@ -11,7 +11,7 @@ const usx2perfCode = function ({usx, selectors, proskomma}) {
 const usx2perf = {
     name: "usx2perf",
     type: "Transform",
-    description: "Loads a USX file into Proskomma and exports it as PERF",
+    description: "USX=>PERF: Conversion via Proskomma",
     inputs: [
         {
             name: "usx",
