@@ -48,7 +48,7 @@ const perfUniqueWordCountCode = function ({perf}) {
 const perfUniqueWordCount = {
     name: "perfUniqueWordCount",
         type: "Transform",
-        description: "Counts the occurrence of each word in a PERF document",
+        description: "PERF=>JSON: Calculates word frequency",
         inputs: [
         {
             name: "perf",

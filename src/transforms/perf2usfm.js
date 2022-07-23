@@ -108,7 +108,7 @@ const perf2usfmCode = function ({perf}) {
 const perf2usfm = {
     name: "perf2usfm",
     type: "Transform",
-    description: "Converts a PERF document into USFM",
+    description: "PERF=>USFM",
     inputs: [
         {
             name: "perf",

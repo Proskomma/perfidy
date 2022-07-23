@@ -1,0 +1,142 @@
+[
+  {
+    "id": 2,
+    "title": "UST PSA USFM from DCS",
+    "type": "Source",
+    "sourceLocation": "http",
+    "outputType": "text",
+    "httpUrl": "https://git.door43.org/unfoldingWord/en_ust/raw/branch/master/19-PSA.usfm"
+  },
+  {
+    "id": 4,
+    "title": "UST Selectors",
+    "type": "Source",
+    "sourceLocation": "local",
+    "localValue": "{\n\"org\": \"dcs\",\n\"lang\": \"en\",\n\"abbr\": \"ust\"\n}",
+    "outputType": "json"
+  },
+  {
+    "id": 10,
+    "title": "ULT PSA USFM from DCS",
+    "type": "Source",
+    "sourceLocation": "http",
+    "outputType": "text",
+    "httpUrl": "https://git.door43.org/unfoldingWord/en_ult/raw/branch/master/19-PSA.usfm"
+  },
+  {
+    "id": 11,
+    "title": "ULT Selectors",
+    "type": "Source",
+    "sourceLocation": "local",
+    "localValue": "{\n\"org\": \"dcs\",\n\"lang\": \"en\",\n\"abbr\": \"ult\"\n}",
+    "outputType": "json"
+  },
+  {
+    "id": 1,
+    "title": "Make UST PERF",
+    "name": "usfm2perf",
+    "type": "Transform",
+    "description": "Loads a USFM file into Proskomma and exports it as PERF",
+    "inputs": [
+      {
+        "name": "usfm",
+        "type": "text",
+        "source": "Source 2"
+      },
+      {
+        "name": "selectors",
+        "type": "json",
+        "source": "Source 4"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "perf",
+        "type": "json"
+      }
+    ]
+  },
+  {
+    "id": 12,
+    "title": "Make ULT PERF",
+    "name": "usfm2perf",
+    "type": "Transform",
+    "description": "Loads a USFM file into Proskomma and exports it as PERF",
+    "inputs": [
+      {
+        "name": "usfm",
+        "type": "text",
+        "source": "Source 10"
+      },
+      {
+        "name": "selectors",
+        "type": "json",
+        "source": "Source 11"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "perf",
+        "type": "json"
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "title": "Make Verse Stats for UST",
+    "name": "verseStats",
+    "type": "Transform",
+    "description": "Generates verse statistics",
+    "inputs": [
+      {
+        "name": "perf",
+        "type": "json",
+        "source": "Transform 1 perf"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "lengths",
+        "type": "json"
+      },
+      {
+        "name": "stats",
+        "type": "json"
+      }
+    ]
+  },
+  {
+    "id": 15,
+    "title": "Make Verse Stats for ULT",
+    "name": "verseStats",
+    "type": "Transform",
+    "description": "Generates verse statistics",
+    "inputs": [
+      {
+        "name": "perf",
+        "type": "json",
+        "source": "Transform 12 perf"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "stats",
+        "type": "json"
+      }
+    ]
+  },
+  {
+    "id": 14,
+    "title": "Verse Stats for UST PSA",
+    "type": "Display",
+    "inputType": "json",
+    "inputSource": "Transform 6 stats"
+  },
+  {
+    "id": 8,
+    "title": "Verse Stats for ULT PSA",
+    "type": "Display",
+    "inputType": "json",
+    "inputSource": "Transform 15 stats"
+  }
+]

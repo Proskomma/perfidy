@@ -2,6 +2,7 @@ import React from "react";
 import stepTemplates from "../lib/stepTemplates";
 
 function TransformStepSpecDetails({spec, updateCallback}) {
+
     return <>
         <div className="step-spec-field">
             <label className="step-spec-field-label" htmlFor={`transform-${spec.id}`}>Transform</label>
@@ -19,6 +20,7 @@ function TransformStepSpecDetails({spec, updateCallback}) {
                     Object.keys(stepTemplates["Transform"]).map((op, n) => <option key={n} value={op}>{op}</option>)
                 }
             </select>
+            <div className="transform-help-content">{spec.description}</div>
         </div>
         <div className="step-spec-field step-spec-field-heading">Input:</div>
         {

@@ -69,6 +69,7 @@ function App() {
                 delete newSpec[key];
             }
         }
+        delete newSpec.description;
         for (const key of Object.keys(newTemplate)) {
             if (!Object.keys(newSpec).includes(key)) {
                 newSpec[key] = newTemplate[key];
@@ -228,7 +229,7 @@ function App() {
                                 })}
                                 disabled={results.length > 0 || runIssues.length > 0}
                             >
-                                >>
+                                {">>"}
                             </button>
                             </span>
                             <span className="tooltip">
