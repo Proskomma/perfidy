@@ -184,6 +184,20 @@
     "description": "TEXT,TEXT=>JSON: Text Diff using NPM 'diff'"
   },
   {
+    "id": 16,
+    "title": "Pre-Roundtrip USFM",
+    "type": "Display",
+    "inputType": "text",
+    "inputSource": "Transform 9 usfm"
+  },
+  {
+    "id": 15,
+    "title": "Roundtripped USFM",
+    "type": "Display",
+    "inputType": "text",
+    "inputSource": "Transform 11 usfm"
+  },
+  {
     "id": 14,
     "title": "Diff Roundripped USFM",
     "type": "Display",
