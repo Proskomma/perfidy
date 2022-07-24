@@ -96,6 +96,8 @@ function App() {
         setRunIssues([]);
     }
 
+    console.log("APP");
+
     return (
         <div className="App">
             <header className="App-header">
