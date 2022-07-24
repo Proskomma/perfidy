@@ -35,9 +35,9 @@ const localJustTheBibleActions = {
     ],
     blockGraft: [
         {
-            description: "Ignore blockGraft events",
-            test: () => true,
-            action: () => {
+            description: "Ignore blockGraft events, except for title (\\mt)",
+            test: (environment) => environment.context.sequences[0].block.subType !== 'title',
+            action: (environment) => {
             }
         },
     ],
