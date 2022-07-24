@@ -1,4 +1,4 @@
-# Perflow
+# Perfidy
 ## A playground for Proskomma's PERF
 
 ### Installation
