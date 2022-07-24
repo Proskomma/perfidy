@@ -10,21 +10,23 @@ import validate from "../transforms/validate";
 import diffText from "../transforms/diffText";
 import diffJson from "../transforms/diffJson";
 import mergePerfText from "../transforms/mergePerfText";
+import identity from "../transforms/identity";
 
 const stepTemplates = {
     Transform: {
         usfm2perf,
         usx2perf,
-        perf2usfm,
-        wordFrequency,
-        wordSearch,
-        justTheBible,
-        verseStats,
         proskommaQuery,
         validate,
         diffText,
         diffJson,
-        mergePerfText
+        identity,
+        justTheBible,
+        mergePerfText,
+        wordFrequency,
+        wordSearch,
+        verseStats,
+        perf2usfm,
     },
     Source: {
         local: {

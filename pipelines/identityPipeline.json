@@ -42,8 +42,8 @@
   },
   {
     "id": 4,
-    "title": "Simplify PERF",
-    "name": "justTheBible",
+    "title": "Identity Transform",
+    "name": "identity",
     "type": "Transform",
     "inputs": [
       {
@@ -58,27 +58,7 @@
         "type": "json"
       }
     ],
-    "description": "PERF=>PERF: Strips most markup"
-  },
-  {
-    "id": 7,
-    "title": "Merge PERF text",
-    "name": "mergePerfText",
-    "type": "Transform",
-    "inputs": [
-      {
-        "name": "perf",
-        "type": "json",
-        "source": "Transform 4 perf"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "perf",
-        "type": "json"
-      }
-    ],
-    "description": "PERF=>PERF: Merge consecutive text strings"
+    "description": "PERF=>PERF: Deep Copy"
   },
   {
     "id": 5,
@@ -89,16 +69,9 @@
   },
   {
     "id": 6,
-    "title": "Simplified PERF",
-    "type": "Display",
-    "inputType": "text",
-    "inputSource": "Transform 4 perf"
-  },
-  {
-    "id": 8,
-    "title": "Text-Merged PERF",
+    "title": "Identity PERF",
     "type": "Display",
     "inputType": "json",
-    "inputSource": "Transform 7 perf"
+    "inputSource": "Transform 4 perf"
   }
 ]
