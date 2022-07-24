@@ -142,6 +142,9 @@ Note - in the case of multiple actions returning falsy values - that conditions 
 
 `proskomma-json-tools` exports a `mergeActions` function which may be used to combine multiple action objects.
 
+#### The Identity Transform
+This is a PERF transform which uses PerfRender events to build a deep copy of its input. Used in isolation, this is rarely useful. However, when used as a default with other actions, via `mergeActions`, it is possible to make changes to a PERF document by specifying the changes and copying the rest. The `justTheBible` transform is a simple example of this - the identity transform behaviour is overriden for the classes of data that are to be removed.
+
 #### Development Aids
 PerfRender may be instantiated with an optional `debugLevel` value between 0 and 2:
 ```
