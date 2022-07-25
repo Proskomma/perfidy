@@ -103,10 +103,51 @@ const localToUsfmActions = {
                 output.usfm = reorderedChapters.join('');
             }
         },
-    ]
+    ],
+    startMilestone: [
+        {
+            description: "Output start of milestone",
+            test: () => true,
+            action: ({context, workspace}) => {
+                console.log("start of milestone")
+                console.log(context)
+            }
+        }
+    ],
+    endMilestone: [
+        {
+            description: "Output end of milestone",
+            test: () => true,
+            action: ({context, workspace}) => {
+                console.log("end of milestone")
+                console.log(context)
+            }
+        }
+    ],
+    startWrapper: [
+        {
+            description: "Output start of wrapper",
+            test: () => true,
+            action: ({context, workspace}) => {
+                console.log("start of wrapper")
+                console.log(context)
+            }
+        }
+    ],
+    endWrapper: [
+        {
+            description: "Output end of wrapper",
+            test: () => true,
+            action: ({context, workspace}) => {
+                console.log("end of wrapper")
+                console.log(context)
+            }
+        }
+    ],
 };
 
 const perf2usfmCode = function ({perf}) {
+//    const cl = new ProskommaRenderFromJson({debugLevel: 1, srcJson: perf, actions: localToUsfmActions});
     const cl = new ProskommaRenderFromJson({srcJson: perf, actions: localToUsfmActions});
     const output = {};
     cl.renderDocument({docId: "", config: {}, output});
