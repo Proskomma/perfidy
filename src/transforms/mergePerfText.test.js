@@ -1,7 +1,7 @@
 import mergePerfText from './mergePerfText';
 import perfWrapper from './__data__/perfWrapper';
 
-test('justTheBible output matches expected', () => {
+test('mergePerfText output matches expected', () => {
     const perf = perfWrapper({blocks:[
             {
                 "type": "paragraph",
