@@ -113,7 +113,7 @@ const localToUsfmActions = {
                 workspace.usfmBits.push(`\\zaln-s |`);
                 let separatorCh = "";
                 Object.keys(element.atts).forEach(key => {
-                    if (separatorCh.startsWith("x-")){
+                    if (key.startsWith("x-")){
                         workspace.usfmBits.push(`${separatorCh}${key}="${element.atts[key]}"`);
                         separatorCh = " "
                     }
