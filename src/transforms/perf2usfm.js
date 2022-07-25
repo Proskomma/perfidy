@@ -82,7 +82,7 @@ const localToUsfmActions = {
                 if (element.subType === 'chapter') {
                     workspace.usfmBits.push(`\n\\c ${element.atts['number']}\n`);
                 } else if (element.subType === 'verses') {
-                    workspace.usfmBits.push(`\\v ${element.atts['number']} `);
+                    workspace.usfmBits.push(`\\v ${element.atts['number']}\n`);
                 }
             }
         },
