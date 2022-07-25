@@ -98,7 +98,7 @@ const localToUsfmActions = {
                         const restA = a.slice(0,a.length-2)
                         return [...restA, b, lastA]
                     }
-                    return [...a,b]
+                    return a.concat([b])
                 });
                 output.usfm = reorderedChapters.join('');
             }
