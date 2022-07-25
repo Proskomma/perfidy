@@ -41,46 +41,6 @@
     "description": "USFM=>PERF: Conversion via Proskomma"
   },
   {
-    "id": 4,
-    "title": "Simplify PERF",
-    "name": "justTheBible",
-    "type": "Transform",
-    "inputs": [
-      {
-        "name": "perf",
-        "type": "json",
-        "source": "Transform 3 perf"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "perf",
-        "type": "json"
-      }
-    ],
-    "description": "PERF=>PERF: Strips most markup"
-  },
-  {
-    "id": 7,
-    "title": "Merge PERF text",
-    "name": "mergePerfText",
-    "type": "Transform",
-    "inputs": [
-      {
-        "name": "perf",
-        "type": "json",
-        "source": "Transform 4 perf"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "perf",
-        "type": "json"
-      }
-    ],
-    "description": "PERF=>PERF: Merge consecutive text strings"
-  },
-  {
     "id": 9,
     "title": "Roundtrip back to USFM x1",
     "name": "perf2usfm",
@@ -89,7 +49,7 @@
       {
         "name": "perf",
         "type": "json",
-        "source": "Transform 7 perf"
+        "source": "Transform 3 perf"
       }
     ],
     "outputs": [
