@@ -4,6 +4,7 @@ import perf2usfm from '../transforms/perf2usfm';
 import wordFrequency from '../transforms/wordFrequency';
 import wordSearch from "../transforms/wordSearch";
 import justTheBible from "../transforms/justTheBible";
+import verseWords from '../transforms/verseWords';
 import verseStats from "../transforms/verseStats";
 import proskommaQuery from "../transforms/proskommaQuery";
 import validate from "../transforms/validate";
@@ -26,6 +27,7 @@ const stepTemplates = {
         mergePerfText,
         wordFrequency,
         wordSearch,
+        verseWords,
         verseStats,
         perf2usfm,
         searchRegexGen,
