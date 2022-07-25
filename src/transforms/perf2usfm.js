@@ -92,7 +92,15 @@ const localToUsfmActions = {
             description: "Build output",
             test: () => true,
             action: ({workspace, output}) => {
-                output.usfm = workspace.usfmBits.join('');
+                const reorderedChapters = workspace.usfmBits.reduce((a,b) =>{
+                    if (a && a.length>0 && b.startsWith(`\n\\c `)){
+                        const lastA = a[a.length-1]
+                        const restA = a.slice(0,a.length-2)
+                        return [...restA, b, lastA]
+                    }
+                    return [...a,b]
+                });
+                output.usfm = reorderedChapters.join('');
             }
         },
     ]
