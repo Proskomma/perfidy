@@ -10,7 +10,6 @@ test('justTheBible output matches expected', () => {
                 {
                     "type": "start_milestone",
                     "subtype": "usfm:ts",
-                    "atts": {}
                 },
                 {
                     "type": "mark",
@@ -29,33 +28,6 @@ test('justTheBible output matches expected', () => {
                 {
                     "type": "start_milestone",
                     "subtype": "usfm:zaln",
-                    "atts": {
-                        "x-strong": [
-                            "G39720"
-                        ],
-                        "x-lemma": [
-                            "Παῦλος"
-                        ],
-                        "x-morph": [
-                            "Gr",
-                            "N",
-                            "",
-                            "",
-                            "",
-                            "",
-                            "NMS",
-                            ""
-                        ],
-                        "x-occurrence": [
-                            "1"
-                        ],
-                        "x-occurrences": [
-                            "1"
-                        ],
-                        "x-content": [
-                            "Παῦλος"
-                        ]
-                    }
                 },
                 {
                     "type": "wrapper",
@@ -63,14 +35,6 @@ test('justTheBible output matches expected', () => {
                     "content": [
                         "I"
                     ],
-                    "atts": {
-                        "x-occurrence": [
-                            "1"
-                        ],
-                        "x-occurrences": [
-                            "3"
-                        ]
-                    }
                 },
                 ", ",
                 {
@@ -79,14 +43,6 @@ test('justTheBible output matches expected', () => {
                     "content": [
                         "Paul"
                     ],
-                    "atts": {
-                        "x-occurrence": [
-                            "1"
-                        ],
-                        "x-occurrences": [
-                            "1"
-                        ]
-                    }
                 },
                 ", ",
             ]

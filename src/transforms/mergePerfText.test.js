@@ -7,20 +7,6 @@ test('justTheBible output matches expected', () => {
                 "type": "paragraph",
                 "subtype": "usfm:p",
                 "content": [
-                    {
-                        "type": "mark",
-                        "subtype": "chapter",
-                        "atts": {
-                            "number": "1"
-                        }
-                    },
-                    {
-                        "type": "mark",
-                        "subtype": "verses",
-                        "atts": {
-                            "number": "1"
-                        }
-                    },
                     "I",
                     ", ",
                     "Paul",
@@ -36,20 +22,6 @@ test('justTheBible output matches expected', () => {
                 "type": "paragraph",
                 "subtype": "usfm:p",
                 "content": [
-                    {
-                        "type": "mark",
-                        "subtype": "chapter",
-                        "atts": {
-                            "number": "1"
-                        }
-                    },
-                    {
-                        "type": "mark",
-                        "subtype": "verses",
-                        "atts": {
-                            "number": "1"
-                        }
-                    },
                     "I, Paul, ",
                 ]
             },
