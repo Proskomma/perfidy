@@ -1,0 +1,128 @@
+[
+  {
+    "id": 1,
+    "title": "USFM from DCS",
+    "type": "Source",
+    "sourceLocation": "http",
+    "outputType": "text",
+    "httpUrl": "https://git.door43.org/unfoldingWord/en_ust/raw/branch/master/57-TIT.usfm"
+  },
+  {
+    "id": 2,
+    "title": "Selectors",
+    "type": "Source",
+    "sourceLocation": "local",
+    "localValue": "{\"org\": \"dcs\", \"lang\": \"en\", \"abbr\": \"ust\"}",
+    "outputType": "json"
+  },
+  {
+    "id": 3,
+    "title": "USFM to PERF",
+    "name": "usfm2perf",
+    "type": "Transform",
+    "inputs": [
+      {
+        "name": "usfm",
+        "type": "text",
+        "source": "Source 1"
+      },
+      {
+        "name": "selectors",
+        "type": "json",
+        "source": "Source 2"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "perf",
+        "type": "json"
+      }
+    ],
+    "description": "USFM=>PERF: Conversion via Proskomma"
+  },
+  {
+    "id": 4,
+    "title": "Transform 4",
+    "name": "verseWords",
+    "type": "Transform",
+    "inputs": [
+      {
+        "name": "perf",
+        "type": "json",
+        "source": "Transform 3 perf"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "verseWords",
+        "type": "json"
+      }
+    ],
+    "description": "PERF=>JSON: Counts words occurrences"
+  },
+  {
+    "id": 5,
+    "title": "Verse Words",
+    "type": "Display",
+    "inputType": "json",
+    "inputSource": "Transform 4 verseWords"
+  },
+  {
+    "id": 6,
+    "title": "Strip Markup",
+    "name": "stripMarkup",
+    "type": "Transform",
+    "inputs": [
+      {
+        "name": "perf",
+        "type": "json",
+        "source": "Transform 3 perf"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "perf",
+        "type": "json"
+      },
+      {
+        "name": "stripped",
+        "type": "json"
+      }
+    ],
+    "description": "PERF=>PERF: Strips alignment markup"
+  },
+  {
+    "id": 9,
+    "title": "Merge Text",
+    "name": "mergePerfText",
+    "type": "Transform",
+    "inputs": [
+      {
+        "name": "perf",
+        "type": "json",
+        "source": "Transform 6 perf"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "perf",
+        "type": "json"
+      }
+    ],
+    "description": "PERF=>PERF: Merge consecutive text strings"
+  },
+  {
+    "id": 8,
+    "title": "Stripped markup",
+    "type": "Display",
+    "inputType": "json",
+    "inputSource": "Transform 6 stripped"
+  },
+  {
+    "id": 7,
+    "title": "Stripped perf",
+    "type": "Display",
+    "inputType": "json",
+    "inputSource": "Transform 9 perf"
+  }
+]

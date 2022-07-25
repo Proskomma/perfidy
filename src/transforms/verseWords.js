@@ -1,4 +1,5 @@
-import {ProskommaRenderFromJson} from 'proskomma-json-tools';
+import { ProskommaRenderFromJson } from 'proskomma-json-tools';
+import xre from "xregexp";
 
 const localVerseWordsActions = {
     startDocument: [
@@ -37,7 +38,8 @@ const localVerseWordsActions = {
             test: () => true,
             action: ({ context, workspace, output }) => {
                 const text = context.sequences[0].element.text;
-                const words = text.split(/\s+/);
+                const re = xre('([\\p{Letter}\\p{Number}\\p{Mark}\\u2060]{1,127})')
+                const words = xre.match(text, re, "all");
                 for (const word of words) {
                     if (output.cv[workspace.chapter][workspace.verses][word]) {
                         output.cv[workspace.chapter][workspace.verses][word] += 1;
