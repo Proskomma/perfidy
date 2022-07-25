@@ -108,9 +108,17 @@ const localToUsfmActions = {
         {
             description: "Output start of milestone",
             test: () => true,
-            action: ({context, workspace}) => {
-                console.log("start of milestone")
-                console.log(context)
+            action: ({context,workspace}) => {
+                const element = context.sequences[0].element;
+                workspace.usfmBits.push(`\\zaln-s |`);
+                let separatorCh = "";
+                Object.keys(element.atts).forEach(key => {
+                    if (separatorCh.startsWith("x-")){
+                        workspace.usfmBits.push(`${separatorCh}${key}="${element.atts[key]}"`);
+                        separatorCh = " "
+                    }
+                })
+                workspace.usfmBits.push(`\\*`);
             }
         }
     ],
@@ -118,9 +126,8 @@ const localToUsfmActions = {
         {
             description: "Output end of milestone",
             test: () => true,
-            action: ({context, workspace}) => {
-                console.log("end of milestone")
-                console.log(context)
+            action: ({workspace}) => {
+                workspace.usfmBits.push(`\\zaln-e\\*`);
             }
         }
     ],
@@ -128,9 +135,7 @@ const localToUsfmActions = {
         {
             description: "Output start of wrapper",
             test: () => true,
-            action: ({context, workspace}) => {
-                console.log("start of wrapper")
-                console.log(context)
+            action: ({context,workspace}) => {
             }
         }
     ],
@@ -138,16 +143,13 @@ const localToUsfmActions = {
         {
             description: "Output end of wrapper",
             test: () => true,
-            action: ({context, workspace}) => {
-                console.log("end of wrapper")
-                console.log(context)
+            action: ({context,workspace}) => {
             }
         }
     ],
 };
 
 const perf2usfmCode = function ({perf}) {
-//    const cl = new ProskommaRenderFromJson({debugLevel: 1, srcJson: perf, actions: localToUsfmActions});
     const cl = new ProskommaRenderFromJson({srcJson: perf, actions: localToUsfmActions});
     const output = {};
     cl.renderDocument({docId: "", config: {}, output});
