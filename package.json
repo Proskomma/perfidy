@@ -16,7 +16,8 @@
     "react-dom": "^18.2.0",
     "react-json-view": "^1.21.3",
     "react-scripts": "5.0.1",
-    "web-vitals": "^2.1.0"
+    "web-vitals": "^2.1.0",
+    "xregexp": "^5.1.1"
   },
   "scripts": {
     "start": "react-scripts start",

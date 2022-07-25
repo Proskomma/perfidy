@@ -11,6 +11,7 @@ import diffText from "../transforms/diffText";
 import diffJson from "../transforms/diffJson";
 import mergePerfText from "../transforms/mergePerfText";
 import identity from "../transforms/identity";
+import searchRegexGen from "../transforms/searchRegexGen";
 
 const stepTemplates = {
     Transform: {
@@ -27,6 +28,7 @@ const stepTemplates = {
         wordSearch,
         verseStats,
         perf2usfm,
+        searchRegexGen,
     },
     Source: {
         local: {
