@@ -110,15 +110,18 @@ const localToUsfmActions = {
             test: () => true,
             action: ({context,workspace}) => {
                 const element = context.sequences[0].element;
-                workspace.usfmBits.push(`\\zaln-s |`);
-                let separatorCh = "";
-                Object.keys(element.atts).forEach(key => {
-                    if (key.startsWith("x-")){
+                console.log(element)
+                if (element 
+                    && element.atts 
+                    && Object.keys(element.atts).length>0){
+                    workspace.usfmBits.push(`\\zaln-s |`);
+                    let separatorCh = "";
+                    Object.keys(element.atts).forEach(key => {
                         workspace.usfmBits.push(`${separatorCh}${key}="${element.atts[key]}"`);
                         separatorCh = " "
-                    }
-                })
-                workspace.usfmBits.push(`\\*`);
+                    })
+                    workspace.usfmBits.push(`\\*`);
+                }
             }
         }
     ],
@@ -134,15 +137,16 @@ const localToUsfmActions = {
     startWrapper: [
         {
             description: "Output start of wrapper",
-            test: () => true,
+            test: () => false,
             action: ({context,workspace}) => {
+                const element = context.sequences[0].element;
             }
         }
     ],
     endWrapper: [
         {
             description: "Output end of wrapper",
-            test: () => true,
+            test: () => false,
             action: ({context,workspace}) => {
             }
         }
