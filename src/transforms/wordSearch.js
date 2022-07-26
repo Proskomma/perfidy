@@ -40,9 +40,6 @@ const localWordSearchActions = {
             action: ({config, context, workspace, output}) => {
                 const text = context.sequences[0].element.text;
                 workspace.chunks.add(text);
-                // if (text.toLowerCase().includes(config.toSearch.toLowerCase())) {
-                //     workspace.matches.add(`${workspace.chapter}:${workspace.verses}`);
-                // }
             }
         },
     ],
@@ -65,11 +62,12 @@ const doSearch = function(workspace, config){
     if(workspace.chunks.size){
         let text = '' 
         workspace.chunks.forEach(( value ) => {
-            if(text){
+            if(text && text.substring(text.length-1) != ' '){
                 text += ' ';
             }
             text += value;
         });
+        console.log(`${text}`);
         if (text.toLowerCase().includes(config.toSearch.toLowerCase())) {
             workspace.matches.add(`${workspace.chapter}:${workspace.verses}`);
         }
