@@ -62,23 +62,31 @@ const doSearch = function(workspace, config){
     if(workspace.chunks.size){
         let text = '' 
         workspace.chunks.forEach(( value ) => {
-            if(text && text.substring(text.length-1) != ' '){
+            let lastChar = text && text.substring(text.length-1)
+            // TODO : need to handle punctation properly
+            if(lastChar !== ' ' && value !== ' '){
                 text += ' ';
             }
             text += value;
         });
-        console.log(`${text}`);
-        if (text.toLowerCase().includes(config.toSearch.toLowerCase())) {
-            workspace.matches.add(`${workspace.chapter}:${workspace.verses}`);
+        if(config.ignoreCase === '1'){
+            if (text.toLowerCase().includes(config.toSearch.toLowerCase())) {
+                workspace.matches.add(`${workspace.chapter}:${workspace.verses}`);
+            }
+        }else{
+            if (text.includes(config.toSearch)) {
+                workspace.matches.add(`${workspace.chapter}:${workspace.verses}`);
+            }
         }
+        
     }
     
 }
 
-const wordSearchCode = function ({perf, searchString}) {
+const wordSearchCode = function ({perf, searchString, ignoreCase}) {
     const cl = new ProskommaRenderFromJson({srcJson: perf, actions: localWordSearchActions});
     const output = {};
-    cl.renderDocument({docId: "", config: {toSearch: searchString.trim()}, output});
+    cl.renderDocument({docId: "", config: {toSearch: searchString.trim(), ignoreCase: ignoreCase.trim()}, output});
         return {matches: output.matches};
 }
 
@@ -97,6 +105,12 @@ const wordSearch = {
             type: "text",
             source: ""
         },
+        {
+            name: "ignoreCase",
+            type: "text",
+            source: ""
+        },
+
     ],
     outputs: [
         {
