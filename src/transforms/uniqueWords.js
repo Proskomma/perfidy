@@ -32,7 +32,7 @@ const localuniqueWordsActions = {
             test: () => true,
             action: ({config, context, workspace, output}) => {
                 output.words = [...Object.entries(workspace.words)]
-                    .filter((w) => workspace.words[w] === 1)
+                    .filter((w) => w[1] === 1 );
             }
         },
     ],
