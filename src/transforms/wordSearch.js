@@ -125,7 +125,7 @@ const doSearch = function(workspace, config){
         });
         
         let search_ = config.toSearch;
-        const found = findMatch(config, text, search_);
+        const found = findMatch(config, text, search_, workspace);
         if (found) {
             addMatch(workspace, config);
         }
