@@ -47,7 +47,7 @@ const localWordSearchActions = {
             test: () => true,
             action: ({config, context, workspace, output}) => {
                 output.bookCode = 'TIT';
-                output.searchTerms = config.toSearch.split(' ');
+                output.searchTerms = Array.isArray(config.toSearch) || config.toSearch.split(' ');
                 output.options = [];
                 if (config.ignoreCase) {
                   output.options.push('ignoreCase');
@@ -72,8 +72,12 @@ const addMatch = function(workspace, config) {
     };
 
     let search = config.toSearch;
+    const config_ = {
+      ...config,
+      andLogic: false, // for highlighting we match any found
+    }
     workspace.chunks.forEach(( value ) => {
-        const found = findMatch(config, value, search);
+        const found = findMatch(config_, value, search);
         if (found) {
             match.content.push({
                 type: "wrapper",
@@ -90,13 +94,39 @@ const addMatch = function(workspace, config) {
 }
 
 function findMatch(config, text, search) {
+  const isSearchArray = Array.isArray(search);
   if (config.ignoreCase) {
     text = text.toLowerCase();
-    search = search.toLowerCase();
+    if (isSearchArray) {
+      search = search.map(item => item.toLowerCase());
+    } else {
+      search = search.toLowerCase();
+    }
   }
 
-  const found = text.includes(search);
-  return found;
+  if (!isSearchArray) {
+    search = [search];
+  }
+
+  if (!config.partialMatch) { // if word search, we separate text into array of words to match
+    text = text.split(' ');
+  }
+  
+  let allMatched = true;
+  let anyMatched = false;
+  for (const searchTerm of search) {
+    const found = text.includes(searchTerm);
+    if (!found) {
+      allMatched = false;
+    } else {
+      anyMatched = true;
+    }
+  }
+  if (config.andLogic) {
+    return allMatched;
+  } else { // doing or logic
+    return anyMatched;
+  }
 }
 
 const doSearch = function(workspace, config){
@@ -104,7 +134,7 @@ const doSearch = function(workspace, config){
         let text = '' 
         workspace.chunks.forEach(( value ) => {
             let lastChar = text && text.substring(text.length-1)
-            // TODO : need to handle punctuation properly
+            // TODO : need to fix punctuation spacing
             if (lastChar !== ' ' && value !== ' '){
                 text += ' ';
             }
@@ -119,17 +149,25 @@ const doSearch = function(workspace, config){
     }
 }
 
-const wordSearchCode = function ({perf, searchString, ignoreCase, andLogic}) {
+const wordSearchCode = function ({perf, searchString, ignoreCase, andLogic, partialMatch}) {
     const cl = new ProskommaRenderFromJson({srcJson: perf, actions: localWordSearchActions});
     const output = {};
-    const ignoreCase_ = ignoreCase.trim() === '1';
-    const andLogic_ = andLogic.trim() === '1';
+    const ignoreCase_ = ignoreCase && ignoreCase.trim() === '1';
+    const andLogic_ = andLogic && andLogic.trim() === '1';
+    const partialMatch_ = partialMatch && partialMatch.trim() === '1';
+    let toSearch = searchString.trim();
+    
+    if (andLogic_ && toSearch) {
+      toSearch = toSearch.split(' ');
+    }
+
     cl.renderDocument({
       docId: "",
       config: {
-        toSearch: searchString.trim(),
+        toSearch,
         ignoreCase: ignoreCase_,
         andLogic: andLogic_,
+        partialMatch: partialMatch_,
       },
       output});
     return {matches: output.matches};
@@ -156,9 +194,14 @@ const wordSearch = {
             source: ""
         },
         {
-          name: "andLogic",
-          type: "text",
-          source: ""
+            name: "andLogic",
+            type: "text",
+            source: ""
+        },
+        {
+            name: "partial",
+            type: "text",
+            source: ""
         },
     ],
     outputs: [
