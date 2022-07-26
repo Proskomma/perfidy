@@ -6,11 +6,12 @@ const localStripMarkupActions = {
         {
             description: "Set up",
             test: () => true,
-            action: ({workspace}) => {
+            action: ({workspace,output}) => {
                 workspace.chapter = null;
                 workspace.verses = null;
                 workspace.lastWord = "";
                 workspace.waitingMarkup = null;
+                output.stripped = [];
                 return true;
             }
         }
@@ -28,11 +29,14 @@ const localStripMarkupActions = {
         {
             description: "Ignore zaln endMilestone events",
             test: ({context}) => context.sequences[0].element.subType === "usfm:zaln",
-            action: ({context,workspace}) => {
-                console.log(
-                    `${workspace.chapter}:${workspace.verses} after ${workspace.lastWord}`,
-                    context.sequences[0].element
-                )
+            action: ({ context, workspace, output }) => {
+                output.stripped.push({
+                    chapter: workspace.chapter,
+                    verses: workspace.verses,
+                    position: "after",
+                    word: workspace.lastWord,
+                    payload: context.sequences[0].element,
+                })
             }
         },
     ],
@@ -54,17 +58,20 @@ const localStripMarkupActions = {
         {
             description: "Log occurrences",
             test: () => true,
-            action: ({context,workspace}) => {
+            action: ({context,workspace,output}) => {
                 try {
                     const text = context.sequences[0].element.text;
                     const re = xre('([\\p{Letter}\\p{Number}\\p{Mark}\\u2060]{1,127})')
                     const words = xre.match(text, re, "all");
                     for (const word of words) {
                         if (workspace.waitingMarkup) {
-                            console.log(
-                                `${workspace.chapter}:${workspace.verses} before ${word}`,
-                                workspace.waitingMarkup
-                            )
+                            output.stripped.push({
+                                chapter: workspace.chapter,
+                                verses: workspace.verses,
+                                position: "before",
+                                word,
+                                payload: workspace.waitingMarkup,
+                            })
                             workspace.waitingMarkup = null;
                         }
                         workspace.lastWord = word;
@@ -116,7 +123,7 @@ const stripMarkupCode = function ({perf}) {
     );
     const output = {};
     cl.renderDocument({ docId: "", config: {}, output });
-    return {perf: output, stripped: {}};
+    return {perf: output.perf, stripped: output.stripped};
 }
 
 const stripMarkup = {
