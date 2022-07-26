@@ -10,6 +10,9 @@ const localWordSearchActions = {
                 workspace.verses = null;
                 workspace.matches = new Set([]);
                 workspace.chunks = new Set([]);
+                if (config.regex) {
+                    workspace.regex = new RegExp(config.toSearch, config.regexFlags);
+                }
             }
         },
     ],
@@ -69,7 +72,19 @@ const addMatch = function(workspace, config) {
     };
 
     workspace.chunks.forEach(( value ) => {
-        if (config.ignoreCase){
+        if (config.regex) {
+            if (workspace.regex.test(value)) {
+                match.content.push({
+                    type: "wrapper",
+                    subtype: "x-search-match",
+                    content: [
+                        value
+                    ]
+                });
+            } else {
+                match.content.push(value);
+            }
+        } else if (config.ignoreCase){
             if (value.toLowerCase().includes(config.toSearch.toLowerCase())) {
                 match.content.push({
                     type: "wrapper",
@@ -111,22 +126,44 @@ const doSearch = function(workspace, config){
         });
         
         let search_ = config.toSearch;
-        if (config.ignoreCase) {
-          text = text.toLowerCase();
-          search_ = search_.toLowerCase();
-        }
 
-        if (text.includes(search_)) {
-            addMatch(workspace, config);
+        if (config.regex) {
+            if (workspace.regex.test(text)) {
+                addMatch(workspace, config);
+            }
+        } else {
+
+            if (config.ignoreCase) {
+                text = text.toLowerCase();
+                search_ = search_.toLowerCase();
+            }
+
+            if (text.includes(search_)) {
+                addMatch(workspace, config);
+            }
         }
     }
 }
 
-const wordSearchCode = function ({perf, searchString, ignoreCase}) {
+const wordSearchCode = function ({perf, searchString, ignoreCase = '1', regex = '0'}) {
     const cl = new ProskommaRenderFromJson({srcJson: perf, actions: localWordSearchActions});
     const output = {};
     const ignoreCase_ = ignoreCase.trim() === '1';
-    cl.renderDocument({docId: "", config: {toSearch: searchString.trim(), ignoreCase: ignoreCase_}, output});
+    let regex_ = regex.trim() === '1';
+    let regexFlags = '';
+    let toSearch = searchString.trim();
+    if ( toSearch.startsWith('/') && toSearch.includes('/', 2) ) {
+        regex_ = true;
+        const regexParts = toSearch.split('/');
+        toSearch = regexParts[1];
+        regexFlags = regexParts[2];
+    }
+
+    if (ignoreCase && ! regexFlags.includes('i')) {
+        regexFlags += 'i';
+    }
+
+    cl.renderDocument({docId: "", config: {toSearch, ignoreCase: ignoreCase_, regex: regex_, regexFlags}, output});
         return {matches: output.matches};
 }
 
@@ -147,6 +184,11 @@ const wordSearch = {
         },
         {
             name: "ignoreCase",
+            type: "text",
+            source: ""
+        },
+        {
+            name: "regex",
             type: "text",
             source: ""
         },
