@@ -10,6 +10,9 @@ const localWordSearchActions = {
                 workspace.verses = null;
                 workspace.matches = new Set([]);
                 workspace.chunks = new Set([]);
+                if (config.regex) {
+                    workspace.regex = new RegExp(config.toSearch, config.regexFlags);
+                }
             }
         },
     ],
@@ -55,6 +58,9 @@ const localWordSearchActions = {
                 if (config.andLogic) {
                   output.options.push('andLogic');
                 }
+                if (config.regex) {
+                    output.options.push('regex');
+                }
                 doSearch(workspace, config);
                 output.matches = Array.from(workspace.matches)
                     .sort((a, b) => ((a.chapter * 1000) + a.verses) - ((b.chapter * 1000) + b.verses))
@@ -77,7 +83,7 @@ const addMatch = function(workspace, config) {
       andLogic: false, // for highlighting we match any found
     }
     workspace.chunks.forEach(( value ) => {
-        const found = findMatch(config_, value, search);
+        const found = findMatch(config_, value, search, workspace);
         if (found) {
             match.content.push({
                 type: "wrapper",
@@ -93,9 +99,15 @@ const addMatch = function(workspace, config) {
     workspace.matches.add( match );
 }
 
-function findMatch(config, text, search) {
-  const isSearchArray = Array.isArray(search);
-  if (config.ignoreCase) {
+function findMatch(config, text, search, workspace) {
+
+
+    if (config.regex) {
+        return workspace.regex.test(text);
+    } 
+    
+    const isSearchArray = Array.isArray(search);
+    if (config.ignoreCase) {
     text = text.toLowerCase();
     if (isSearchArray) {
       search = search.map(item => item.toLowerCase());
@@ -107,7 +119,7 @@ function findMatch(config, text, search) {
   if (!isSearchArray) {
     search = [search];
   }
-
+  
   if (!config.partialMatch) { // if word search, we separate text into array of words to match
     text = text.split(' ');
   }
@@ -142,34 +154,45 @@ const doSearch = function(workspace, config){
         });
         
         let search_ = config.toSearch;
-        const found = findMatch(config, text, search_);
+        const found = findMatch(config, text, search_, workspace);
         if (found) {
             addMatch(workspace, config);
         }
     }
 }
 
-const wordSearchCode = function ({perf, searchString, ignoreCase, andLogic, partialMatch}) {
+const wordSearchCode = function ({perf, searchString, ignoreCase = '1', andLogic = '1', regex = '0', partialMatch = '0'}) {
     const cl = new ProskommaRenderFromJson({srcJson: perf, actions: localWordSearchActions});
     const output = {};
-    const ignoreCase_ = ignoreCase && ignoreCase.trim() === '1';
-    const andLogic_ = andLogic && andLogic.trim() === '1';
-    const partialMatch_ = partialMatch && partialMatch.trim() === '1';
+    const ignoreCase_ = ignoreCase.trim() === '1';
+    const andLogic_ = andLogic.trim() === '1';
+    let regex_ = regex.trim() === '1';
+    let regexFlags = '';
     let toSearch = searchString.trim();
-    
-    if (andLogic_ && toSearch) {
+    if ( toSearch.startsWith('/') && toSearch.includes('/', 2) ) {
+        regex_ = true;
+        const regexParts = toSearch.split('/');
+        toSearch = regexParts[1];
+        regexFlags = regexParts[2];
+
+      if (ignoreCase && ! regexFlags.includes('i')) {
+        regexFlags += 'i';
+      }
+    } else if (andLogic_ && toSearch) {
       toSearch = toSearch.split(' ');
     }
 
     cl.renderDocument({
-      docId: "",
-      config: {
-        toSearch,
-        ignoreCase: ignoreCase_,
-        andLogic: andLogic_,
-        partialMatch: partialMatch_,
-      },
-      output});
+        docId: "",
+        config: {
+            toSearch,
+            ignoreCase: ignoreCase_,
+            andLogic: andLogic_,
+            partialMatch: partialMatch_,
+            regex: regex_,
+            regexFlags
+        },
+        output});
     return {matches: output.matches};
 }
 
@@ -190,6 +213,11 @@ const wordSearch = {
         },
         {
             name: "ignoreCase",
+            type: "text",
+            source: ""
+        },
+        {
+            name: "regex",
             type: "text",
             source: ""
         },
