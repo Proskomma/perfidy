@@ -1,15 +1,15 @@
-import {ProskommaRenderFromJson, identityActions} from 'proskomma-json-tools';
+import {ProskommaRenderFromJson, transforms} from 'proskomma-json-tools';
 
 const identityCode = function ({perf}) {
     const cl = new ProskommaRenderFromJson(
         {
             srcJson: perf,
-            actions: identityActions
+            actions: transforms.identityActions
         }
     );
     const output = {};
     cl.renderDocument({docId: "", config: {}, output});
-    return {perf: output};
+    return {perf: output.perf};
 }
 
 const identity = {

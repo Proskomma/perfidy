@@ -1,0 +1,83 @@
+[
+  {
+    "id": 1,
+    "title": "USFM from DCS",
+    "type": "Source",
+    "sourceLocation": "http",
+    "outputType": "text",
+    "httpUrl": "https://git.door43.org/unfoldingWord/en_ust/raw/branch/master/57-TIT.usfm"
+  },
+  {
+    "id": 2,
+    "title": "Selectors",
+    "type": "Source",
+    "sourceLocation": "local",
+    "localValue": "{\"org\": \"dcs\", \"lang\": \"en\", \"abbr\": \"ust\"}",
+    "outputType": "json"
+  },
+  {
+    "id": 3,
+    "title": "USFM to PERF",
+    "name": "usfm2perf",
+    "type": "Transform",
+    "inputs": [
+      {
+        "name": "usfm",
+        "type": "text",
+        "source": "Source 1"
+      },
+      {
+        "name": "selectors",
+        "type": "json",
+        "source": "Source 2"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "perf",
+        "type": "json"
+      }
+    ],
+    "description": "USFM=>PERF: Conversion via Proskomma"
+  },
+  {
+    "id": 5,
+    "title": "Search Term",
+    "type": "Source",
+    "sourceLocation": "local",
+    "localValue": "Jesus",
+    "outputType": "text"
+  },
+  {
+    "id": 6,
+    "title": "Transform 6",
+    "name": "wordSearch",
+    "type": "Transform",
+    "inputs": [
+      {
+        "name": "perf",
+        "type": "json",
+        "source": "Transform 3 perf"
+      },
+      {
+        "name": "searchString",
+        "type": "text",
+        "source": "Source 5"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "matches",
+        "type": "json"
+      }
+    ],
+    "description": "PERF=>JSON: Searches for a word"
+  },
+  {
+    "id": 7,
+    "title": "Matches",
+    "type": "Display",
+    "inputType": "json",
+    "inputSource": "Transform 6 matches"
+  }
+]

@@ -1,5 +1,3 @@
-// import xre from 'xregexp';
-
 const searchRegexGenCode = function ({searchString}) {
     // regex4terms = xre.replace(searchTerms, /&/, "+");
     return {
