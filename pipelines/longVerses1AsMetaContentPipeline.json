@@ -1,0 +1,95 @@
+[
+  {
+    "id": 1,
+    "title": "USFM from DCS",
+    "type": "Source",
+    "sourceLocation": "http",
+    "outputType": "text",
+    "httpUrl": "https://git.door43.org/unfoldingWord/en_ust/raw/branch/master/57-TIT.usfm"
+  },
+  {
+    "id": 2,
+    "title": "Selectors",
+    "type": "Source",
+    "sourceLocation": "local",
+    "localValue": "{\"org\": \"dcs\", \"lang\": \"en\", \"abbr\": \"ust\"}",
+    "outputType": "json"
+  },
+  {
+    "id": 3,
+    "title": "USFM to PERF",
+    "name": "usfm2perf",
+    "type": "Transform",
+    "inputs": [
+      {
+        "name": "usfm",
+        "type": "text",
+        "source": "Source 1"
+      },
+      {
+        "name": "selectors",
+        "type": "json",
+        "source": "Source 2"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "perf",
+        "type": "json"
+      }
+    ],
+    "description": "USFM=>PERF: Conversion via Proskomma"
+  },
+  {
+    "id": 4,
+    "title": "Check for Long Verses",
+    "name": "longVerses1",
+    "type": "Transform",
+    "inputs": [
+      {
+        "name": "perf",
+        "type": "json",
+        "source": "Transform 3 perf"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "report",
+        "type": "json"
+      }
+    ],
+    "description": "PERF=>JSON: Generates naive long verses report"
+  },
+  {
+    "id": 5,
+    "title": "Insert Report as Meta Content",
+    "name": "insertMetaContent",
+    "type": "Transform",
+    "inputs": [
+      {
+        "name": "perf-with-meta-content",
+        "type": "json",
+        "source": "Transform 4 report"
+      },
+      {
+        "name": "perf",
+        "type": "json",
+        "source": "Transform 3 perf"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "report",
+        "type": "json"
+      }
+    ],
+    "description": "Merge meta content into original PERF"
+  },
+  {
+    "id": 6,
+    "title": "PERF with Meta Content",
+    "type": "Display",
+    "inputType": "json",
+    "inputSource": "Transform 5 report"
+  }
+]

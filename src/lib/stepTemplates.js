@@ -13,6 +13,7 @@ import mergePerfText from "../transforms/mergePerfText";
 import identity from "../transforms/identity";
 import searchRegexGen from "../transforms/searchRegexGen";
 import longVerses1 from "../transforms/longVerses1";
+import mergeReport from "../transforms/mergeReport";
 
 const stepTemplates = {
     Transform: {
@@ -31,6 +32,7 @@ const stepTemplates = {
         perf2usfm,
         searchRegexGen,
         longVerses1,
+        mergeReport,
     },
     Source: {
         local: {
