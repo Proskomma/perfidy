@@ -150,11 +150,6 @@ const wordSearch = {
             type: "text",
             source: ""
         },
-        {
-          name: "andLogic",
-          type: "text",
-          source: ""
-        },
     ],
     outputs: [
         {
