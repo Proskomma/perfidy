@@ -48,15 +48,51 @@ const localWordSearchActions = {
             description: "Sort matches",
             test: () => true,
             action: ({config, context, workspace, output}) => {
+                output.bookCode = 'TIT';
+                output.searchTerms = config.toSearch.split(' ');
+                output.options = [];
+                if ( config.ignoreCase === '1') {
+                    output.options.push('ignoreCase');
+                }
                 doSearch(workspace, config);
                 output.matches = Array.from(workspace.matches)
-                    .map(cv => cv.split(':').map(b => parseInt(b)))
-                    .sort((a, b) => ((a[0] * 1000) + a[1]) - ((b[0] * 1000) + b[1]))
-                    .map(cva => cva.join(':'))
+                    .sort((a, b) => ((a.chapter * 1000) + a.verses) - ((b.chapter * 1000) + b.verses))
             }
         },
     ],
 };
+
+const addMatch = function(workspace, config) {
+
+    const match = {
+        chapter: workspace.chapter,
+        verses: workspace.verses,
+        content: []
+    };
+
+    workspace.chunks.forEach(( value ) => {
+        if(config.ignoreCase === '1'){
+            if (value.toLowerCase().includes(config.toSearch.toLowerCase())) {
+                match.content.push({
+                    type: "wrapper",
+                    subtype: "x-search-match",
+                    content: [
+                        value
+                    ]
+                });
+            } else {
+                match.content.push(value);
+            }
+        }else{
+            if (value.includes(config.toSearch)) {
+                addMatch(workspace, config);
+            } else {
+                match.content.push(value);
+            }
+        }
+    });
+    workspace.matches.add( match );
+}
 
 const doSearch = function(workspace, config){
     if(workspace.chunks.size){
@@ -71,16 +107,15 @@ const doSearch = function(workspace, config){
         });
         if(config.ignoreCase === '1'){
             if (text.toLowerCase().includes(config.toSearch.toLowerCase())) {
-                workspace.matches.add(`${workspace.chapter}:${workspace.verses}`);
+                addMatch(workspace, config);
             }
         }else{
             if (text.includes(config.toSearch)) {
-                workspace.matches.add(`${workspace.chapter}:${workspace.verses}`);
+                addMatch(workspace, config);
             }
         }
         
     }
-    
 }
 
 const wordSearchCode = function ({perf, searchString, ignoreCase}) {

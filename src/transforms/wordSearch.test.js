@@ -35,14 +35,25 @@ describe('test wordSearch', () => {
     const searchString = 'paul';
     const ignoreCase = '1';
 
-    const {matches} = wordSearch.code({perf, searchString, ignoreCase})
+    const { matches } = wordSearch.code({perf, searchString, ignoreCase})
 
-    expect(matches).toEqual(
-      [
-        '1:1',
-      ]
-    );
-  });
+    expect(matches).toEqual([
+        {
+            "chapter": "1",
+            "verses": "1",
+            "content": [
+                "I",
+                ", ",
+                {
+                    type: "wrapper",
+                    subtype: "x-search-match",
+                    content: [
+                        'Paul'
+                    ]
+                },
+            ],
+       },
+    ]);
 
   test('case sensitive fails on case mismatch', () => {
     const searchString = 'paul';
