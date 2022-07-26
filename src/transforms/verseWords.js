@@ -19,7 +19,6 @@ const localVerseWordsActions = {
             description: "Update CV state",
             test: () => true,
             action: ({ context, workspace, output }) => {
-                console.log(context);
                 const { element } = context.sequences[0];
                 if (element.subType === 'chapter') {
                     workspace.chapter = element.atts['number'];
@@ -38,16 +37,13 @@ const localVerseWordsActions = {
             description: "Log occurrences",
             test: () => true,
             action: ({ context, workspace, output }) => {
-                const text = context.sequences[0].element.text;
+                const { chapter, verses } = workspace;
+                const { text } = context.sequences[0].element;
                 const re = xre('([\\p{Letter}\\p{Number}\\p{Mark}\\u2060]{1,127})')
                 const words = xre.match(text, re, "all");
                 for (const word of words) {
-                    if (output.cv[workspace.chapter][workspace.verses][word]) {
-                        output.cv[workspace.chapter][workspace.verses][word] += 1;
-                    }
-                    else {
-                        output.cv[workspace.chapter][workspace.verses][word] = 1;
-                    }
+                    output.cv[chapter][verses][word] ??= 1;
+                    output.cv[chapter][verses][word] += 1;
                 }
             }
         }

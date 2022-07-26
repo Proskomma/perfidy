@@ -10,7 +10,7 @@ const localStripMarkupActions = {
                 workspace.chapter = null;
                 workspace.verses = null;
                 workspace.lastWord = "";
-                workspace.waitingMarkup = null;
+                workspace.waitingMarkup = [];
                 output.stripped = [];
                 return true;
             }
@@ -21,7 +21,7 @@ const localStripMarkupActions = {
             description: "Ignore zaln startMilestone events",
             test: ({context}) => context.sequences[0].element.subType === "usfm:zaln",
             action: ({context,workspace}) => {
-                workspace.waitingMarkup = context.sequences[0].element;
+                workspace.waitingMarkup.push(context.sequences[0].element);
             }
         },
     ],
@@ -44,14 +44,24 @@ const localStripMarkupActions = {
         {
             description: "Ignore w startWrapper events",
             test: ({context}) => context.sequences[0].element.subType === "usfm:w",
-            action: () => {}
+            action: ({ context, workspace }) => {
+                workspace.waitingMarkup.push(context.sequences[0].element);
+            }
         },
     ],
     endWrapper: [
         {
             description: "Ignore w endWrapper events",
             test: ({context}) => context.sequences[0].element.subType === "usfm:w",
-            action: () => {}
+            action: ({output, context, workspace}) => {
+                output.stripped.push({
+                    chapter: workspace.chapter,
+                    verses: workspace.verses,
+                    position: "after",
+                    word: workspace.lastWord,
+                    payload: context.sequences[0].element,
+                })
+            }
         },
     ],
     text: [
@@ -64,15 +74,15 @@ const localStripMarkupActions = {
                     const re = xre('([\\p{Letter}\\p{Number}\\p{Mark}\\u2060]{1,127})')
                     const words = xre.match(text, re, "all");
                     for (const word of words) {
-                        if (workspace.waitingMarkup) {
+                        while (workspace.waitingMarkup.length) {
+                            const payload = workspace.waitingMarkup.shift();
                             output.stripped.push({
                                 chapter: workspace.chapter,
                                 verses: workspace.verses,
                                 position: "before",
                                 word,
-                                payload: workspace.waitingMarkup,
+                                payload,
                             })
-                            workspace.waitingMarkup = null;
                         }
                         workspace.lastWord = word;
                     }
