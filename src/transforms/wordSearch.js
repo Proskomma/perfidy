@@ -85,7 +85,13 @@ const addMatch = function(workspace, config) {
             }
         }else{
             if (value.includes(config.toSearch)) {
-                addMatch(workspace, config);
+              match.content.push({
+                type: "wrapper",
+                subtype: "x-search-match",
+                content: [
+                  value
+                ]
+              });
             } else {
                 match.content.push(value);
             }
