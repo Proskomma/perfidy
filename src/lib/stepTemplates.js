@@ -33,7 +33,7 @@ const stepTemplates = {
         verseStats,
         perf2usfm,
         searchRegexGen,
-        stripMarkup
+        stripMarkup,
         longVerses1,
     },
     Source: {
