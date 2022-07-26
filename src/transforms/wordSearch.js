@@ -166,6 +166,7 @@ const wordSearchCode = function ({perf, searchString, ignoreCase = '1', andLogic
     const output = {};
     const ignoreCase_ = ignoreCase.trim() === '1';
     const andLogic_ = andLogic.trim() === '1';
+    const partialMatch_ = partialMatch && partialMatch.trim() === '1';
     let regex_ = regex.trim() === '1';
     let regexFlags = '';
     let toSearch = searchString.trim();
