@@ -9,6 +9,7 @@ const localWordSearchActions = {
                 workspace.chapter = null;
                 workspace.verses = null;
                 workspace.matches = new Set([]);
+                workspace.chunks = new Set([]);
             }
         },
     ],
@@ -19,9 +20,15 @@ const localWordSearchActions = {
             action: ({config, context, workspace, output}) => {
                 const element = context.sequences[0].element;
                 if (element.subType === 'chapter') {
+                    // toDo : add Search
+                    doSearch(workspace, config);
                     workspace.chapter = element.atts['number'];
+                    workspace.chunks = new Set([]);
                 } else if (element.subType === 'verses') {
+                    // toDo : add Search
+                    doSearch(workspace, config);
                     workspace.verses = element.atts['number'];
+                    workspace.chunks = new Set([]);
                 }
             }
         },
@@ -32,9 +39,10 @@ const localWordSearchActions = {
             test: ({context, workspace}) => workspace.chapter && workspace.verses,
             action: ({config, context, workspace, output}) => {
                 const text = context.sequences[0].element.text;
-                if (text.toLowerCase().includes(config.toSearch.toLowerCase())) {
-                    workspace.matches.add(`${workspace.chapter}:${workspace.verses}`);
-                }
+                workspace.chunks.add(text);
+                // if (text.toLowerCase().includes(config.toSearch.toLowerCase())) {
+                //     workspace.matches.add(`${workspace.chapter}:${workspace.verses}`);
+                // }
             }
         },
     ],
@@ -43,6 +51,7 @@ const localWordSearchActions = {
             description: "Sort matches",
             test: () => true,
             action: ({config, context, workspace, output}) => {
+                doSearch(workspace, config);
                 output.matches = Array.from(workspace.matches)
                     .map(cv => cv.split(':').map(b => parseInt(b)))
                     .sort((a, b) => ((a[0] * 1000) + a[1]) - ((b[0] * 1000) + b[1]))
@@ -51,6 +60,22 @@ const localWordSearchActions = {
         },
     ],
 };
+
+const doSearch = function(workspace, config){
+    if(workspace.chunks.size){
+        let text = '' 
+        workspace.chunks.forEach(( value ) => {
+            if(text){
+                text += ' ';
+            }
+            text += value;
+        });
+        if (text.toLowerCase().includes(config.toSearch.toLowerCase())) {
+            workspace.matches.add(`${workspace.chapter}:${workspace.verses}`);
+        }
+    }
+    
+}
 
 const wordSearchCode = function ({perf, searchString}) {
     const cl = new ProskommaRenderFromJson({srcJson: perf, actions: localWordSearchActions});
