@@ -50,7 +50,10 @@ const localWordSearchActions = {
                 output.searchTerms = config.toSearch.split(' ');
                 output.options = [];
                 if (config.ignoreCase) {
-                    output.options.push('ignoreCase');
+                  output.options.push('ignoreCase');
+                }
+                if (config.andLogic) {
+                  output.options.push('andLogic');
                 }
                 doSearch(workspace, config);
                 output.matches = Array.from(workspace.matches)
@@ -68,34 +71,32 @@ const addMatch = function(workspace, config) {
         content: []
     };
 
+    let search = config.toSearch;
     workspace.chunks.forEach(( value ) => {
-        if (config.ignoreCase){
-            if (value.toLowerCase().includes(config.toSearch.toLowerCase())) {
-                match.content.push({
-                    type: "wrapper",
-                    subtype: "x-search-match",
-                    content: [
-                        value
-                    ]
-                });
-            } else {
-                match.content.push(value);
-            }
-        }else{
-            if (value.includes(config.toSearch)) {
-              match.content.push({
+        const found = findMatch(config, value, search);
+        if (found) {
+            match.content.push({
                 type: "wrapper",
                 subtype: "x-search-match",
                 content: [
-                  value
+                    value
                 ]
-              });
-            } else {
-                match.content.push(value);
-            }
+            });
+        } else {
+            match.content.push(value);
         }
     });
     workspace.matches.add( match );
+}
+
+function findMatch(config, text, search) {
+  if (config.ignoreCase) {
+    text = text.toLowerCase();
+    search = search.toLowerCase();
+  }
+
+  const found = text.includes(search);
+  return found;
 }
 
 const doSearch = function(workspace, config){
@@ -103,7 +104,7 @@ const doSearch = function(workspace, config){
         let text = '' 
         workspace.chunks.forEach(( value ) => {
             let lastChar = text && text.substring(text.length-1)
-            // TODO : need to handle punctation properly
+            // TODO : need to handle punctuation properly
             if (lastChar !== ' ' && value !== ' '){
                 text += ' ';
             }
@@ -111,23 +112,27 @@ const doSearch = function(workspace, config){
         });
         
         let search_ = config.toSearch;
-        if (config.ignoreCase) {
-          text = text.toLowerCase();
-          search_ = search_.toLowerCase();
-        }
-
-        if (text.includes(search_)) {
+        const found = findMatch(config, text, search_);
+        if (found) {
             addMatch(workspace, config);
         }
     }
 }
 
-const wordSearchCode = function ({perf, searchString, ignoreCase}) {
+const wordSearchCode = function ({perf, searchString, ignoreCase, andLogic}) {
     const cl = new ProskommaRenderFromJson({srcJson: perf, actions: localWordSearchActions});
     const output = {};
     const ignoreCase_ = ignoreCase.trim() === '1';
-    cl.renderDocument({docId: "", config: {toSearch: searchString.trim(), ignoreCase: ignoreCase_}, output});
-        return {matches: output.matches};
+    const andLogic_ = andLogic.trim() === '1';
+    cl.renderDocument({
+      docId: "",
+      config: {
+        toSearch: searchString.trim(),
+        ignoreCase: ignoreCase_,
+        andLogic: andLogic_,
+      },
+      output});
+    return {matches: output.matches};
 }
 
 const wordSearch = {
@@ -149,6 +154,11 @@ const wordSearch = {
             name: "ignoreCase",
             type: "text",
             source: ""
+        },
+        {
+          name: "andLogic",
+          type: "text",
+          source: ""
         },
     ],
     outputs: [

@@ -2,6 +2,8 @@ import wordSearch from './wordSearch';
 import perfWrapper from './__data__/perfWrapper';
 
 describe('test wordSearch', () => {
+  const andLogic = '0';
+  
   test('ignore case succeeds', () => {
     const perf = perfWrapper({
       blocks: [
@@ -35,7 +37,7 @@ describe('test wordSearch', () => {
     const searchString = 'paul';
     const ignoreCase = '1';
 
-    const {matches} = wordSearch.code({perf, searchString, ignoreCase})
+    const {matches} = wordSearch.code({perf, searchString, ignoreCase, andLogic})
 
     expect(matches).toEqual([
       {
@@ -89,7 +91,7 @@ describe('test wordSearch', () => {
     const searchString = 'paul';
     const ignoreCase = '0';
 
-    const {matches} = wordSearch.code({perf, searchString, ignoreCase})
+    const {matches} = wordSearch.code({perf, searchString, ignoreCase, andLogic})
 
     expect(matches).toEqual(
       []
@@ -129,7 +131,7 @@ describe('test wordSearch', () => {
     const searchString = 'Paul';
     const ignoreCase = '0';
 
-    const {matches} = wordSearch.code({perf, searchString, ignoreCase})
+    const {matches} = wordSearch.code({perf, searchString, ignoreCase, andLogic})
 
     expect(matches).toEqual([
       {
