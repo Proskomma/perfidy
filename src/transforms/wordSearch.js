@@ -99,24 +99,25 @@ const addMatch = function(workspace, config) {
 }
 
 const doSearch = function(workspace, config){
-    if(workspace.chunks.size){
+    if (workspace.chunks.size){
         let text = '' 
         workspace.chunks.forEach(( value ) => {
             let lastChar = text && text.substring(text.length-1)
             // TODO : need to handle punctation properly
-            if(lastChar !== ' ' && value !== ' '){
+            if (lastChar !== ' ' && value !== ' '){
                 text += ' ';
             }
             text += value;
         });
-        if (config.ignoreCase){
-            if (text.toLowerCase().includes(config.toSearch.toLowerCase())) {
-                addMatch(workspace, config);
-            }
-        } else{
-            if (text.includes(config.toSearch)) {
-                addMatch(workspace, config);
-            }
+        
+        let search_ = config.toSearch;
+        if (config.ignoreCase) {
+          text = text.toLowerCase();
+          search_ = search_.toLowerCase();
+        }
+
+        if (text.includes(search_)) {
+            addMatch(workspace, config);
         }
     }
 }
@@ -149,7 +150,11 @@ const wordSearch = {
             type: "text",
             source: ""
         },
-
+        {
+          name: "andLogic",
+          type: "text",
+          source: ""
+        },
     ],
     outputs: [
         {
