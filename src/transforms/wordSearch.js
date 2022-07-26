@@ -20,12 +20,10 @@ const localWordSearchActions = {
             action: ({config, context, workspace, output}) => {
                 const element = context.sequences[0].element;
                 if (element.subType === 'chapter') {
-                    // toDo : add Search
                     doSearch(workspace, config);
                     workspace.chapter = element.atts['number'];
                     workspace.chunks = new Set([]);
                 } else if (element.subType === 'verses') {
-                    // toDo : add Search
                     doSearch(workspace, config);
                     workspace.verses = element.atts['number'];
                     workspace.chunks = new Set([]);
@@ -51,7 +49,7 @@ const localWordSearchActions = {
                 output.bookCode = 'TIT';
                 output.searchTerms = config.toSearch.split(' ');
                 output.options = [];
-                if ( config.ignoreCase === '1') {
+                if (config.ignoreCase) {
                     output.options.push('ignoreCase');
                 }
                 doSearch(workspace, config);
@@ -71,7 +69,7 @@ const addMatch = function(workspace, config) {
     };
 
     workspace.chunks.forEach(( value ) => {
-        if(config.ignoreCase === '1'){
+        if (config.ignoreCase){
             if (value.toLowerCase().includes(config.toSearch.toLowerCase())) {
                 match.content.push({
                     type: "wrapper",
@@ -111,23 +109,23 @@ const doSearch = function(workspace, config){
             }
             text += value;
         });
-        if(config.ignoreCase === '1'){
+        if (config.ignoreCase){
             if (text.toLowerCase().includes(config.toSearch.toLowerCase())) {
                 addMatch(workspace, config);
             }
-        }else{
+        } else{
             if (text.includes(config.toSearch)) {
                 addMatch(workspace, config);
             }
         }
-        
     }
 }
 
 const wordSearchCode = function ({perf, searchString, ignoreCase}) {
     const cl = new ProskommaRenderFromJson({srcJson: perf, actions: localWordSearchActions});
     const output = {};
-    cl.renderDocument({docId: "", config: {toSearch: searchString.trim(), ignoreCase: ignoreCase.trim()}, output});
+    const ignoreCase_ = ignoreCase.trim() === '1';
+    cl.renderDocument({docId: "", config: {toSearch: searchString.trim(), ignoreCase: ignoreCase_}, output});
         return {matches: output.matches};
 }
 
