@@ -1,4 +1,4 @@
-import {ProskommaRenderFromJson, identityActions, mergeActions} from 'proskomma-json-tools';
+import {ProskommaRenderFromJson, transforms, mergeActions} from 'proskomma-json-tools';
 import xre from "xregexp";
 
 const localStripMarkupActions = {
@@ -6,11 +6,11 @@ const localStripMarkupActions = {
         {
             description: "Set up",
             test: () => true,
-            action: (env) => {
-                env.workspace.chapter = null;
-                env.workspace.verses = null;
-                env.workspace.lastWord = "";
-                env.workspace.waitingMarkup = null;
+            action: ({workspace}) => {
+                workspace.chapter = null;
+                workspace.verses = null;
+                workspace.lastWord = "";
+                workspace.waitingMarkup = null;
                 return true;
             }
         }
@@ -18,20 +18,20 @@ const localStripMarkupActions = {
     startMilestone: [
         {
             description: "Ignore zaln startMilestone events",
-            test: (env) => env.context.sequences[0].element.subType === "usfm:zaln",
-            action: (env) => {
-                env.workspace.waitingMarkup = env.context.sequences[0].element;
+            test: ({context}) => context.sequences[0].element.subType === "usfm:zaln",
+            action: ({context,workspace}) => {
+                workspace.waitingMarkup = context.sequences[0].element;
             }
         },
     ],
     endMilestone: [
         {
             description: "Ignore zaln endMilestone events",
-            test: (env) => env.context.sequences[0].element.subType === "usfm:zaln",
-            action: (env) => {
+            test: ({context}) => context.sequences[0].element.subType === "usfm:zaln",
+            action: ({context,workspace}) => {
                 console.log(
-                    `${env.workspace.chapter}:${env.workspace.verses} after ${env.workspace.lastWord}`,
-                    env.context.sequences[0].element
+                    `${workspace.chapter}:${workspace.verses} after ${workspace.lastWord}`,
+                    context.sequences[0].element
                 )
             }
         },
@@ -39,34 +39,39 @@ const localStripMarkupActions = {
     startWrapper: [
         {
             description: "Ignore w startWrapper events",
-            test: (env) => env.context.sequences[0].element.subType === "usfm:w",
-            action: (env) => {}
+            test: ({context}) => context.sequences[0].element.subType === "usfm:w",
+            action: () => {}
         },
     ],
     endWrapper: [
         {
             description: "Ignore w endWrapper events",
-            test: (env) => env.context.sequences[0].element.subType === "usfm:w",
-            action: (env) => {}
+            test: ({context}) => context.sequences[0].element.subType === "usfm:w",
+            action: () => {}
         },
     ],
     text: [
         {
             description: "Log occurrences",
             test: () => true,
-            action: (env) => {
-                const text = env.context.sequences[0].element.text;
-                const re = xre('([\\p{Letter}\\p{Number}\\p{Mark}\\u2060]{1,127})')
-                const words = xre.match(text, re, "all");
-                for (const word of words) {
-                    if (env.workspace.waitingMarkup) {
-                        console.log(
-                            `${env.workspace.chapter}:${env.workspace.verses} before ${word}`,
-                            env.workspace.waitingMarkup
-                        )
-                        env.workspace.waitingMarkup = null;
+            action: ({context,workspace}) => {
+                try {
+                    const text = context.sequences[0].element.text;
+                    const re = xre('([\\p{Letter}\\p{Number}\\p{Mark}\\u2060]{1,127})')
+                    const words = xre.match(text, re, "all");
+                    for (const word of words) {
+                        if (workspace.waitingMarkup) {
+                            console.log(
+                                `${workspace.chapter}:${workspace.verses} before ${word}`,
+                                workspace.waitingMarkup
+                            )
+                            workspace.waitingMarkup = null;
+                        }
+                        workspace.lastWord = word;
                     }
-                    env.workspace.lastWord = word;
+                } catch (err) {
+                    console.error(err)
+                    throw err;
                 }
                 return true;
             }
@@ -76,15 +81,20 @@ const localStripMarkupActions = {
         {
             description: "Update CV state",
             test: () => true,
-            action: (env) => {
-                const element = env.context.sequences[0].element;
-                if (element.subType === 'chapter') {
-                    env.workspace.chapter = element.atts['number'];
-                    env.workspace.verses = 0
-                    env.workspace.lastWord = "";
-                } else if (element.subType === 'verses') {
-                    env.workspace.verses = element.atts['number'];
-                    env.workspace.lastWord = "";
+            action: ({context,workspace}) => {
+                try {
+                    const element = context.sequences[0].element;
+                    if (element.subType === 'chapter') {
+                        workspace.chapter = element.atts['number'];
+                        workspace.verses = 0
+                        workspace.lastWord = "";
+                    } else if (element.subType === 'verses') {
+                        workspace.verses = element.atts['number'];
+                        workspace.lastWord = "";
+                    }
+                } catch (err) {
+                    console.error(err)
+                    throw err;
                 }
                 return true;
             }
@@ -99,14 +109,14 @@ const stripMarkupCode = function ({perf}) {
             actions: mergeActions(
                 [
                     localStripMarkupActions,
-                    identityActions
+                    transforms.identityActions
                 ]
             )
         }
     );
     const output = {};
-    cl.renderDocument({docId: "", config: {}, output});
-    return {perf: output, stripped: {}}; // identityActions currently put PERF directly in output
+    cl.renderDocument({ docId: "", config: {}, output });
+    return {perf: output, stripped: {}};
 }
 
 const stripMarkup = {

@@ -1,40 +1,40 @@
-import usfm2perf from '../transforms/usfm2perf';
-import usx2perf from '../transforms/usx2perf';
-import perf2usfm from '../transforms/perf2usfm';
-import wordFrequency from '../transforms/wordFrequency';
-import wordSearch from "../transforms/wordSearch";
-import justTheBible from "../transforms/justTheBible";
-import verseWords from '../transforms/verseWords';
-import verseStats from "../transforms/verseStats";
-import proskommaQuery from "../transforms/proskommaQuery";
-import validate from "../transforms/validate";
-import diffText from "../transforms/diffText";
 import diffJson from "../transforms/diffJson";
-import mergePerfText from "../transforms/mergePerfText";
+import diffText from "../transforms/diffText";
 import identity from "../transforms/identity";
+import justTheBible from "../transforms/justTheBible";
+import longVerses1 from "../transforms/longVerses1";
+import mergePerfText from "../transforms/mergePerfText";
+import perf2usfm from '../transforms/perf2usfm';
+import proskommaQuery from "../transforms/proskommaQuery";
 import searchRegexGen from "../transforms/searchRegexGen";
 import stripMarkup from '../transforms/stripMarkup';
-import longVerses1 from "../transforms/longVerses1";
+import usfm2perf from '../transforms/usfm2perf';
+import usx2perf from '../transforms/usx2perf';
+import validate from "../transforms/validate";
+import verseStats from "../transforms/verseStats";
+import verseWords from '../transforms/verseWords';
+import wordFrequency from '../transforms/wordFrequency';
+import wordSearch from "../transforms/wordSearch";
 
 const stepTemplates = {
     Transform: {
-        usfm2perf,
-        usx2perf,
-        proskommaQuery,
-        validate,
-        diffText,
         diffJson,
+        diffText,
         identity,
         justTheBible,
+        longVerses1,
         mergePerfText,
-        wordFrequency,
-        wordSearch,
-        verseWords,
-        verseStats,
         perf2usfm,
+        proskommaQuery,
         searchRegexGen,
         stripMarkup,
-        longVerses1,
+        usfm2perf,
+        usx2perf,
+        validate,
+        verseStats,
+        verseWords,
+        wordFrequency,
+        wordSearch,
     },
     Source: {
         local: {

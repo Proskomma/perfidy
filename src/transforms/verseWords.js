@@ -18,8 +18,9 @@ const localVerseWordsActions = {
         {
             description: "Update CV state",
             test: () => true,
-            action: ({context, workspace, output}) => {
-                const element = context.sequences[0].element;
+            action: ({ context, workspace, output }) => {
+                console.log(context);
+                const { element } = context.sequences[0];
                 if (element.subType === 'chapter') {
                     workspace.chapter = element.atts['number'];
                     workspace.verses = 0
