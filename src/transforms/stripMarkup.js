@@ -10,6 +10,8 @@ const localStripMarkupActions = {
                 env.workspace.chapter = null;
                 env.workspace.verses = null;
                 env.workspace.lastWord = "";
+                env.workspace.waitingMarkup = null;
+                return true;
             }
         }
     ],
@@ -18,7 +20,7 @@ const localStripMarkupActions = {
             description: "Ignore zaln startMilestone events",
             test: (env) => env.context.sequences[0].element.subType === "usfm:zaln",
             action: (env) => {
-                
+                env.workspace.waitingMarkup = env.context.sequences[0].element;
             }
         },
     ],
@@ -27,7 +29,10 @@ const localStripMarkupActions = {
             description: "Ignore zaln endMilestone events",
             test: (env) => env.context.sequences[0].element.subType === "usfm:zaln",
             action: (env) => {
-                console.log(`${env.workspace.chapter}:${env.workspace.verses} before ${env.workspace.lastWord}`)
+                console.log(
+                    `${env.workspace.chapter}:${env.workspace.verses} after ${env.workspace.lastWord}`,
+                    env.context.sequences[0].element
+                )
             }
         },
     ],
@@ -35,18 +40,14 @@ const localStripMarkupActions = {
         {
             description: "Ignore w startWrapper events",
             test: (env) => env.context.sequences[0].element.subType === "usfm:w",
-            action: (env) => {
-                
-            }
+            action: (env) => {}
         },
     ],
     endWrapper: [
         {
             description: "Ignore w endWrapper events",
             test: (env) => env.context.sequences[0].element.subType === "usfm:w",
-            action: (env) => {
-                
-            }
+            action: (env) => {}
         },
     ],
     text: [
@@ -58,8 +59,16 @@ const localStripMarkupActions = {
                 const re = xre('([\\p{Letter}\\p{Number}\\p{Mark}\\u2060]{1,127})')
                 const words = xre.match(text, re, "all");
                 for (const word of words) {
+                    if (env.workspace.waitingMarkup) {
+                        console.log(
+                            `${env.workspace.chapter}:${env.workspace.verses} before ${word}`,
+                            env.workspace.waitingMarkup
+                        )
+                        env.workspace.waitingMarkup = null;
+                    }
                     env.workspace.lastWord = word;
                 }
+                return true;
             }
         }
     ],
@@ -77,6 +86,7 @@ const localStripMarkupActions = {
                     env.workspace.verses = element.atts['number'];
                     env.workspace.lastWord = "";
                 }
+                return true;
             }
         },
     ],
