@@ -30,12 +30,19 @@ test('wordSearch finds some words', () => {
     ]});
 
     const searchString = 'paul';
+    const ignoreCase = '1';
 
-    const { matches } = wordSearch.code({perf, searchString})
+    const { matches } = wordSearch.code({perf, searchString, ignoreCase})
 
     expect(matches).toEqual(
         [
             '1:1',
         ]
+    );
+
+    const { matches: matchesCS } = wordSearch.code({perf, searchString, ignoreCase: '0'})
+
+    expect(matchesCS).toEqual(
+        []
     );
 });
