@@ -34,11 +34,23 @@ test('wordSearch finds some words', () => {
 
     const { matches } = wordSearch.code({perf, searchString, ignoreCase})
 
-    expect(matches).toEqual(
-        [
-            '1:1',
-        ]
-    );
+    expect(matches).toEqual([
+        {
+            "chapter": "1",
+            "verses": "1",
+            "content": [
+                "I",
+                ", ",
+                {
+                    type: "wrapper",
+                    subtype: "x-search-match",
+                    content: [
+                        'Paul'
+                    ]
+                },
+            ],
+       },
+    ]);
 
     const { matches: matchesCS } = wordSearch.code({perf, searchString, ignoreCase: '0'})
 
