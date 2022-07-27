@@ -58,6 +58,9 @@ const localWordSearchActions = {
                 if (config.andLogic) {
                   output.options.push('andLogic');
                 }
+                if (config.partialMatch) {
+                    output.options.push('partialMatch');
+                }
                 if (config.regex) {
                     output.options.push('regex');
                 }
@@ -100,8 +103,6 @@ const addMatch = function(workspace, config) {
 }
 
 function findMatch(config, text, search, workspace) {
-
-
     if (config.regex) {
         return workspace.regex.test(text);
     } 

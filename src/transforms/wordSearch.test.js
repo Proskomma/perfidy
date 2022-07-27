@@ -163,7 +163,15 @@ describe('test wordSearch andLogic', () => {
     ]);
   });
 
+  test('ignore case fails not all words match', () => {
+    const searchString = 'i peter';
+    const ignoreCase = '1';
 
+    const {matches} = wordSearch.code({perf, searchString, ignoreCase, andLogic})
+
+    expect(matches).toEqual([]);
+  });
+  
   test('case sensitive fails on case mismatch', () => {
     const searchString = 'i paul';
     const ignoreCase = '0';
@@ -193,6 +201,72 @@ describe('test wordSearch andLogic', () => {
               'I'
             ]
           },
+          ", ",
+          {
+            type: "wrapper",
+            subtype: "x-search-match",
+            content: [
+              'Paul'
+            ]
+          },
+        ],
+      },
+    ]);
+  });
+});
+
+describe('test wordSearch partialMatch string', () => {
+  const andLogic = '0';
+  const partialMatch = '1';
+
+  test('ignore case succeeds one word', () => {
+    const searchString = 'pau';
+    const ignoreCase = '1';
+
+    const {matches} = wordSearch.code({perf, searchString, ignoreCase, andLogic, partialMatch})
+
+    expect(matches).toEqual([
+      {
+        "chapter": "1",
+        "verses": "1",
+        "content": [
+          "I",
+          ", ",
+          {
+            type: "wrapper",
+            subtype: "x-search-match",
+            content: [
+              'Paul'
+            ]
+          },
+        ],
+      },
+    ]);
+  });
+  
+  test('case sensitive fails on case mismatch', () => {
+    const searchString = 'pau';
+    const ignoreCase = '0';
+
+    const {matches} = wordSearch.code({perf, searchString, ignoreCase, andLogic, partialMatch})
+
+    expect(matches).toEqual(
+      []
+    );
+  });
+
+  test('case sensitive succeeds', () => {
+    const searchString = 'Pau';
+    const ignoreCase = '0';
+
+    const {matches} = wordSearch.code({perf, searchString, ignoreCase, andLogic, partialMatch})
+
+    expect(matches).toEqual([
+      {
+        "chapter": "1",
+        "verses": "1",
+        "content": [
+          "I",
           ", ",
           {
             type: "wrapper",
