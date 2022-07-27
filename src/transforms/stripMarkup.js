@@ -11,6 +11,7 @@ const localStripMarkupActions = {
                 workspace.verses = null;
                 workspace.lastWord = "";
                 workspace.waitingMarkup = [];
+                workspace.currentOccurrences = {}
                 output.stripped = [];
                 return true;
             }
@@ -68,17 +69,23 @@ const localStripMarkupActions = {
         {
             description: "Log occurrences",
             test: () => true,
-            action: ({context,workspace,output}) => {
+            action: ({context,workspace,output,config}) => {
                 try {
                     const text = context.sequences[0].element.text;
                     const re = xre('([\\p{Letter}\\p{Number}\\p{Mark}\\u2060]{1,127})')
                     const words = xre.match(text, re, "all");
+                    const { chapter, verses } = workspace;
+                    const { verseWords: totalOccurrences } = config;
                     for (const word of words) {
+                        workspace.currentOccurrences[word] ??= 0;
+                        workspace.currentOccurrences[word]++;
                         while (workspace.waitingMarkup.length) {
                             const payload = workspace.waitingMarkup.shift();
                             output.stripped.push({
-                                chapter: workspace.chapter,
-                                verses: workspace.verses,
+                                chapter: chapter,
+                                verses: verses,
+                                occurrence: workspace.currentOccurrences[word],
+                                occurrences: totalOccurrences[chapter][verses][word],
                                 position: "before",
                                 word,
                                 payload,
@@ -105,9 +112,11 @@ const localStripMarkupActions = {
                         workspace.chapter = element.atts['number'];
                         workspace.verses = 0
                         workspace.lastWord = "";
+                        workspace.currentOccurrences = {}
                     } else if (element.subType === 'verses') {
                         workspace.verses = element.atts['number'];
                         workspace.lastWord = "";
+                        workspace.currentOccurrences = {}
                     }
                 } catch (err) {
                     console.error(err)
@@ -119,7 +128,7 @@ const localStripMarkupActions = {
     ],
 };
 
-const stripMarkupCode = function ({perf}) {
+const stripMarkupCode = function ({perf, verseWords}) {
     const cl = new ProskommaRenderFromJson(
         {
             srcJson: perf,
@@ -132,7 +141,7 @@ const stripMarkupCode = function ({perf}) {
         }
     );
     const output = {};
-    cl.renderDocument({ docId: "", config: {}, output });
+    cl.renderDocument({ docId: "", config: {verseWords}, output });
     return {perf: output.perf, stripped: output.stripped};
 }
 
@@ -143,6 +152,11 @@ const stripMarkup = {
     inputs: [
         {
             name: "perf",
+            type: "json",
+            source: ""
+        },
+        {
+            name: "verseWords",
             type: "json",
             source: ""
         },

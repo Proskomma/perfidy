@@ -55,14 +55,8 @@ const localWordsWrappersActions = {
                         workspace.currentOccurrences[word]++;
                         output.wrappers[chapter][verses].push({
                             word,
-                            payload: {
-                                type: "wrapper",
-                                subType: "usfm:w",
-                                atts: {
-                                    "x-occurrence": workspace.currentOccurrences[word],
-                                    "x-occurrences": totalOccurrences[chapter][verses][word]
-                                }
-                            }
+                            occurrence: workspace.currentOccurrences[word],
+                            occurrences: totalOccurrences[chapter][verses][word]
                         });
                     }
                 } catch (err) {
