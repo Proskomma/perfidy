@@ -220,7 +220,7 @@ const wordSearch = {
             source: ""
         },
         {
-            name: "ignoreCase", // expect '1' to enable
+            name: "ignoreCase", // expect '1' to enable case insensitive, otherwise we do case sensitive searching
             type: "text",
             source: ""
         },
@@ -235,7 +235,7 @@ const wordSearch = {
             source: ""
         },
         {
-            name: "partial", // expect '1' to enable paritial match of words/string
+            name: "partial", // expect '1' to enable partial match of words/string, otherwise we do full word matching
             type: "text",
             source: ""
         },
