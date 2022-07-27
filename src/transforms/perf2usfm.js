@@ -9,7 +9,7 @@ const pushStrAtLevel = (workspace,str,level = 0) => {
     workspace.usfmBits[level].push(str);
 }
 
-const nestedPushStr = (workspace,str) => 
+const nestedPushStr = (workspace,str) =>
     pushStrAtLevel(workspace,str,workspace.nestInx)
 
 const upNestingLevel = (workspace,saveEl) => {
@@ -31,7 +31,14 @@ const downNestingLevel = workspace => {
         workspace.nestInx--
     }
     workspace.usfmBits[workspace.nestInx].push(...tempArr)
-} 
+}
+
+const oneifyTag = t => {
+    if (['toc', 'toca', 'mt'].includes(t)) {
+        return t + '1';
+    }
+    return t;
+}
 
 const localToUsfmActions = {
     startDocument: [
@@ -47,10 +54,7 @@ const localToUsfmActions = {
                     Object.entries(context.document.metadata.document)
                         .filter(kv => !['tags', 'properties', 'bookCode'].includes(kv[0]))
                     ) {
-                    if (['toc', 'toca'].includes(key)) {
-                        key += '1';
-                    }
-                    nestedPushStr(workspace,`\\${key} ${value}\n`);
+                    nestedPushStr(workspace,`\\${oneifyTag(key)} ${value}\n`);
                 };
             }
         },
@@ -145,8 +149,8 @@ const localToUsfmActions = {
             test: () => true,
             action: ({context,workspace}) => {
                 const element = context.sequences[0].element;
-                if (element 
-                    && element.atts 
+                if (element
+                    && element.atts
                     && Object.keys(element.atts).length>0)
                 {
                     nestedPushStr(workspace,`\\zaln-s |`);
@@ -186,8 +190,8 @@ const localToUsfmActions = {
                 const savedStartEl = popNestedElement(workspace)
                 const nestedUsfmBits = popNestedUsfmBits(workspace)
                 downNestingLevel(workspace)
-                if (savedStartEl 
-                    && savedStartEl.atts 
+                if (savedStartEl
+                    && savedStartEl.atts
                     && Object.keys(savedStartEl.atts).length>0)
                 {
                     nestedPushStr(workspace,`\\w ${nestedUsfmBits.join('')}|`);
