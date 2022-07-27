@@ -75,6 +75,23 @@ const localWordSearchActions = {
     ],
 };
 
+const chuncksToString = function(chunks){
+    const perf = perfWrapper({blocks:[
+        {
+            "type": "paragraph",
+            "subtype": "usfm:p",
+            "content": [
+                ...chunks
+            ]
+        },
+    ]});
+    
+    const {perf: outputPerf } = mergePerfText.code({perf});
+    
+    return outputPerf.blocks.content[0];
+
+}
+
 const addMatch = function(workspace, config) {
 
     const match = {
