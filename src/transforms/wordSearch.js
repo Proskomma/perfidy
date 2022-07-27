@@ -190,7 +190,7 @@ const wordSearchCode = function ({perf, searchString, ignoreCase = '1', logic = 
         toSearch = regexParts[1];
         regexFlags = regexParts[2];
 
-        if (ignoreCase && ! regexFlags.includes('i')) {
+        if (ignoreCase_ && ! regexFlags.includes('i')) {
           regexFlags += 'i';
         }
     } else if ((andLogic_ || orLogic_) && toSearch) {
