@@ -17,6 +17,7 @@ import wordFrequency from '../transforms/wordFrequency';
 import wordSearch from "../transforms/wordSearch";
 import wordsWrappers from "../transforms/wordsWrappers";
 import mergeReport from "../transforms/mergeReport";
+import uniqueWords from "../transforms/uniqueWords";
 
 const stepTemplates = {
     Transform: {
@@ -39,6 +40,7 @@ const stepTemplates = {
         wordSearch,
         wordsWrappers,
         mergeReport,
+        uniqueWords,
     },
     Source: {
         local: {
