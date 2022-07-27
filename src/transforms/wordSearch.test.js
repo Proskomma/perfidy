@@ -53,6 +53,7 @@ describe('test wordSearch exact match', () => {
               'Paul'
             ]
           },
+          ", ",
         ],
       },
     ]);
@@ -98,6 +99,7 @@ describe('test wordSearch exact match', () => {
               'Paul'
             ]
           },
+          ", ",
         ],
       },
     ]);
@@ -127,6 +129,7 @@ describe('test wordSearch and logic', () => {
               'Paul'
             ]
           },
+          ", ",
         ],
       },
     ]);
@@ -158,6 +161,7 @@ describe('test wordSearch and logic', () => {
               'Paul'
             ]
           },
+          ", ",
         ],
       },
     ]);
@@ -209,6 +213,7 @@ describe('test wordSearch and logic', () => {
               'Paul'
             ]
           },
+          ", ",
         ],
       },
     ]);
@@ -238,6 +243,7 @@ describe('test wordSearch or logic', () => {
               'Paul'
             ]
           },
+          ", ",
         ],
       },
     ]);
@@ -269,6 +275,7 @@ describe('test wordSearch or logic', () => {
               'Paul'
             ]
           },
+          ", ",
         ],
       },
     ]);
@@ -294,6 +301,7 @@ describe('test wordSearch or logic', () => {
           },
           ", ",
           "Paul",
+          ", ",
         ],
       },
     ]);
@@ -336,6 +344,7 @@ describe('test wordSearch or logic', () => {
               'Paul'
             ]
           },
+          ", ",
         ],
       },
     ]);
@@ -366,6 +375,7 @@ describe('test wordSearch or logic with partial match', () => {
               'Paul'
             ]
           },
+          ", ",
         ],
       },
     ]);
@@ -397,6 +407,7 @@ describe('test wordSearch or logic with partial match', () => {
               'Paul'
             ]
           },
+          ", ",
         ],
       },
     ]);
@@ -422,6 +433,7 @@ describe('test wordSearch or logic with partial match', () => {
           },
           ", ",
           "Paul",
+          ", ",
         ],
       },
     ]);
@@ -464,6 +476,7 @@ describe('test wordSearch or logic with partial match', () => {
               'Paul'
             ]
           },
+          ", ",
         ],
       },
     ]);
@@ -494,6 +507,7 @@ describe('test wordSearch partialMatch string', () => {
               'Paul'
             ]
           },
+          ", ",
         ],
       },
     ]);
@@ -530,6 +544,7 @@ describe('test wordSearch partialMatch string', () => {
               'Paul'
             ]
           },
+          ", ",
         ],
       },
     ]);
@@ -593,8 +608,10 @@ describe('test wordSearch regex', () => {
               'Paul'
             ]
           },
+          ", ",
         ],
       },
     ]);
   });
 });
+

@@ -1,4 +1,6 @@
 import {ProskommaRenderFromJson} from 'proskomma-json-tools';
+import xre from "xregexp";
+const splitWords = xre('([\\p{Letter}\\p{Number}\\p{Mark}\\u2060]{1,127})');
 
 const localWordSearchActions = {
     startDocument: [
@@ -9,7 +11,7 @@ const localWordSearchActions = {
                 workspace.chapter = null;
                 workspace.verses = null;
                 workspace.matches = new Set([]);
-                workspace.chunks = new Set([]);
+                workspace.chunks = [];
                 if (config.regex) {
                     workspace.regex = new RegExp(config.toSearch, config.regexFlags);
                 }
@@ -25,11 +27,11 @@ const localWordSearchActions = {
                 if (element.subType === 'chapter') {
                     doSearch(workspace, config);
                     workspace.chapter = element.atts['number'];
-                    workspace.chunks = new Set([]);
+                    workspace.chunks = [];
                 } else if (element.subType === 'verses') {
                     doSearch(workspace, config);
                     workspace.verses = element.atts['number'];
-                    workspace.chunks = new Set([]);
+                    workspace.chunks = [];
                 }
             }
         },
@@ -40,7 +42,7 @@ const localWordSearchActions = {
             test: ({context, workspace}) => workspace.chapter && workspace.verses,
             action: ({config, context, workspace, output}) => {
                 const text = context.sequences[0].element.text;
-                workspace.chunks.add(text);
+                workspace.chunks.push(text);
             }
         },
     ],
@@ -75,25 +77,7 @@ const localWordSearchActions = {
     ],
 };
 
-const chuncksToString = function(chunks){
-    const perf = perfWrapper({blocks:[
-        {
-            "type": "paragraph",
-            "subtype": "usfm:p",
-            "content": [
-                ...chunks
-            ]
-        },
-    ]});
-    
-    const {perf: outputPerf } = mergePerfText.code({perf});
-    
-    return outputPerf.blocks.content[0];
-
-}
-
 const addMatch = function(workspace, config) {
-
     const match = {
         chapter: workspace.chapter,
         verses: workspace.verses,
@@ -142,7 +126,8 @@ function findMatch(config, text, search, workspace) {
   }
   
   if (!config.partialMatch) { // if word search, we separate text into array of words to match
-    text = text.split(' ');
+    const words = xre.split(text, splitWords);
+    text = words;
   }
   
   let allMatched = true;
@@ -163,16 +148,8 @@ function findMatch(config, text, search, workspace) {
 }
 
 const doSearch = function(workspace, config){
-    if (workspace.chunks.size){
-        let text = '' 
-        workspace.chunks.forEach(( value ) => {
-            let lastChar = text && text.substring(text.length-1)
-            // TODO : need to fix punctuation spacing
-            if (lastChar !== ' ' && value !== ' '){
-                text += ' ';
-            }
-            text += value;
-        });
+    if (workspace.chunks.length) {
+        let text = workspace.chunks.join(''); 
         
         let search_ = config.toSearch;
         const found = findMatch(config, text, search_, workspace);

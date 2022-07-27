@@ -41,6 +41,46 @@
     "description": "USFM=>PERF: Conversion via Proskomma"
   },
   {
+    "id": 8,
+    "title": "Just The Bible",
+    "name": "justTheBible",
+    "type": "Transform",
+    "inputs": [
+      {
+        "name": "perf",
+        "type": "json",
+        "source": "Transform 3 perf"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "perf",
+        "type": "json"
+      }
+    ],
+    "description": "PERF=>PERF: Strips most markup"
+  },
+  {
+    "id": 9,
+    "title": "Merge Verse Text",
+    "name": "mergePerfText",
+    "type": "Transform",
+    "inputs": [
+      {
+        "name": "perf",
+        "type": "json",
+        "source": "Transform 8 perf"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "perf",
+        "type": "json"
+      }
+    ],
+    "description": "PERF=>PERF: Merge consecutive text strings"
+  },
+  {
     "id": 5,
     "title": "Search Term",
     "type": "Source",
@@ -49,20 +89,56 @@
     "outputType": "text"
   },
   {
-    "id": 6,
-    "title": "Transform 6",
+    "id": 11,
+    "title": "Enable",
+    "type": "Source",
+    "sourceLocation": "local",
+    "localValue": "1",
+    "outputType": "text"
+  },
+  {
+    "id": 12,
+    "title": "Disable",
+    "type": "Source",
+    "sourceLocation": "local",
+    "localValue": "0",
+    "outputType": "text"
+  },
+  {
+    "id": 10,
+    "title": "Word Search Output",
     "name": "wordSearch",
     "type": "Transform",
     "inputs": [
       {
         "name": "perf",
         "type": "json",
-        "source": "Transform 3 perf"
+        "source": "Transform 9 perf"
       },
       {
         "name": "searchString",
         "type": "text",
         "source": "Source 5"
+      },
+      {
+        "name": "ignoreCase",
+        "type": "text",
+        "source": "Source 11"
+      },
+      {
+        "name": "regex",
+        "type": "text",
+        "source": "Source 12"
+      },
+      {
+        "name": "logic",
+        "type": "text",
+        "source": "Source 12"
+      },
+      {
+        "name": "partial",
+        "type": "text",
+        "source": "Source 12"
       }
     ],
     "outputs": [
@@ -74,10 +150,24 @@
     "description": "PERF=>JSON: Searches for a word"
   },
   {
-    "id": 7,
-    "title": "Matches",
+    "id": 13,
+    "title": "Just The Bible",
     "type": "Display",
     "inputType": "json",
-    "inputSource": "Transform 6 matches"
+    "inputSource": "Transform 8 perf"
+  },
+  {
+    "id": 14,
+    "title": "Merged Verses",
+    "type": "Display",
+    "inputType": "json",
+    "inputSource": "Transform 9 perf"
+  },
+  {
+    "id": 7,
+    "title": "Search Matches",
+    "type": "Display",
+    "inputType": "json",
+    "inputSource": "Transform 10 matches"
   }
 ]
