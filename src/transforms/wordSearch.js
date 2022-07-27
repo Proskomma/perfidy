@@ -220,22 +220,22 @@ const wordSearch = {
             source: ""
         },
         {
-            name: "ignoreCase",
+            name: "ignoreCase", // expect '1' to enable
             type: "text",
             source: ""
         },
         {
-            name: "regex",
+            name: "regex", // expect '1' to enable
             type: "text",
             source: ""
         },
         {
-            name: "logic",
+            name: "logic", // expect 'A' to enable AND logic, 'O' to enable OR logic, default is exact match search string
             type: "text",
             source: ""
         },
         {
-            name: "partial",
+            name: "partial", // expect '1' to enable paritial match of words/string
             type: "text",
             source: ""
         },
