@@ -77,6 +77,11 @@
         "name": "perf",
         "type": "json",
         "source": "Transform 3 perf"
+      },
+      {
+        "name": "verseWords",
+        "type": "json",
+        "source": "Transform 4 verseWords"
       }
     ],
     "outputs": [
@@ -92,8 +97,15 @@
     "description": "PERF=>PERF: Strips alignment markup"
   },
   {
+    "id": 7,
+    "title": "Stripped markup",
+    "type": "Display",
+    "inputType": "json",
+    "inputSource": "Transform 6 stripped"
+  },
+  {
     "id": 9,
-    "title": "Merge Text",
+    "title": "Merge stripped perf",
     "name": "mergePerfText",
     "type": "Transform",
     "inputs": [
@@ -113,14 +125,7 @@
   },
   {
     "id": 8,
-    "title": "Stripped markup",
-    "type": "Display",
-    "inputType": "json",
-    "inputSource": "Transform 6 stripped"
-  },
-  {
-    "id": 7,
-    "title": "Stripped perf",
+    "title": "Stripped Merged Perf",
     "type": "Display",
     "inputType": "json",
     "inputSource": "Transform 9 perf"

@@ -15,7 +15,6 @@ import verseStats from "../transforms/verseStats";
 import verseWords from '../transforms/verseWords';
 import wordFrequency from '../transforms/wordFrequency';
 import wordSearch from "../transforms/wordSearch";
-import wordsWrappers from "../transforms/wordsWrappers";
 import mergeReport from "../transforms/mergeReport";
 import uniqueWords from "../transforms/uniqueWords";
 
@@ -38,7 +37,6 @@ const stepTemplates = {
         verseWords,
         wordFrequency,
         wordSearch,
-        wordsWrappers,
         mergeReport,
         uniqueWords,
     },
