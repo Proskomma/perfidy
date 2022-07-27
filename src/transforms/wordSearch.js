@@ -89,20 +89,26 @@ const addMatch = function(workspace, config) {
       ...config,
       andLogic: false, // for highlighting we match any found
     }
-    workspace.chunks.forEach(( value ) => {
+    
+    let text = workspace.chunks.join('');
+    const words = xre.split(text, splitWords);
+    
+    for (const value of words) {
+      if (value) {
         const found = findMatch(config_, value, search, workspace);
         if (found) {
-            match.content.push({
-                type: "wrapper",
-                subtype: "x-search-match",
-                content: [
-                    value
-                ]
-            });
+          match.content.push({
+            type: "wrapper",
+            subtype: "x-search-match",
+            content: [
+              value
+            ]
+          });
         } else {
-            match.content.push(value);
+          match.content.push(value);
         }
-    });
+      }
+    }
     workspace.matches.add( match );
 }
 

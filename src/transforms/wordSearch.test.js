@@ -21,10 +21,7 @@ const perf = perfWrapper({
             "number": "1"
           }
         },
-        "I",
-        ", ",
-        "Paul",
-        ", ",
+        "I, Paul, ",
       ]
     },
   ]
