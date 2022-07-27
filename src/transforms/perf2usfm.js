@@ -1,25 +1,45 @@
-import {ProskommaRenderFromJson} from 'proskomma-json-tools';
+import {usfmHelps, ProskommaRenderFromJson} from 'proskomma-json-tools';
 
 const initNestedLevel = (workspace,level) => {
     workspace.nestInx=level
     workspace.usfmBits[level] = [];
 }
 
-const pushStrAtLevel = (workspace,str,level = 0) => {
-    workspace.usfmBits[level].push(str);
+const wsPushStrAtLevel = (workspace,str,level = 0) => {
+    str && workspace.usfmBits[level].push(str);
 }
 
-const nestedPushStr = (workspace,str) =>
-    pushStrAtLevel(workspace,str,workspace.nestInx)
+const wsPushStr = (workspace,str) =>
+    wsPushStrAtLevel(workspace,str,workspace.nestInx)
 
 const upNestingLevel = (workspace,saveEl) => {
     workspace.savedEl.push(saveEl)
     initNestedLevel(workspace,workspace.nestInx+1)
 }
+const wsCheckAndPushTag = (workspace,tag,str) => {
+    const checkTags = ['ts', 'c', ...usfmHelps.bodyTags]
+    // Strategy - delay output and wait until able to keep the strict order
+    // unless tag is outside of valid list
+    // then output all delayed items and current one (while keeping the order) 
+    if (checkTags.includes(tag)) {
+        if (usfmHelps.bodyTags.includes(tag)) {
+            workspace.strictTagOrderStore.usfmBits.push(str)
+        } else {
+            workspace.strictTagOrderStore[tag] = str
+        }
+    } else {
+        wsPushStr(workspace,workspace.strictTagOrderStore.ts)
+        wsPushStr(workspace,workspace.strictTagOrderStore.c)
+        wsPushStr(workspace,workspace.strictTagOrderStore.usfmBits.join())
+        wsPushStr(workspace,str)
+        workspace.strictTagOrderStore = {usfmBits: []}
+    }
+}
 
 const popNestedElement = (workspace) => workspace.savedEl.pop()
 
 const popNestedUsfmBits = (workspace) => {
+    // To do: probably first output all content in "strictTagOrder"
     const retArr = workspace.usfmBits[workspace.nestInx]
     workspace.usfmBits[workspace.nestInx] = [];
     return retArr
@@ -48,13 +68,14 @@ const localToUsfmActions = {
             action: ({context, workspace}) => {
                 workspace.usfmBits = [];
                 workspace.savedEl = [];
+                workspace.strictTagOrderStore = {usfmBits: []}
                 initNestedLevel(workspace,0);
                 for (
                     let [key, value] of
                     Object.entries(context.document.metadata.document)
                         .filter(kv => !['tags', 'properties', 'bookCode'].includes(kv[0]))
                     ) {
-                    nestedPushStr(workspace,`\\${oneifyTag(key)} ${value}\n`);
+                        wsCheckAndPushTag(workspace,key,`\\${oneifyTag(key)} ${value}\n`);
                 };
             }
         },
@@ -89,7 +110,8 @@ const localToUsfmActions = {
             description: "Output paragraph tag",
             test: () => true,
             action: ({context, workspace}) => {
-                nestedPushStr(workspace,`\n\\${context.sequences[0].block.subType.split(':')[1]}\n`);
+                const tag = context.sequences[0].block.subType.split(':')[1]
+                wsCheckAndPushTag(workspace,tag,`\n\\${oneifyTag(tag)}\n`);
             }
         }
     ],
@@ -98,7 +120,7 @@ const localToUsfmActions = {
             description: "Output nl",
             test: () => true,
             action: ({workspace}) => {
-                nestedPushStr(workspace,`\n`);
+                wsPushStr(workspace,`\n`);
             }
         }
     ],
@@ -108,7 +130,7 @@ const localToUsfmActions = {
             test: () => true,
             action: ({context, workspace}) => {
                 const text = context.sequences[0].element.text;
-                nestedPushStr(workspace,text);
+                wsPushStr(workspace,text);
             }
         },
     ],
@@ -119,9 +141,9 @@ const localToUsfmActions = {
             action: ({context, workspace}) => {
                 const element = context.sequences[0].element;
                 if (element.subType === 'chapter') {
-                    nestedPushStr(workspace,`\n\\c ${element.atts['number']}\n`);
+                    wsCheckAndPushTag(workspace,'c',`\n\\c ${element.atts['number']}\n`);
                 } else if (element.subType === 'verses') {
-                    nestedPushStr(workspace,`\\v ${element.atts['number']}\n`);
+                    wsCheckAndPushTag(workspace,'v',`\\v ${element.atts['number']}\n`);
                 }
             }
         },
@@ -131,14 +153,7 @@ const localToUsfmActions = {
             description: "Build output",
             test: () => true,
             action: ({workspace, output}) => {
-                const reorderedChapters = workspace.usfmBits[0].reduce((a,b) =>{
-                    if (a && a.length>0 && b.startsWith(`\n\\c `)){
-                        const lastA = a[a.length-1]
-                        const restA = a.slice(0,a.length-2)
-                        return [...restA, b, lastA]
-                    }
-                    return [...a,b]
-                });
+                const reorderedChapters = workspace.usfmBits[0]
                 output.usfm = reorderedChapters.join('');
             }
         },
@@ -149,17 +164,18 @@ const localToUsfmActions = {
             test: () => true,
             action: ({context,workspace}) => {
                 const element = context.sequences[0].element;
-                if (element
-                    && element.atts
-                    && Object.keys(element.atts).length>0)
-                {
-                    nestedPushStr(workspace,`\\zaln-s |`);
-                    let separatorCh = "";
-                    Object.keys(element.atts).forEach(key => {
-                        nestedPushStr(workspace,`${separatorCh}${key}="${element.atts[key]}"`);
-                        separatorCh = " "
-                    })
-                    nestedPushStr(workspace,`\\*`);
+                if (element && element.atts) {
+                    if (Object.keys(element.atts).length>0) {
+                        wsPushStr(workspace,`\\zaln-s |`);
+                        let separatorCh = "";
+                        Object.keys(element.atts).forEach(key => {
+                            wsPushStr(workspace,`${separatorCh}${key}="${element.atts[key]}"`);
+                            separatorCh = " "
+                        })
+                        wsPushStr(workspace,`\\*`);
+                    } else if (element.subType === "usfm:ts") {
+                        wsCheckAndPushTag(workspace,'ts',`\n\n\\ts\\* `)
+                    }
                 }
             }
         }
@@ -169,13 +185,13 @@ const localToUsfmActions = {
             description: "Output end of milestone",
             test: () => true,
             action: ({workspace}) => {
-                nestedPushStr(workspace,`\\zaln-e\\*`);
+                wsPushStr(workspace,`\\zaln-e\\*`);
             }
         }
     ],
     startWrapper: [
         {
-            description: "Output start of wrapper",
+            description: "Handle start of wrapper",
             test: () => true,
             action: ({context,workspace}) => {
                 upNestingLevel(workspace,context.sequences[0].element)
@@ -184,7 +200,7 @@ const localToUsfmActions = {
     ],
     endWrapper: [
         {
-            description: "Output end of wrapper",
+            description: "Output start and end of wrapper, incl. wrapped text",
             test: () => true,
             action: ({context,workspace}) => {
                 const savedStartEl = popNestedElement(workspace)
@@ -194,15 +210,15 @@ const localToUsfmActions = {
                     && savedStartEl.atts
                     && Object.keys(savedStartEl.atts).length>0)
                 {
-                    nestedPushStr(workspace,`\\w ${nestedUsfmBits.join('')}|`);
+                    wsPushStr(workspace,`\\w ${nestedUsfmBits.join('')}|`);
                     let separatorCh = "";
                     Object.keys(savedStartEl.atts).forEach(key => {
-                        nestedPushStr(workspace,
+                        wsPushStr(workspace,
                             `${separatorCh}${key}="${savedStartEl.atts[key]}"`);
                         separatorCh = " "
                     })
                 }
-                nestedPushStr(workspace,`\\w*`);
+                wsPushStr(workspace,`\\w*`);
             }
         }
     ],
