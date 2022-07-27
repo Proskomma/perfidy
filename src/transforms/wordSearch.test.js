@@ -205,65 +205,67 @@ describe('test wordSearch andLogic', () => {
       },
     ]);
   });
+});
 
-    test('regex succeeds', () => {
-        const perf = perfWrapper({
-            blocks: [
-                {
-                    "type": "paragraph",
-                    "subtype": "usfm:p",
-                    "content": [
-                        {
-                            "type": "mark",
-                            "subtype": "chapter",
-                            "atts": {
-                                "number": "1"
-                            }
-                        },
-                        {
-                            "type": "mark",
-                            "subtype": "verses",
-                            "atts": {
-                                "number": "1"
-                            }
-                        },
-                        "I",
-                        ", ",
-                        "Paul",
-                        ", ",
-                    ]
-                },
-            ]
-        });
-
-        const searchString = 'I|l';
-        const ignoreCase = '0';
-        const regex = '1'
-
-        const {matches} = wordSearch.code({perf, searchString, ignoreCase, regex})
-
-        expect(matches).toEqual([
+describe('test wordSearch regex', () => {
+  test('regex succeeds', () => {
+    const perf = perfWrapper({
+      blocks: [
+        {
+          "type": "paragraph",
+          "subtype": "usfm:p",
+          "content": [
             {
-                "chapter": "1",
-                "verses": "1",
-                "content": [
-                    {
-                        type: "wrapper",
-                        subtype: "x-search-match",
-                        content: [
-                            'I'
-                        ]
-                    },
-                    ", ",
-                    {
-                        type: "wrapper",
-                        subtype: "x-search-match",
-                        content: [
-                            'Paul'
-                        ]
-                    },
-                ],
+              "type": "mark",
+              "subtype": "chapter",
+              "atts": {
+                "number": "1"
+              }
             },
-        ]);
+            {
+              "type": "mark",
+              "subtype": "verses",
+              "atts": {
+                "number": "1"
+              }
+            },
+            "I",
+            ", ",
+            "Paul",
+            ", ",
+          ]
+        },
+      ]
     });
+
+    const searchString = 'I|l';
+    const ignoreCase = '0';
+    const regex = '1'
+
+    const {matches} = wordSearch.code({perf, searchString, ignoreCase, regex})
+
+    expect(matches).toEqual([
+      {
+        "chapter": "1",
+        "verses": "1",
+        "content": [
+          {
+            type: "wrapper",
+            subtype: "x-search-match",
+            content: [
+              'I'
+            ]
+          },
+          ", ",
+          {
+            type: "wrapper",
+            subtype: "x-search-match",
+            content: [
+              'Paul'
+            ]
+          },
+        ],
+      },
+    ]);
+  });
 });
