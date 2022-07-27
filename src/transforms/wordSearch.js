@@ -168,17 +168,25 @@ const wordSearchCode = function ({perf, searchString, ignoreCase = '1', logic = 
     const orLogic_ = logic === 'O';
     const partialMatch_ = partialMatch && partialMatch.trim() === '1';
     let regex_ = regex.trim() === '1';
-    let regexFlags = '';
     let toSearch = searchString.trim();
+    if (!regex_) {
+      if (toSearch.includes('?') || toSearch.includes('*')) { // check for wildcard characters
+        let newSearch = toSearch.replaceAll('?', '\\S{1}');
+        newSearch = newSearch.replaceAll('*', '\\S*');
+        toSearch = '/' + newSearch + '/';
+      }
+    }
+    
+    let regexFlags = '';
     if ( toSearch.startsWith('/') && toSearch.includes('/', 2) ) {
         regex_ = true;
         const regexParts = toSearch.split('/');
         toSearch = regexParts[1];
         regexFlags = regexParts[2];
 
-      if (ignoreCase && ! regexFlags.includes('i')) {
-        regexFlags += 'i';
-      }
+        if (ignoreCase && ! regexFlags.includes('i')) {
+          regexFlags += 'i';
+        }
     } else if ((andLogic_ || orLogic_) && toSearch) {
       toSearch = toSearch.split(' ');
     }

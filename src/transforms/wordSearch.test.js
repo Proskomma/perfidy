@@ -37,9 +37,61 @@ describe('test wordSearch exact match', () => {
     const searchString = 'paul';
     const ignoreCase = '1';
 
-    const {matches} = wordSearch.code({perf, searchString, ignoreCase, logic})
+    const results = wordSearch.code({perf, searchString, ignoreCase, logic})
 
-    expect(matches).toEqual([
+    expect(results.matches).toEqual([
+      {
+        "chapter": "1",
+        "verses": "1",
+        "content": [
+          "I",
+          ", ",
+          {
+            type: "wrapper",
+            subtype: "x-search-match",
+            content: [
+              'Paul'
+            ]
+          },
+          ", ",
+        ],
+      },
+    ]);
+  });
+
+  test('ignore case succeeds with ?', () => {
+    const searchString = 'pa?l';
+    const ignoreCase = '1';
+
+    const results = wordSearch.code({perf, searchString, ignoreCase, logic})
+
+    expect(results.matches).toEqual([
+      {
+        "chapter": "1",
+        "verses": "1",
+        "content": [
+          "I",
+          ", ",
+          {
+            type: "wrapper",
+            subtype: "x-search-match",
+            content: [
+              'Paul'
+            ]
+          },
+          ", ",
+        ],
+      },
+    ]);
+  });
+
+  test('ignore case succeeds with *', () => {
+    const searchString = 'p*l';
+    const ignoreCase = '1';
+
+    const results = wordSearch.code({perf, searchString, ignoreCase, logic})
+
+    expect(results.matches).toEqual([
       {
         "chapter": "1",
         "verses": "1",
@@ -63,18 +115,18 @@ describe('test wordSearch exact match', () => {
     const searchString = 'pau';
     const ignoreCase = '1';
 
-    const {matches} = wordSearch.code({perf, searchString, ignoreCase, logic})
+    const results = wordSearch.code({perf, searchString, ignoreCase, logic})
 
-    expect(matches).toEqual([ ]);
+    expect(results.matches).toEqual([ ]);
   });
 
   test('case sensitive fails on case mismatch', () => {
     const searchString = 'paul';
     const ignoreCase = '0';
 
-    const {matches} = wordSearch.code({perf, searchString, ignoreCase, logic})
+    const results = wordSearch.code({perf, searchString, ignoreCase, logic})
 
-    expect(matches).toEqual(
+    expect(results.matches).toEqual(
       []
     );
   });
@@ -83,9 +135,113 @@ describe('test wordSearch exact match', () => {
     const searchString = 'Paul';
     const ignoreCase = '0';
 
-    const {matches} = wordSearch.code({perf, searchString, ignoreCase, logic})
+    const results = wordSearch.code({perf, searchString, ignoreCase, logic})
 
-    expect(matches).toEqual([
+    expect(results.matches).toEqual([
+      {
+        "chapter": "1",
+        "verses": "1",
+        "content": [
+          "I",
+          ", ",
+          {
+            type: "wrapper",
+            subtype: "x-search-match",
+            content: [
+              'Paul'
+            ]
+          },
+          ", ",
+        ],
+      },
+    ]);
+  });
+
+  test('case sensitive succeeds with ?', () => {
+    const searchString = 'Pa?l';
+    const ignoreCase = '0';
+
+    const results = wordSearch.code({perf, searchString, ignoreCase, logic})
+
+    expect(results.matches).toEqual([
+      {
+        "chapter": "1",
+        "verses": "1",
+        "content": [
+          "I",
+          ", ",
+          {
+            type: "wrapper",
+            subtype: "x-search-match",
+            content: [
+              'Paul'
+            ]
+          },
+          ", ",
+        ],
+      },
+    ]);
+  });
+
+  test('case sensitive succeeds with *', () => {
+    const searchString = 'Pa*l';
+    const ignoreCase = '0';
+
+    const results = wordSearch.code({perf, searchString, ignoreCase, logic})
+
+    expect(results.matches).toEqual([
+      {
+        "chapter": "1",
+        "verses": "1",
+        "content": [
+          "I",
+          ", ",
+          {
+            type: "wrapper",
+            subtype: "x-search-match",
+            content: [
+              'Paul'
+            ]
+          },
+          ", ",
+        ],
+      },
+    ]);
+  });
+
+  test('case sensitive succeeds with * case 2', () => {
+    const searchString = 'Pau*l';
+    const ignoreCase = '0';
+
+    const results = wordSearch.code({perf, searchString, ignoreCase, logic})
+
+    expect(results.matches).toEqual([
+      {
+        "chapter": "1",
+        "verses": "1",
+        "content": [
+          "I",
+          ", ",
+          {
+            type: "wrapper",
+            subtype: "x-search-match",
+            content: [
+              'Paul'
+            ]
+          },
+          ", ",
+        ],
+      },
+    ]);
+  });
+
+  test('case sensitive succeeds with * - case 3', () => {
+    const searchString = 'P*l';
+    const ignoreCase = '0';
+
+    const results = wordSearch.code({perf, searchString, ignoreCase, logic})
+
+    expect(results.matches).toEqual([
       {
         "chapter": "1",
         "verses": "1",
@@ -113,9 +269,9 @@ describe('test wordSearch and logic', () => {
     const searchString = 'paul';
     const ignoreCase = '1';
 
-    const {matches} = wordSearch.code({perf, searchString, ignoreCase, logic})
+    const results = wordSearch.code({perf, searchString, ignoreCase, logic})
 
-    expect(matches).toEqual([
+    expect(results.matches).toEqual([
       {
         "chapter": "1",
         "verses": "1",
@@ -139,9 +295,9 @@ describe('test wordSearch and logic', () => {
     const searchString = 'i paul';
     const ignoreCase = '1';
 
-    const {matches} = wordSearch.code({perf, searchString, ignoreCase, logic})
+    const results = wordSearch.code({perf, searchString, ignoreCase, logic})
 
-    expect(matches).toEqual([
+    expect(results.matches).toEqual([
       {
         "chapter": "1",
         "verses": "1",
@@ -171,18 +327,18 @@ describe('test wordSearch and logic', () => {
     const searchString = 'i peter';
     const ignoreCase = '1';
 
-    const {matches} = wordSearch.code({perf, searchString, ignoreCase, logic})
+    const results = wordSearch.code({perf, searchString, ignoreCase, logic})
 
-    expect(matches).toEqual([]);
+    expect(results.matches).toEqual([]);
   });
   
   test('case sensitive fails on case mismatch', () => {
     const searchString = 'i paul';
     const ignoreCase = '0';
 
-    const {matches} = wordSearch.code({perf, searchString, ignoreCase, logic})
+    const results = wordSearch.code({perf, searchString, ignoreCase, logic})
 
-    expect(matches).toEqual(
+    expect(results.matches).toEqual(
       []
     );
   });
@@ -191,9 +347,9 @@ describe('test wordSearch and logic', () => {
     const searchString = 'I Paul';
     const ignoreCase = '0';
 
-    const {matches} = wordSearch.code({perf, searchString, ignoreCase, logic})
+    const results = wordSearch.code({perf, searchString, ignoreCase, logic})
 
-    expect(matches).toEqual([
+    expect(results.matches).toEqual([
       {
         "chapter": "1",
         "verses": "1",
@@ -227,9 +383,9 @@ describe('test wordSearch or logic', () => {
     const searchString = 'paul';
     const ignoreCase = '1';
 
-    const {matches} = wordSearch.code({perf, searchString, ignoreCase, logic})
+    const results = wordSearch.code({perf, searchString, ignoreCase, logic})
 
-    expect(matches).toEqual([
+    expect(results.matches).toEqual([
       {
         "chapter": "1",
         "verses": "1",
@@ -253,9 +409,9 @@ describe('test wordSearch or logic', () => {
     const searchString = 'i paul';
     const ignoreCase = '1';
 
-    const {matches} = wordSearch.code({perf, searchString, ignoreCase, logic})
+    const results = wordSearch.code({perf, searchString, ignoreCase, logic})
 
-    expect(matches).toEqual([
+    expect(results.matches).toEqual([
       {
         "chapter": "1",
         "verses": "1",
@@ -285,9 +441,9 @@ describe('test wordSearch or logic', () => {
     const searchString = 'i peter';
     const ignoreCase = '1';
 
-    const {matches} = wordSearch.code({perf, searchString, ignoreCase, logic})
+    const results = wordSearch.code({perf, searchString, ignoreCase, logic})
 
-    expect(matches).toEqual([
+    expect(results.matches).toEqual([
       {
         "chapter": "1",
         "verses": "1",
@@ -311,9 +467,9 @@ describe('test wordSearch or logic', () => {
     const searchString = 'i paul';
     const ignoreCase = '0';
 
-    const {matches} = wordSearch.code({perf, searchString, ignoreCase, logic})
+    const results = wordSearch.code({perf, searchString, ignoreCase, logic})
 
-    expect(matches).toEqual(
+    expect(results.matches).toEqual(
       []
     );
   });
@@ -322,9 +478,9 @@ describe('test wordSearch or logic', () => {
     const searchString = 'I Paul';
     const ignoreCase = '0';
 
-    const {matches} = wordSearch.code({perf, searchString, ignoreCase, logic})
+    const results = wordSearch.code({perf, searchString, ignoreCase, logic})
 
-    expect(matches).toEqual([
+    expect(results.matches).toEqual([
       {
         "chapter": "1",
         "verses": "1",
@@ -359,9 +515,9 @@ describe('test wordSearch or logic with partial match', () => {
     const searchString = 'pau';
     const ignoreCase = '1';
 
-    const {matches} = wordSearch.code({perf, searchString, ignoreCase, logic, partialMatch})
+    const results = wordSearch.code({perf, searchString, ignoreCase, logic, partialMatch})
 
-    expect(matches).toEqual([
+    expect(results.matches).toEqual([
       {
         "chapter": "1",
         "verses": "1",
@@ -385,9 +541,9 @@ describe('test wordSearch or logic with partial match', () => {
     const searchString = 'i pau';
     const ignoreCase = '1';
 
-    const {matches} = wordSearch.code({perf, searchString, ignoreCase, logic, partialMatch})
+    const results = wordSearch.code({perf, searchString, ignoreCase, logic, partialMatch})
 
-    expect(matches).toEqual([
+    expect(results.matches).toEqual([
       {
         "chapter": "1",
         "verses": "1",
@@ -417,9 +573,9 @@ describe('test wordSearch or logic with partial match', () => {
     const searchString = 'i peter';
     const ignoreCase = '1';
 
-    const {matches} = wordSearch.code({perf, searchString, ignoreCase, logic, partialMatch})
+    const results = wordSearch.code({perf, searchString, ignoreCase, logic, partialMatch})
 
-    expect(matches).toEqual([
+    expect(results.matches).toEqual([
       {
         "chapter": "1",
         "verses": "1",
@@ -443,9 +599,9 @@ describe('test wordSearch or logic with partial match', () => {
     const searchString = 'i pau';
     const ignoreCase = '0';
 
-    const {matches} = wordSearch.code({perf, searchString, ignoreCase, logic, partialMatch})
+    const results = wordSearch.code({perf, searchString, ignoreCase, logic, partialMatch})
 
-    expect(matches).toEqual(
+    expect(results.matches).toEqual(
       []
     );
   });
@@ -454,9 +610,9 @@ describe('test wordSearch or logic with partial match', () => {
     const searchString = 'I Pau';
     const ignoreCase = '0';
 
-    const {matches} = wordSearch.code({perf, searchString, ignoreCase, logic, partialMatch})
+    const results = wordSearch.code({perf, searchString, ignoreCase, logic, partialMatch})
 
-    expect(matches).toEqual([
+    expect(results.matches).toEqual([
       {
         "chapter": "1",
         "verses": "1",
@@ -491,9 +647,9 @@ describe('test wordSearch partialMatch string', () => {
     const searchString = 'pau';
     const ignoreCase = '1';
 
-    const {matches} = wordSearch.code({perf, searchString, ignoreCase, logic, partialMatch})
+    const results = wordSearch.code({perf, searchString, ignoreCase, logic, partialMatch})
 
-    expect(matches).toEqual([
+    expect(results.matches).toEqual([
       {
         "chapter": "1",
         "verses": "1",
@@ -517,9 +673,9 @@ describe('test wordSearch partialMatch string', () => {
     const searchString = 'pau';
     const ignoreCase = '0';
 
-    const {matches} = wordSearch.code({perf, searchString, ignoreCase, logic, partialMatch})
+    const results = wordSearch.code({perf, searchString, ignoreCase, logic, partialMatch})
 
-    expect(matches).toEqual(
+    expect(results.matches).toEqual(
       []
     );
   });
@@ -528,9 +684,9 @@ describe('test wordSearch partialMatch string', () => {
     const searchString = 'Pau';
     const ignoreCase = '0';
 
-    const {matches} = wordSearch.code({perf, searchString, ignoreCase, logic, partialMatch})
+    const results = wordSearch.code({perf, searchString, ignoreCase, logic, partialMatch})
 
-    expect(matches).toEqual([
+    expect(results.matches).toEqual([
       {
         "chapter": "1",
         "verses": "1",
@@ -586,9 +742,9 @@ describe('test wordSearch regex', () => {
     const ignoreCase = '0';
     const regex = '1'
 
-    const {matches} = wordSearch.code({perf, searchString, ignoreCase, regex})
+    const results = wordSearch.code({perf, searchString, ignoreCase, regex})
 
-    expect(matches).toEqual([
+    expect(results.matches).toEqual([
       {
         "chapter": "1",
         "verses": "1",
