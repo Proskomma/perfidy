@@ -15,6 +15,7 @@ import verseStats from "../transforms/verseStats";
 import verseWords from '../transforms/verseWords';
 import wordFrequency from '../transforms/wordFrequency';
 import wordSearch from "../transforms/wordSearch";
+import wordsWrappers from "../transforms/wordsWrappers";
 
 const stepTemplates = {
     Transform: {
@@ -35,6 +36,7 @@ const stepTemplates = {
         verseWords,
         wordFrequency,
         wordSearch,
+        wordsWrappers
     },
     Source: {
         local: {

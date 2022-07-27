@@ -42,7 +42,7 @@ const localVerseWordsActions = {
                 const re = xre('([\\p{Letter}\\p{Number}\\p{Mark}\\u2060]{1,127})')
                 const words = xre.match(text, re, "all");
                 for (const word of words) {
-                    output.cv[chapter][verses][word] ??= 1;
+                    output.cv[chapter][verses][word] ??= 0;
                     output.cv[chapter][verses][word] += 1;
                 }
             }
