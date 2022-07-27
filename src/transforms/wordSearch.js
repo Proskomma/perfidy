@@ -58,6 +58,9 @@ const localWordSearchActions = {
                 if (config.andLogic) {
                   output.options.push('andLogic');
                 }
+                if (config.orLogic) {
+                  output.options.push('orLogic');
+                }
                 if (config.partialMatch) {
                     output.options.push('partialMatch');
                 }
@@ -162,11 +165,13 @@ const doSearch = function(workspace, config){
     }
 }
 
-const wordSearchCode = function ({perf, searchString, ignoreCase = '1', andLogic = '1', regex = '0', partialMatch = '0'}) {
+const wordSearchCode = function ({perf, searchString, ignoreCase = '1', logic = '', regex = '0', partialMatch = '0'}) {
     const cl = new ProskommaRenderFromJson({srcJson: perf, actions: localWordSearchActions});
     const output = {};
     const ignoreCase_ = ignoreCase.trim() === '1';
-    const andLogic_ = andLogic.trim() === '1';
+    logic = logic.trim().substring(0,1).toUpperCase();
+    const andLogic_ = logic === 'A';
+    const orLogic_ = logic === 'O';
     const partialMatch_ = partialMatch && partialMatch.trim() === '1';
     let regex_ = regex.trim() === '1';
     let regexFlags = '';
@@ -180,7 +185,7 @@ const wordSearchCode = function ({perf, searchString, ignoreCase = '1', andLogic
       if (ignoreCase && ! regexFlags.includes('i')) {
         regexFlags += 'i';
       }
-    } else if (andLogic_ && toSearch) {
+    } else if ((andLogic_ || orLogic_) && toSearch) {
       toSearch = toSearch.split(' ');
     }
 
@@ -190,6 +195,7 @@ const wordSearchCode = function ({perf, searchString, ignoreCase = '1', andLogic
             toSearch,
             ignoreCase: ignoreCase_,
             andLogic: andLogic_,
+            orLogic: orLogic_,
             partialMatch: partialMatch_,
             regex: regex_,
             regexFlags
@@ -224,7 +230,7 @@ const wordSearch = {
             source: ""
         },
         {
-            name: "andLogic",
+            name: "logic",
             type: "text",
             source: ""
         },
