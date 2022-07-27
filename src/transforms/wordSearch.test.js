@@ -215,6 +215,261 @@ describe('test wordSearch and logic', () => {
   });
 });
 
+describe('test wordSearch or logic', () => {
+  const logic = 'O';
+
+  test('ignore case succeeds one word', () => {
+    const searchString = 'paul';
+    const ignoreCase = '1';
+
+    const {matches} = wordSearch.code({perf, searchString, ignoreCase, logic})
+
+    expect(matches).toEqual([
+      {
+        "chapter": "1",
+        "verses": "1",
+        "content": [
+          "I",
+          ", ",
+          {
+            type: "wrapper",
+            subtype: "x-search-match",
+            content: [
+              'Paul'
+            ]
+          },
+        ],
+      },
+    ]);
+  });
+
+  test('ignore case succeeds two words', () => {
+    const searchString = 'i paul';
+    const ignoreCase = '1';
+
+    const {matches} = wordSearch.code({perf, searchString, ignoreCase, logic})
+
+    expect(matches).toEqual([
+      {
+        "chapter": "1",
+        "verses": "1",
+        "content": [
+          {
+            type: "wrapper",
+            subtype: "x-search-match",
+            content: [
+              'I'
+            ]
+          },
+          ", ",
+          {
+            type: "wrapper",
+            subtype: "x-search-match",
+            content: [
+              'Paul'
+            ]
+          },
+        ],
+      },
+    ]);
+  });
+
+  test('ignore case fails not all words match', () => {
+    const searchString = 'i peter';
+    const ignoreCase = '1';
+
+    const {matches} = wordSearch.code({perf, searchString, ignoreCase, logic})
+
+    expect(matches).toEqual([
+      {
+        "chapter": "1",
+        "verses": "1",
+        "content": [
+          {
+            type: "wrapper",
+            subtype: "x-search-match",
+            content: [
+              'I'
+            ]
+          },
+          ", ",
+          "Paul",
+        ],
+      },
+    ]);
+  });
+  
+  test('case sensitive fails on case mismatch', () => {
+    const searchString = 'i paul';
+    const ignoreCase = '0';
+
+    const {matches} = wordSearch.code({perf, searchString, ignoreCase, logic})
+
+    expect(matches).toEqual(
+      []
+    );
+  });
+
+  test('case sensitive succeeds', () => {
+    const searchString = 'I Paul';
+    const ignoreCase = '0';
+
+    const {matches} = wordSearch.code({perf, searchString, ignoreCase, logic})
+
+    expect(matches).toEqual([
+      {
+        "chapter": "1",
+        "verses": "1",
+        "content": [
+          {
+            type: "wrapper",
+            subtype: "x-search-match",
+            content: [
+              'I'
+            ]
+          },
+          ", ",
+          {
+            type: "wrapper",
+            subtype: "x-search-match",
+            content: [
+              'Paul'
+            ]
+          },
+        ],
+      },
+    ]);
+  });
+});
+
+describe('test wordSearch or logic with partial match', () => {
+  const logic = 'O';
+  const partial = '1';
+
+  test('ignore case succeeds one word', () => {
+    const searchString = 'pau';
+    const ignoreCase = '1';
+
+    const {matches} = wordSearch.code({perf, searchString, ignoreCase, logic, partial})
+
+    expect(matches).toEqual([
+      {
+        "chapter": "1",
+        "verses": "1",
+        "content": [
+          "I",
+          ", ",
+          {
+            type: "wrapper",
+            subtype: "x-search-match",
+            content: [
+              'Paul'
+            ]
+          },
+        ],
+      },
+    ]);
+  });
+
+  test('ignore case succeeds two words', () => {
+    const searchString = 'i paul';
+    const ignoreCase = '1';
+
+    const {matches} = wordSearch.code({perf, searchString, ignoreCase, logic})
+
+    expect(matches).toEqual([
+      {
+        "chapter": "1",
+        "verses": "1",
+        "content": [
+          {
+            type: "wrapper",
+            subtype: "x-search-match",
+            content: [
+              'I'
+            ]
+          },
+          ", ",
+          {
+            type: "wrapper",
+            subtype: "x-search-match",
+            content: [
+              'Paul'
+            ]
+          },
+        ],
+      },
+    ]);
+  });
+
+  test('ignore case fails not all words match', () => {
+    const searchString = 'i peter';
+    const ignoreCase = '1';
+
+    const {matches} = wordSearch.code({perf, searchString, ignoreCase, logic})
+
+    expect(matches).toEqual([
+      {
+        "chapter": "1",
+        "verses": "1",
+        "content": [
+          {
+            type: "wrapper",
+            subtype: "x-search-match",
+            content: [
+              'I'
+            ]
+          },
+          ", ",
+          "Paul",
+        ],
+      },
+    ]);
+  });
+  
+  test('case sensitive fails on case mismatch', () => {
+    const searchString = 'i paul';
+    const ignoreCase = '0';
+
+    const {matches} = wordSearch.code({perf, searchString, ignoreCase, logic})
+
+    expect(matches).toEqual(
+      []
+    );
+  });
+
+  test('case sensitive succeeds', () => {
+    const searchString = 'I Paul';
+    const ignoreCase = '0';
+
+    const {matches} = wordSearch.code({perf, searchString, ignoreCase, logic})
+
+    expect(matches).toEqual([
+      {
+        "chapter": "1",
+        "verses": "1",
+        "content": [
+          {
+            type: "wrapper",
+            subtype: "x-search-match",
+            content: [
+              'I'
+            ]
+          },
+          ", ",
+          {
+            type: "wrapper",
+            subtype: "x-search-match",
+            content: [
+              'Paul'
+            ]
+          },
+        ],
+      },
+    ]);
+  });
+});
+
 describe('test wordSearch partialMatch string', () => {
   const logic = '';
   const partialMatch = '1';
