@@ -1,4 +1,4 @@
-import pipelineJson from '../../pipelines/searchWordPipeline.json';
+import pipelineJson from '../../pipelines/wordSearchPipeline.json';
 import runCallback from '../lib/runCallback';
 import stepTemplates from "../lib/stepTemplates";
 import {Proskomma}  from 'proskomma';
