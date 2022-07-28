@@ -90,7 +90,7 @@
   },
   {
     "id": 11,
-    "title": "Enable",
+    "title": "Ignore Case",
     "type": "Source",
     "sourceLocation": "local",
     "localValue": "1",
@@ -98,7 +98,23 @@
   },
   {
     "id": 12,
-    "title": "Disable",
+    "title": "Regex",
+    "type": "Source",
+    "sourceLocation": "local",
+    "localValue": "0",
+    "outputType": "text"
+  },
+  {
+    "id": 15,
+    "title": "Logic",
+    "type": "Source",
+    "sourceLocation": "local",
+    "localValue": "O",
+    "outputType": "text"
+  },
+  {
+    "id": 16,
+    "title": "Partial",
     "type": "Source",
     "sourceLocation": "local",
     "localValue": "0",
@@ -133,12 +149,12 @@
       {
         "name": "logic",
         "type": "text",
-        "source": "Source 12"
+        "source": "Source 15"
       },
       {
         "name": "partial",
         "type": "text",
-        "source": "Source 12"
+        "source": "Source 16"
       }
     ],
     "outputs": [
