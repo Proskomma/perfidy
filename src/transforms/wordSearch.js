@@ -52,7 +52,7 @@ const localWordSearchActions = {
             test: () => true,
             action: ({config, context, workspace, output}) => {
                 output.bookCode = context?.document?.metadata?.document?.bookCode || '';
-                output.searchTerms = Array.isArray(config.toSearch) || config.toSearch.split(' ');
+                output.searchTerms = Array.isArray(config.toSearch) ? config.toSearch.join(' ') : config.toSearch;
                 output.options = [];
                 if (config.ignoreCase) {
                   output.options.push('ignoreCase');
