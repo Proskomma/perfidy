@@ -90,7 +90,7 @@
         "type": "json"
       }
     ],
-    "description": "PERF=>JSON: tbd"
+    "description": "PERF=>JSON: unique words as verse meta content"
   },
   {
     "id": 7,
