@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
-import { useProskomma } from 'proskomma-react-hooks';
+import React, { useState} from 'react';
+import {useProskomma} from 'proskomma-react-hooks';
 import deepCopy from 'deep-copy-all';
-
 import StepSpec from "./components/StepSpec";
 import stepTemplates from "./lib/stepTemplates";
 import runCallback from "./lib/runCallback";
-import DisplayResult from "./components/DisplayResult";
+// import DisplayResult from "./components/DisplayResult";
 import DisplayIssues from "./components/DisplayIssues";
 import LoadSteps from "./components/LoadSteps";
 
 import './App.css';
+import EditorWrapper from './components/EditorWrapper';
 
 function App() {
     const [specSteps, setSpecSteps] = useState([]);
@@ -252,14 +252,10 @@ function App() {
                             <DisplayIssues issues={runIssues} />
                         }
                         {
-                            runIssues.length === 0 &&
-                            results.map(
-                                (r, n) => {
-                                    console.log(r);
-                                    return <DisplayResult key={n} result={r} />
-                                }
-                            )
+                            runIssues.length === 0 && 
+                            <EditorWrapper results={results} />
                         }
+                        
                     </div>
                 </div>
             </div>
