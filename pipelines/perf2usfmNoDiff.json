@@ -1,0 +1,181 @@
+[
+  {
+    "id": 1,
+    "title": "USFM from DCS",
+    "type": "Source",
+    "sourceLocation": "http",
+    "outputType": "text",
+    "httpUrl": "https://git.door43.org/unfoldingWord/en_ust/raw/branch/master/57-TIT.usfm"
+  },
+  {
+    "id": 2,
+    "title": "Selectors",
+    "type": "Source",
+    "sourceLocation": "local",
+    "localValue": "{\"org\": \"dcs\", \"lang\": \"en\", \"abbr\": \"ust\"}",
+    "outputType": "json"
+  },
+  {
+    "id": 3,
+    "title": "USFM to PERF",
+    "name": "usfm2perf",
+    "type": "Transform",
+    "inputs": [
+      {
+        "name": "usfm",
+        "type": "text",
+        "source": "Source 1"
+      },
+      {
+        "name": "selectors",
+        "type": "json",
+        "source": "Source 2"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "perf",
+        "type": "json"
+      }
+    ],
+    "description": "USFM=>PERF: Conversion via Proskomma"
+  },
+  {
+    "id": 9,
+    "title": "Roundtrip back to USFM x1",
+    "name": "perf2usfm",
+    "type": "Transform",
+    "inputs": [
+      {
+        "name": "perf",
+        "type": "json",
+        "source": "Transform 3 perf"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "usfm",
+        "type": "text"
+      }
+    ],
+    "description": "PERF=>USFM"
+  },
+  {
+    "id": 10,
+    "title": "Simplified USFM to PERF",
+    "name": "usfm2perf",
+    "type": "Transform",
+    "inputs": [
+      {
+        "name": "usfm",
+        "type": "text",
+        "source": "Transform 9 usfm"
+      },
+      {
+        "name": "selectors",
+        "type": "json",
+        "source": "Source 2"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "perf",
+        "type": "json"
+      }
+    ],
+    "description": "USFM=>PERF: Conversion via Proskomma"
+  },
+  {
+    "id": 11,
+    "title": "Roundtrip back to USFM x2",
+    "name": "perf2usfm",
+    "type": "Transform",
+    "inputs": [
+      {
+        "name": "perf",
+        "type": "json",
+        "source": "Transform 10 perf"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "usfm",
+        "type": "text"
+      }
+    ],
+    "description": "PERF=>USFM"
+  },
+  {
+    "id": 18,
+    "title": "Load Roundtripped Again",
+    "name": "usfm2perf",
+    "type": "Transform",
+    "inputs": [
+      {
+        "name": "usfm",
+        "type": "text",
+        "source": "Transform 11 usfm"
+      },
+      {
+        "name": "selectors",
+        "type": "json",
+        "source": "Source 2"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "perf",
+        "type": "json"
+      }
+    ],
+    "description": "USFM=>PERF: Conversion via Proskomma"
+  },
+  {
+    "id": 19,
+    "title": "Roundtrip back to USFM x3",
+    "name": "perf2usfm",
+    "type": "Transform",
+    "inputs": [
+      {
+        "name": "perf",
+        "type": "json",
+        "source": "Transform 18 perf"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "usfm",
+        "type": "text"
+      }
+    ],
+    "description": "PERF=>USFM"
+  },
+  {
+    "id": 17,
+    "title": "Original USFM",
+    "type": "Display",
+    "inputType": "text",
+    "inputSource": "Source 1"
+  },
+  {
+    "id": 16,
+    "title": "Roundtripped 1x USFM",
+    "type": "Display",
+    "inputType": "text",
+    "inputSource": "Transform 9 usfm"
+  },
+  {
+    "id": 15,
+    "title": "Roundtripped 2x USFM",
+    "type": "Display",
+    "inputType": "text",
+    "inputSource": "Transform 11 usfm"
+  },
+  {
+    "id": 20,
+    "title": "Roundtripped 3x USFM",
+    "type": "Display",
+    "inputType": "text",
+    "inputSource": "Transform 19 usfm"
+  }
+]
