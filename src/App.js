@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState,useCallback} from 'react';
 import {useProskomma} from 'proskomma-react-hooks';
 import deepCopy from 'deep-copy-all';
 
@@ -8,8 +8,16 @@ import runCallback from "./lib/runCallback";
 import DisplayResult from "./components/DisplayResult";
 import DisplayIssues from "./components/DisplayIssues";
 import LoadSteps from "./components/LoadSteps";
+import ReactFlow, {
+  addEdge,
+  Background,
+  useNodesState,
+  useEdgesState,
+} from 'react-flow-renderer';
 
 import './App.css';
+
+const graphStyles = { width: "100%", height: "500px" };
 
 function App() {
     const [specSteps, setSpecSteps] = useState([]);
@@ -17,8 +25,97 @@ function App() {
     const [results, setResults] = useState([]);
     const [runIssues, setRunIssues] = useState([]);
     const [expandSpecs, setExpandSpecs] = useState(true);
+    const [showGraph, setShowGraph] = useState(false)
+    const [flowInstance,setFlowInstance] = useState({})
 
     const {proskomma} = useProskomma({verbose: false});
+
+    const [nodes, setNodes, onNodesChange] = useNodesState([]);
+    const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+    const onConnect = useCallback((params) => setEdges((eds) => addEdge(params, eds)), [setEdges]);
+    const onInit = (reactFlowInstance) => {
+        console.log('flow loaded:', reactFlowInstance);
+        setFlowInstance(reactFlowInstance)
+    }
+
+    const setNodeAndSpecStep = (specs) => {
+        setSpecSteps(specs)
+        const stepY = 60;
+        let sourceY = 0;
+        let transformY = 0;
+        let outputY = 0;
+        let position = {};
+        const mappedNodes = specs.map( step => {
+            let sourcePosition = undefined;
+            let targetPosition = undefined;
+            let type = undefined;
+            let draggable = true;
+            let colorStr = "";
+            if (step.type==='Source') {
+                sourcePosition = 'right';
+                type = 'input';
+                draggable = false;
+                position = { x: 0, y: (sourceY * stepY) };
+                sourceY++;
+                colorStr = 'green';
+            } else if (step.type==='Display') {
+                targetPosition = 'left';
+                type = 'output';
+                position = { x: 500, y: (outputY * stepY) };
+                outputY++;
+                colorStr = 'blue';
+            } else {
+                sourcePosition = 'right';
+                targetPosition = 'left';
+                position = { x: 250, y: (transformY * stepY) };
+                transformY++;
+                colorStr = 'red';
+            }
+            return {
+                ...step,
+                sourcePosition,
+                targetPosition,
+                data: { label: step.title },
+                id: step.id.toString(),
+                draggable,
+                position,
+                type,
+                style: { border: `2px solid ${colorStr}`, padding: 10 },
+            }
+        })
+        setNodes(mappedNodes)
+        const mappedEdges = []
+        specs.forEach( step => {
+            const target = step.id.toString();
+            step.inputs && step.inputs.forEach( i => {
+                const srcIdStr = i.source.match(/\d+/)
+                const findNode = mappedNodes.filter(n => n.id === srcIdStr[0])
+                if (findNode[0]) {
+                    const source = findNode[0].id.toString()
+                    mappedEdges.push({
+                        id: `e${target}-${source}`,
+                        source,
+                        target
+                    })
+                }
+            })
+            if (step.inputSource) {
+                const srcIdStr = step.inputSource.match(/\d+/)
+                const findNode = mappedNodes.filter(n => n.id === srcIdStr[0])
+                if (findNode[0]) {
+                    const source = findNode[0].id.toString()
+                    mappedEdges.push({
+                        id: `e${target}-${source}`,
+                        source,
+                        target
+                    })
+                }
+            }
+        })
+        setEdges(mappedEdges)
+        flowInstance.zoomIn()
+        flowInstance.fitView()
+    }
 
     const cleanSteps = steps => {
         const ret = deepCopy(steps);
@@ -43,7 +140,7 @@ function App() {
     }
 
     const addStepCallback = stepType => {
-        setSpecSteps(
+        setNodeAndSpecStep(
             [
                 ...specSteps,
                 {
@@ -75,7 +172,8 @@ function App() {
                 newSpec[key] = newTemplate[key];
             }
         }
-        setSpecSteps(specSteps.map(v => v.id === newSpec.id ? newSpec : v));
+
+        setNodeAndSpecStep(specSteps.map(v => v.id === newSpec.id ? newSpec : v));
     }
 
     const moveCallback = (specPosition, direction) => {
@@ -86,17 +184,18 @@ function App() {
         } else {
             specs.splice(specPosition + 1, 0, specSteps[specPosition]);
         }
-        setSpecSteps(specs);
+
+        setNodeAndSpecStep(specs);
     }
 
-    const deleteCallback = deleteId => setSpecSteps(specSteps.filter(v => v.id !== deleteId));
+    const deleteCallback = deleteId => setNodeAndSpecStep(specSteps.filter(v => v.id !== deleteId));
 
     const clearResultsCallback = () => {
         setResults([]);
         setRunIssues([]);
     }
 
-    return (
+     return (
         <div className="App">
             <header className="App-header">
                 <h1 className="program-title">
@@ -116,8 +215,43 @@ function App() {
                 </h1>
             </header>
             <div className="content">
+                <div className={showGraph ? "graph-pane" : "graph-pane-hidden"}>
+                    <ReactFlow
+                        nodes={nodes}
+                        edges={edges}
+                        onNodesChange={onNodesChange}
+                        onEdgesChange={onEdgesChange}
+                        onConnect={onConnect}
+                        onInit={onInit}
+                        panOnDrag={true}
+                        zoomOnScroll={false}
+                        panOnScroll={false}
+                        zoomOnDoubleClick={false}
+                        style={graphStyles}
+                        onNodeClick={(event, element) => {
+    // To do: might add interactivity features here
+    //                      console.log("click", element);
+                        }}
+                        fitView
+                    >
+                        <Background color="#aaa" gap={16} />
+                    </ReactFlow>
+                </div>
                 <div className="spec-pane">
                     <div className="spec-inner">
+                    {(nodes && nodes.length>0) && (
+                        <span className="graph-button">
+                            <span className="tooltiptext rtooltiptext">Graph view</span>
+                            <button
+                                className="graph-button"
+                                onClick={
+                                    () => setShowGraph(!showGraph)
+                                }
+                            >
+                                {showGraph ? "-" : "+"}
+                            </button>
+                        </span>
+                    )}
                         <h2 className="spec-title">
                     <span className="tooltip">
                                 <span className="tooltiptext rtooltiptext">Build your Pipeline Here</span>
@@ -153,7 +287,7 @@ function App() {
                             <span className=" spec-button tooltip">
                                 <span className="tooltiptext rtooltiptext">Load Steps from File</span>
                             <LoadSteps
-                                setSpecSteps={setSpecSteps}
+                                setSpecSteps={setNodeAndSpecStep}
                                 setNextStepId={setNextStepId}
                             />
                             </span>

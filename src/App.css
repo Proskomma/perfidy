@@ -44,6 +44,20 @@ header {
 
 }
 
+.graph-pane-hidden {
+    display: none;
+}
+
+.react-flow {
+    width: 100%;
+    min-height: 40vh;
+    height: 40vh;
+}
+
+.react-flow__attribution.bottom.right {
+    display: none;
+}
+
 .result-pane {
     min-width: 69vw;
     max-width: 69vw;
