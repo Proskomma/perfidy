@@ -2,148 +2,167 @@ import {ProskommaRenderFromJson, transforms, mergeActions} from 'proskomma-json-
 import xre from "xregexp";
 
 const localStripMarkupActions = {
-    startDocument: [
-        {
-            description: "Set up",
-            test: () => true,
-            action: ({workspace,output}) => {
-                workspace.chapter = null;
-                workspace.verses = null;
-                workspace.lastWord = "";
-                workspace.waitingMarkup = [];
-                workspace.currentOccurrences = {}
-                output.stripped = {};
-                return true;
-            }
+  startDocument: [
+    {
+      description: "Set up",
+      test: () => true,
+      action: ({ workspace, output }) => {
+        workspace.chapter = null;
+        workspace.verses = null;
+        workspace.lastWord = "";
+        workspace.waitingMarkup = [];
+        workspace.currentOccurrences = {};
+        output.stripped = {};
+        return true;
+      },
+    },
+  ],
+  startMilestone: [
+    {
+      description: "Ignore zaln startMilestone events",
+      test: ({ context }) =>
+        context.sequences[0].element.subType === "usfm:zaln",
+      action: ({ context, workspace }) => {
+        workspace.waitingMarkup.push(context.sequences[0].element);
+      },
+    },
+  ],
+  endMilestone: [
+    {
+      description: "Ignore zaln endMilestone events",
+      test: ({ context }) =>
+        context.sequences[0].element.subType === "usfm:zaln",
+      action: ({ context, workspace, output, config }) => {
+        const { chapter, verses, lastWord: word } = workspace;
+        const { verseWords: totalOccurrences } = config;
+        const strippedKey = [
+          "after",
+          word,
+          workspace.currentOccurrences[word],
+          totalOccurrences[chapter][verses][word],
+        ].join("--");
+        const record = {
+          chapter: chapter,
+          verses: verses,
+          occurrence: workspace.currentOccurrences[word],
+          occurrences: totalOccurrences[chapter][verses][word],
+          position: "after",
+          word,
+          payload: context.sequences[0].element,
+        };
+        if (
+          !output.stripped[workspace.chapter][workspace.verses][strippedKey]
+        ) {
+          output.stripped[workspace.chapter][workspace.verses][strippedKey] = [
+            record,
+          ];
+        } else {
+          output.stripped[workspace.chapter][workspace.verses][
+            strippedKey
+          ].push(record);
         }
-    ],
-    startMilestone: [
-        {
-            description: "Ignore zaln startMilestone events",
-            test: ({context}) => context.sequences[0].element.subType === "usfm:zaln",
-            action: ({context,workspace}) => {
-                workspace.waitingMarkup.push(context.sequences[0].element);
+      },
+    },
+  ],
+  startWrapper: [
+    {
+      description: "Ignore w startWrapper events",
+      test: ({ context }) => context.sequences[0].element.subType === "usfm:w",
+      action: ({ context, workspace }) => {
+        workspace.waitingMarkup.push(context.sequences[0].element);
+      },
+    },
+  ],
+  endWrapper: [
+    {
+      description: "Ignore w endWrapper events",
+      test: ({ context }) => context.sequences[0].element.subType === "usfm:w",
+      action: ({ context }) => {},
+    },
+  ],
+  text: [
+    {
+      description: "Log occurrences",
+      test: () => true,
+      action: ({ context, workspace, output, config }) => {
+        try {
+          const text = context.sequences[0].element.text;
+          const re = xre("([\\p{Letter}\\p{Number}\\p{Mark}\\u2060]{1,127})");
+          const words = xre.match(text, re, "all");
+          const { chapter, verses } = workspace;
+          const { verseWords: totalOccurrences } = config;
+          for (const word of words) {
+            workspace.currentOccurrences[word] ??= 0;
+            workspace.currentOccurrences[word]++;
+            while (workspace.waitingMarkup.length) {
+              const payload = workspace.waitingMarkup.shift();
+              const strippedKey = [
+                "before",
+                word,
+                workspace.currentOccurrences[word],
+                totalOccurrences[chapter][verses][word],
+              ].join("--");
+              const record = {
+                chapter: chapter,
+                verses: verses,
+                occurrence: workspace.currentOccurrences[word],
+                occurrences: totalOccurrences[chapter][verses][word],
+                position: "before",
+                word,
+                payload: {...payload, ...(payload.subType === "usfm:w" && {content: [word]})},
+              };
+              if (
+                !output.stripped[workspace.chapter][workspace.verses][
+                  strippedKey
+                ]
+              ) {
+                output.stripped[workspace.chapter][workspace.verses][
+                  strippedKey
+                ] = [record];
+              } else {
+                output.stripped[workspace.chapter][workspace.verses][
+                  strippedKey
+                ].push(record);
+              }
             }
-        },
-    ],
-    endMilestone: [
-        {
-            description: "Ignore zaln endMilestone events",
-            test: ({context}) => context.sequences[0].element.subType === "usfm:zaln",
-            action: ({ context, workspace, output }) => {
-                /*
-                output.stripped.push({
-                    chapter: workspace.chapter,
-                    verses: workspace.verses,
-                    position: "after",
-                    word: workspace.lastWord,
-                    payload: context.sequences[0].element,
-                })
-                */
-            }
-        },
-    ],
-    startWrapper: [
-        {
-            description: "Ignore w startWrapper events",
-            test: ({context}) => context.sequences[0].element.subType === "usfm:w",
-            action: ({ context, workspace }) => {
-                workspace.waitingMarkup.push(context.sequences[0].element);
-            }
-        },
-    ],
-    endWrapper: [
-        {
-            description: "Ignore w endWrapper events",
-            test: ({context}) => context.sequences[0].element.subType === "usfm:w",
-            action: ({output, context, workspace}) => {
-                /*
-                output.stripped.push({
-                    chapter: workspace.chapter,
-                    verses: workspace.verses,
-                    position: "after",
-                    word: workspace.lastWord,
-                    payload: context.sequences[0].element,
-                })
-                 */
-            }
-        },
-    ],
-    text: [
-        {
-            description: "Log occurrences",
-            test: () => true,
-            action: ({context,workspace,output,config}) => {
-                try {
-                    const text = context.sequences[0].element.text;
-                    const re = xre('([\\p{Letter}\\p{Number}\\p{Mark}\\u2060]{1,127})')
-                    const words = xre.match(text, re, "all");
-                    const { chapter, verses } = workspace;
-                    const { verseWords: totalOccurrences } = config;
-                    for (const word of words) {
-                        workspace.currentOccurrences[word] ??= 0;
-                        workspace.currentOccurrences[word]++;
-                        while (workspace.waitingMarkup.length) {
-                            const payload = workspace.waitingMarkup.shift();
-                            const strippedKey = [
-                                "before",
-                                word,
-                                workspace.currentOccurrences[word],
-                                totalOccurrences[chapter][verses][word]
-                            ].join('--');
-                            const record = {
-                                chapter: chapter,
-                                verses: verses,
-                                occurrence: workspace.currentOccurrences[word],
-                                occurrences: totalOccurrences[chapter][verses][word],
-                                position: "before",
-                                word,
-                                payload,
-                            };
-                            if (!output.stripped[workspace.chapter][workspace.verses][strippedKey]) {
-                                output.stripped[workspace.chapter][workspace.verses][strippedKey] = [record];
-                            } else {
-                                output.stripped[workspace.chapter][workspace.verses][strippedKey].push(record);
-                            }
-                        }
-                        workspace.lastWord = word;
-                    }
-                } catch (err) {
-                    console.error(err)
-                    throw err;
-                }
-                return true;
-            }
+            workspace.lastWord = word;
+          }
+        } catch (err) {
+          console.error(err);
+          throw err;
         }
-    ],
-    mark: [
-        {
-            description: "Update CV state",
-            test: () => true,
-            action: ({context, workspace, output}) => {
-                try {
-                    const element = context.sequences[0].element;
-                    if (element.subType === 'chapter') {
-                        workspace.chapter = element.atts['number'];
-                        workspace.verses = 0
-                        workspace.lastWord = "";
-                        workspace.currentOccurrences = {}
-                        output.stripped[workspace.chapter] = {};
-                        output.stripped[workspace.chapter][workspace.verses] = {};
-                    } else if (element.subType === 'verses') {
-                        workspace.verses = element.atts['number'];
-                        workspace.lastWord = "";
-                        workspace.currentOccurrences = {};
-                        output.stripped[workspace.chapter][workspace.verses] = {};
-                    }
-                } catch (err) {
-                    console.error(err)
-                    throw err;
-                }
-                return true;
-            }
-        },
-    ],
+        return true;
+      },
+    },
+  ],
+  mark: [
+    {
+      description: "Update CV state",
+      test: () => true,
+      action: ({ context, workspace, output }) => {
+        try {
+          const element = context.sequences[0].element;
+          if (element.subType === "chapter") {
+            workspace.chapter = element.atts["number"];
+            workspace.verses = 0;
+            workspace.lastWord = "";
+            workspace.currentOccurrences = {};
+            output.stripped[workspace.chapter] = {};
+            output.stripped[workspace.chapter][workspace.verses] = {};
+          } else if (element.subType === "verses") {
+            workspace.verses = element.atts["number"];
+            workspace.lastWord = "";
+            workspace.currentOccurrences = {};
+            output.stripped[workspace.chapter][workspace.verses] = {};
+          }
+        } catch (err) {
+          console.error(err);
+          throw err;
+        }
+        return true;
+      },
+    },
+  ],
 };
 
 const stripMarkupCode = function ({perf, verseWords}) {
