@@ -143,7 +143,7 @@ describe('test wordSearch parameters', () => {
 
     test(testName, () => {
       const results = wordSearch.code({perf, searchString, ignoreCase, logic, partialMatch, regex});
-      expect(results.matches).toEqual(expectedResults);
+      expect(results.matches.matches).toEqual(expectedResults);
     })
   }
 });

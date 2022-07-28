@@ -51,7 +51,7 @@ const localWordSearchActions = {
             description: "Sort matches",
             test: () => true,
             action: ({config, context, workspace, output}) => {
-                output.bookCode = 'TIT';
+                output.bookCode = context?.document?.metadata?.document?.bookCode || '';
                 output.searchTerms = Array.isArray(config.toSearch) || config.toSearch.split(' ');
                 output.options = [];
                 if (config.ignoreCase) {
@@ -209,7 +209,7 @@ const wordSearchCode = function ({perf, searchString, ignoreCase = '1', logic = 
             regexFlags
         },
         output});
-    return {matches: output.matches};
+    return {matches: output};
 }
 
 const wordSearch = {

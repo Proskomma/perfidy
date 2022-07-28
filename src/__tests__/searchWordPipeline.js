@@ -33,7 +33,7 @@ describe('wordSearch pipeline integration test', () => {
             proskomma
         })
 
-        expect(results[2].value).toContainEqual({"chapter": "3", "content": ["God", " ", "generously", " ", "gave", " ", "us", " ", "his", " ", "Holy", " ", "Spirit", " ", "when", " ", {"content": ["Jesus"], "subtype": "x-search-match", "type": "wrapper"}, " ", "the", " ", "Messiah", " ", "saved", " ", "us", ". "], "verses": "6"});
+        expect(results[2].value.matches).toContainEqual({"chapter": "3", "content": ["God", " ", "generously", " ", "gave", " ", "us", " ", "his", " ", "Holy", " ", "Spirit", " ", "when", " ", {"content": ["Jesus"], "subtype": "x-search-match", "type": "wrapper"}, " ", "the", " ", "Messiah", " ", "saved", " ", "us", ". "], "verses": "6"});
     });
 });
 
