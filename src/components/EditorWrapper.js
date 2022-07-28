@@ -63,7 +63,7 @@ function EditorWrapper({ results }) {
               </button>
             </span>
             <span className="add-step-button tooltip">
-              <span className="tooltiptext ltooltiptext">Word wrap</span>
+              <span className="tooltiptext ltooltiptext">Toggle word wrap</span>
               <button
                 className="result-button"
                 onClick={() =>
