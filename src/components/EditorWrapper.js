@@ -73,7 +73,7 @@ function EditorWrapper({ results }) {
                   }))
                 }
               >
-                {"W>"}
+                {"W"}
               </button>
             </span>
           </>
