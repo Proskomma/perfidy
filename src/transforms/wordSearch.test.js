@@ -27,8 +27,6 @@ const perf = perfWrapper({
   ]
 });
 
-
-
 const matchPaul = [
   {
     "chapter": "1",
@@ -93,12 +91,12 @@ const matchI = [
 ]
 
 const tests = [
-  // Case_Insensitve Testing
+  // Case Insensitve Testing
   { searchString: 'paul', ignoreCase: '1', partialMatch: '0', logic: '', regex: '0', perf, expect: matchPaul },
   { searchString: 'pa?l', ignoreCase: '1', partialMatch: '0', logic: '', regex: '0', perf, expect: matchPaul },
   { searchString: 'p*l', ignoreCase: '1', partialMatch: '0', logic: '', regex: '0', perf, expect: matchPaul },
   { searchString: 'pau', ignoreCase: '1', partialMatch: '0', logic: '', regex: '0', perf, expect: [] },
-  // Case-Sensitive Testing
+  // Case Sensitive Testing
   { searchString: 'paul', ignoreCase: '0', partialMatch: '0', logic: '', regex: '0', perf, expect: [] },
   { searchString: 'Paul', ignoreCase: '0', partialMatch: '0', logic: '', regex: '0', perf, expect: matchPaul },
   { searchString: 'Pa?l', ignoreCase: '0', partialMatch: '0', logic: '', regex: '0', perf, expect: matchPaul },
@@ -132,8 +130,8 @@ const tests = [
   { searchString: '/i|l/', ignoreCase: '1', partialMatch: '0', logic: '', regex: '0', perf, expect: matchIPaul },
 ]
 
-describe('test wordSearch regex', () => {
-  for(const _test of tests){
+describe('test wordSearch parameters', () => {
+  for(const _test of tests) {
     const searchString = _test.searchString;
     const ignoreCase = _test.ignoreCase;
     const logic = _test.logic;
@@ -142,9 +140,10 @@ describe('test wordSearch regex', () => {
     const perf = _test.perf;
     const expectedResults = _test.expect;
     const testName = `${searchString}-ignoreCase=${ignoreCase}-logic=${logic}-partialMatch=${partialMatch}-regex=${regex}`;
+
     test(testName, () => {
       const results = wordSearch.code({perf, searchString, ignoreCase, logic, partialMatch, regex});
       expect(results.matches).toEqual(expectedResults);
     })
-  };
+  }
 });
