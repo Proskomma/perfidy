@@ -12,7 +12,7 @@ const localStripMarkupActions = {
                 workspace.lastWord = "";
                 workspace.waitingMarkup = [];
                 workspace.currentOccurrences = {}
-                output.stripped = [];
+                output.stripped = {};
                 return true;
             }
         }
@@ -31,6 +31,7 @@ const localStripMarkupActions = {
             description: "Ignore zaln endMilestone events",
             test: ({context}) => context.sequences[0].element.subType === "usfm:zaln",
             action: ({ context, workspace, output }) => {
+                /*
                 output.stripped.push({
                     chapter: workspace.chapter,
                     verses: workspace.verses,
@@ -38,6 +39,7 @@ const localStripMarkupActions = {
                     word: workspace.lastWord,
                     payload: context.sequences[0].element,
                 })
+                */
             }
         },
     ],
@@ -55,6 +57,7 @@ const localStripMarkupActions = {
             description: "Ignore w endWrapper events",
             test: ({context}) => context.sequences[0].element.subType === "usfm:w",
             action: ({output, context, workspace}) => {
+                /*
                 output.stripped.push({
                     chapter: workspace.chapter,
                     verses: workspace.verses,
@@ -62,6 +65,7 @@ const localStripMarkupActions = {
                     word: workspace.lastWord,
                     payload: context.sequences[0].element,
                 })
+                 */
             }
         },
     ],
@@ -81,7 +85,13 @@ const localStripMarkupActions = {
                         workspace.currentOccurrences[word]++;
                         while (workspace.waitingMarkup.length) {
                             const payload = workspace.waitingMarkup.shift();
-                            output.stripped.push({
+                            const strippedKey = [
+                                "before",
+                                word,
+                                workspace.currentOccurrences[word],
+                                totalOccurrences[chapter][verses][word]
+                            ].join('--');
+                            const record = {
                                 chapter: chapter,
                                 verses: verses,
                                 occurrence: workspace.currentOccurrences[word],
@@ -89,7 +99,12 @@ const localStripMarkupActions = {
                                 position: "before",
                                 word,
                                 payload,
-                            })
+                            };
+                            if (!output.stripped[workspace.chapter][workspace.verses][strippedKey]) {
+                                output.stripped[workspace.chapter][workspace.verses][strippedKey] = [record];
+                            } else {
+                                output.stripped[workspace.chapter][workspace.verses][strippedKey].push(record);
+                            }
                         }
                         workspace.lastWord = word;
                     }
@@ -105,7 +120,7 @@ const localStripMarkupActions = {
         {
             description: "Update CV state",
             test: () => true,
-            action: ({context,workspace}) => {
+            action: ({context, workspace, output}) => {
                 try {
                     const element = context.sequences[0].element;
                     if (element.subType === 'chapter') {
@@ -113,10 +128,13 @@ const localStripMarkupActions = {
                         workspace.verses = 0
                         workspace.lastWord = "";
                         workspace.currentOccurrences = {}
+                        output.stripped[workspace.chapter] = {};
+                        output.stripped[workspace.chapter][workspace.verses] = {};
                     } else if (element.subType === 'verses') {
                         workspace.verses = element.atts['number'];
                         workspace.lastWord = "";
-                        workspace.currentOccurrences = {}
+                        workspace.currentOccurrences = {};
+                        output.stripped[workspace.chapter][workspace.verses] = {};
                     }
                 } catch (err) {
                     console.error(err)
