@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import Editor from "@monaco-editor/react";
+import Editor, { DiffEditor } from "@monaco-editor/react";
 
 const cleanEditorContent = {
     title: "index",
@@ -26,84 +26,97 @@ function EditorWrapper({ results }) {
         if (!editorContent.id && firstResult) setEditorContent(results[results.length - 1])
         if (!results.length && editorContent.id) setEditorContent(cleanEditorContent);
     }, [firstResult, editorContent, results])
+    console.log({editorContent})
 
     return (
-      <>
-        {firstResult && (
-          <>
-            <span className="add-step-button tooltip">
-              <span className="tooltiptext ltooltiptext">
-                Save display to File
-              </span>
-              <button
-                className="result-button"
-                onClick={() => {
-                  const a = document.createElement("a");
-                  a.download = `${editorContent.title
-                    .toLowerCase()
-                    .replace(" ", "_")}.${
-                    typeof editorContent.value === "string" ? "txt" : "json"
-                  }`;
-                  const blob = new Blob(
-                    [
-                      typeof editorContent.value === "string"
-                        ? editorContent.value
-                        : JSON.stringify(editorContent.value, null, 2),
-                    ],
-                    { type: "application/json" }
-                  );
-                  a.href = URL.createObjectURL(blob);
-                  a.addEventListener("click", (e) => {
-                    setTimeout(() => URL.revokeObjectURL(a.href), 30 * 1000);
-                  });
-                  a.click();
-                }}
-              >
-                {"R>"}
-              </button>
-            </span>
-            <span className="add-step-button tooltip">
-              <span className="tooltiptext ltooltiptext">Toggle word wrap</span>
-              <button
-                className="result-button"
-                onClick={() =>
-                  setEditorOptions((options) => ({
-                    ...options,
-                    wordWrap: !options?.wordWrap,
-                  }))
-                }
-              >
-                {"W"}
-              </button>
-            </span>
-          </>
-        )}
-        {results.map((r, n) => {
-          return (
-            <button
-              className="editor-tab"
-              disabled={editorContent.title === r.title}
-              onClick={() => setEditorContent(r)}
-              key={n}
-            >
-              {r.title}
-            </button>
-          );
-        })}
-        <Editor
-          height="80vh"
-          theme="vs-dark"
-          path={editorContent.title}
-          defaultLanguage={editorContent.inputType}
-          defaultValue={
-            typeof editorContent.value === "object"
-              ? JSON.stringify(editorContent.value, null, 2)
-              : editorContent.value
-          }
-          options={editorOptions}
-          onMount={(editor) => (editorRef.current = editor)}
-        />
-      </>
+        <>
+            {firstResult && (
+                <>
+                    <span className="add-step-button tooltip">
+                        <span className="tooltiptext ltooltiptext">
+                            Save display to File
+                        </span>
+                        <button
+                            className="result-button"
+                            onClick={() => {
+                                const a = document.createElement("a");
+                                a.download = `${editorContent.title
+                                    .toLowerCase()
+                                    .replace(" ", "_")}.${typeof editorContent.value === "string" ? "txt" : "json"
+                                    }`;
+                                const blob = new Blob(
+                                    [
+                                        typeof editorContent.value === "string"
+                                            ? editorContent.value
+                                            : JSON.stringify(editorContent.value, null, 2),
+                                    ],
+                                    { type: "application/json" }
+                                );
+                                a.href = URL.createObjectURL(blob);
+                                a.addEventListener("click", (e) => {
+                                    setTimeout(() => URL.revokeObjectURL(a.href), 30 * 1000);
+                                });
+                                a.click();
+                            }}
+                        >
+                            {"R>"}
+                        </button>
+                    </span>
+                    <span className="add-step-button tooltip">
+                        <span className="tooltiptext ltooltiptext">Toggle word wrap</span>
+                        <button
+                            className="result-button"
+                            onClick={() =>
+                                setEditorOptions((options) => ({
+                                    ...options,
+                                    wordWrap: !options?.wordWrap,
+                                }))
+                            }
+                        >
+                            {"W"}
+                        </button>
+                    </span>
+                </>
+            )}
+            {results.map((r, n) => {
+                return (
+                    <button
+                        className="editor-tab"
+                        disabled={editorContent.title === r.title}
+                        onClick={() => setEditorContent(r)}
+                        key={n}
+                    >
+                        {r.title}
+                    </button>
+                );
+            })}
+            {editorContent.value?.type === "diff" ? (
+                <DiffEditor
+                    height="80vh"
+                    theme="vs-dark"
+                    path={editorContent.title}
+                    original={editorContent.value.original}
+                    modified={editorContent.value.modified}
+                    language={editorContent.inputType}
+                    options={editorOptions}
+                    onMount={(editor) => (editorRef.current = editor)}
+                />
+            ) : (
+                <Editor
+                    height="80vh"
+                    theme="vs-dark"
+                    path={editorContent.title}
+                    defaultLanguage={editorContent.inputType}
+                    defaultValue={
+                        typeof editorContent.value === "object"
+                            ? JSON.stringify(editorContent.value, null, 2)
+                            : editorContent.value
+                    }
+                    options={editorOptions}
+                    onMount={(editor) => (editorRef.current = editor)}
+                />
+            )}
+        </>
     );
 }
 
