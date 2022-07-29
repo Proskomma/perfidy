@@ -1,6 +1,14 @@
 import Axios from "axios";
 
-const remoteTransformCode = async ({request, url}) => {
+const remoteTransformCode = async ({url, input1, proskomma}) => {
+    const request = {
+        "name": "test1",
+        "title": "test2",
+        "description": "test3",
+        "inputs": [input1],
+    };
+    console.log(proskomma);
+    console.log(request);
     console.log("URL: "+url);
     console.log("REQUEST:", request);
     const response = await Axios.post(url, request, {
@@ -11,29 +19,28 @@ const remoteTransformCode = async ({request, url}) => {
         crossDomain: true,
     });
     console.log("RESPONSE:", response);
-    return {response: response.data};
+    return {data: response.data["result"]};
 };
 
 const remoteTranform = {
-    name: "remoteTransform",
+    name: "remoteTransform-",
     type: "Transform",
     description: "JSON=>JSON: Sends JSON to remote server, gets JSON back",
     inputs: [
-        {
-            name: "request",
-            type: "json",
-            source: ""
-        },
         {
             name: "url",
             type: "text",
             source: ""
         },  
-
+        {
+            name: "input1",
+            type: "json",
+            source: ""
+        }
     ],
     outputs: [
         {
-            name: "response",
+            name: "data",
             type: "json",
         }
     ],
