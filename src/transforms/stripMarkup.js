@@ -24,9 +24,12 @@ const localStripMarkupActions = {
       test: ({ context }) =>
         context.sequences[0].element.subType === "usfm:zaln",
       action: ({ context, workspace }) => {
-        workspace.waitingMarkup.push(context.sequences[0].element);
+          const payload = {...context.sequences[0].element};
+          payload.subtype = payload.subType;
+          delete payload.subType;
+        workspace.waitingMarkup.push(payload);
         workspace.lastMilestone = {
-          payload: context.sequences[0].element
+          payload
         }
       },
     },
@@ -45,14 +48,17 @@ const localStripMarkupActions = {
           workspace.currentOccurrences[word],
           totalOccurrences[chapter][verses][word],
         ].join("--");
-        const record = {
+          const payload = {...context.sequences[0].element};
+          payload.subtype = payload.subType;
+          delete payload.subType;
+          const record = {
           chapter: chapter,
           verses: verses,
           occurrence: workspace.currentOccurrences[word],
           occurrences: totalOccurrences[chapter][verses][word],
           position: "after",
           word,
-          payload: context.sequences[0].element,
+          payload,
           startMilestone: workspace.lastMilestone.payload,
         };
         if (
@@ -74,7 +80,10 @@ const localStripMarkupActions = {
       description: "Ignore w startWrapper events",
       test: ({ context }) => context.sequences[0].element.subType === "usfm:w",
       action: ({ context, workspace }) => {
-        workspace.waitingMarkup.push(context.sequences[0].element);
+          const payload = {...context.sequences[0].element};
+          payload.subtype = payload.subType;
+          delete payload.subType;
+        workspace.waitingMarkup.push(payload);
       },
     },
   ],
@@ -114,7 +123,7 @@ const localStripMarkupActions = {
                 occurrences: totalOccurrences[chapter][verses][word],
                 position: "before",
                 word,
-                payload: {...payload, ...(payload.subType === "usfm:w" && {content: [word]})},
+                payload: {...payload, ...(payload.subtype === "usfm:w" && {content: [word]})},
               };
               if (
                 !output.stripped[workspace.chapter][workspace.verses][

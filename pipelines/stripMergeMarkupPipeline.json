@@ -105,7 +105,7 @@
   },
   {
     "id": 9,
-    "title": "Merge stripped perf text",
+    "title": "Merge Text in Stripped PERF",
     "name": "mergePerfText",
     "type": "Transform",
     "inputs": [
@@ -152,7 +152,7 @@
   },
   {
     "id": 13,
-    "title": "Merge backup (roundtrip)",
+    "title": "Merge Back Into Stripped (roundtrip)",
     "name": "mergeMarkup",
     "type": "Transform",
     "inputs": [
@@ -181,11 +181,31 @@
     "description": "PERF=>PERF adds report to verses"
   },
   {
+    "id": 17,
+    "title": "Merge Merged PERF Text",
+    "name": "mergePerfText",
+    "type": "Transform",
+    "inputs": [
+      {
+        "name": "perf",
+        "type": "json",
+        "source": "Transform 13 perf"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "perf",
+        "type": "json"
+      }
+    ],
+    "description": "PERF=>PERF: Merge consecutive text strings"
+  },
+  {
     "id": 14,
     "title": "Merged Perf (roundtrip)",
     "type": "Display",
     "inputType": "json",
-    "inputSource": "Transform 13 perf"
+    "inputSource": "Transform 17 perf"
   },
   {
     "id": 15,
@@ -201,7 +221,7 @@
       {
         "name": "modified",
         "type": "json",
-        "source": "Transform 13 perf"
+        "source": "Transform 17 perf"
       }
     ],
     "outputs": [
