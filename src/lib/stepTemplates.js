@@ -1,7 +1,7 @@
-import usfm2perf from '../transforms/usfm2perf';
-import usx2perf from '../transforms/usx2perf';
-import perf2usfm from '../transforms/perf2usfm';
-import wordFrequency from '../transforms/wordFrequency';
+import usfm2perf from "../transforms/usfm2perf";
+import usx2perf from "../transforms/usx2perf";
+import perf2usfm from "../transforms/perf2usfm";
+import wordFrequency from "../transforms/wordFrequency";
 import wordSearch from "../transforms/wordSearch";
 import justTheBible from "../transforms/justTheBible";
 import verseStats from "../transforms/verseStats";
@@ -15,6 +15,10 @@ import searchRegexGen from "../transforms/searchRegexGen";
 import longVerses1 from "../transforms/longVerses1";
 import mergeReport from "../transforms/mergeReport";
 import uniqueWords from "../transforms/uniqueWords";
+import stripMarkup from "../transforms/stripMarkup";
+import verseWords from "../transforms/verseWords";
+import mergeMarkup from "../transforms/mergeMarkup";
+import prepareJsonDiff from "../transforms/prepareJsonDiff";
 import uniqueWordsVerses from '../transforms/uniqueWordsVerses';
 
 const stepTemplates = {
@@ -36,6 +40,10 @@ const stepTemplates = {
         longVerses1,
         mergeReport,
         uniqueWords,
+        stripMarkup,
+        verseWords,
+        mergeMarkup,
+        prepareJsonDiff,
         uniqueWordsVerses,
     },
     Source: {
@@ -43,27 +51,27 @@ const stepTemplates = {
             type: "Source",
             sourceLocation: "local",
             localValue: "",
-            outputType: "text"
+            outputType: "text",
         },
         http: {
             type: "Source",
             sourceLocation: "http",
             httpUrl: "",
-            outputType: "text"
-        }
+            outputType: "text",
+        },
     },
     Display: {
         text: {
             type: "Display",
             inputType: "text",
-            inputSource: ""
+            inputSource: "",
         },
         json: {
             type: "Display",
             inputType: "json",
-            inputSource: ""
-        }
-    }
-}
+            inputSource: "",
+        },
+    },
+};
 
 export default stepTemplates;
