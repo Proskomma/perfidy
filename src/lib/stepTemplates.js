@@ -13,6 +13,9 @@ import mergePerfText from "../transforms/mergePerfText";
 import identity from "../transforms/identity";
 import searchRegexGen from "../transforms/searchRegexGen";
 import longVerses1 from "../transforms/longVerses1";
+import mergeReport from "../transforms/mergeReport";
+import uniqueWords from "../transforms/uniqueWords";
+import uniqueWordsVerses from '../transforms/uniqueWordsVerses';
 
 const stepTemplates = {
     Transform: {
@@ -31,6 +34,9 @@ const stepTemplates = {
         perf2usfm,
         searchRegexGen,
         longVerses1,
+        mergeReport,
+        uniqueWords,
+        uniqueWordsVerses,
     },
     Source: {
         local: {

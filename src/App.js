@@ -1,10 +1,10 @@
-import React, {useState} from 'react';
+import React, { useState} from 'react';
 import {useProskomma} from 'proskomma-react-hooks';
 import deepCopy from 'deep-copy-all';
 import StepSpec from "./components/StepSpec";
 import stepTemplates from "./lib/stepTemplates";
 import runCallback from "./lib/runCallback";
-import DisplayResult from "./components/DisplayResult";
+// import DisplayResult from "./components/DisplayResult";
 import DisplayIssues from "./components/DisplayIssues";
 import LoadSteps from "./components/LoadSteps";
 import Tooltip from '@mui/material/Tooltip';
@@ -18,6 +18,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import MenuItem from '@mui/material/MenuItem';
 
 import './App.css';
+import EditorWrapper from './components/EditorWrapper';
 
 function App() {
     const [specSteps, setSpecSteps] = useState([]);
@@ -29,7 +30,7 @@ function App() {
     const [anchorEl, setAnchorEl] = React.useState(null);
     
 
-    const {proskomma} = useProskomma({verbose: false});
+    const { proskomma } = useProskomma({ verbose: false });
 
     const cleanSteps = steps => {
         const ret = deepCopy(steps);
@@ -270,15 +271,13 @@ function App() {
                         </h2>
                         {
                             runIssues.length > 0 &&
-                            <DisplayIssues issues={runIssues}/>
+                            <DisplayIssues issues={runIssues} />
                         }
                         {
-                            runIssues.length === 0 &&
-                            results.map(
-                                (r, n) =>
-                                    <DisplayResult key={n} result={r}/>
-                            )
+                            runIssues.length === 0 && 
+                            <EditorWrapper results={results} />
                         }
+                        
                     </div>
                 </div>
             </div>
