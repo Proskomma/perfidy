@@ -19,7 +19,7 @@ const runCallback = async ({specSteps, setResults, setRunIssues, proskomma}) => 
             newRunIssues.forEach(ri => console.log(`* ${ri}`));
             console.log("Issues found - abandoning");
         } else {
-            evaluateSpec({
+            await evaluateSpec({
                 specSteps,
                 outputs,
                 proskomma
@@ -99,7 +99,7 @@ const checkSpec = async ({specSteps, outputs, newRunIssues, unsatisfiedInputs}) 
     }
 }
 
-const evaluateSpec = ({specSteps, outputs, proskomma}) => {
+const evaluateSpec = async ({specSteps, outputs, proskomma}) => {
     console.log("** Evaluate **");
     // Remove old values
     for (const transformStep of [...specSteps].filter(st => st.type === "Transform")) {
@@ -138,7 +138,7 @@ const evaluateSpec = ({specSteps, outputs, proskomma}) => {
                     inputOb[input.name] = input.value;
                 }
                 try {
-                    transformStep.result = transformStep.code({...inputOb, proskomma});
+                    transformStep.result = await transformStep.code({...inputOb, proskomma});
                 } catch (err) {
                     const errMsg = `Error evaluating Transform ${transformStep.id} (name=${transformStep.name}, type=${typeof transformStep.code}): ${err}`;
                     throw new Error(errMsg);
