@@ -43,7 +43,7 @@ const stepTemplates = {
         stripMarkup,
         verseWords,
         mergeMarkup,
-        prepareJsonDiff
+        prepareJsonDiff,
         uniqueWordsVerses,
     },
     Source: {
