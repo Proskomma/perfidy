@@ -44,6 +44,11 @@ header {
 
 }
 
+.graph-pane, .graph-pane-hidden {
+    width: 1000px;
+    height: 800px
+}
+
 .graph-pane-hidden {
     display: none;
 }

@@ -212,18 +212,20 @@ function App() {
                             className="tooltiptext rtooltiptext">It's called Perfidy because... oh never mind</span>
                         <span className="smaller-program-title"> - an IDE for PERF</span>
                     </span>
+                    {showGraph &&
+                        <button
+                            className="opened-graph-button"
+                            onClick={
+                                () => setShowGraph(false)
+                            }
+                        >
+                            X
+                        </button>
+                    }
                 </h1>
             </header>
             <div className="content">
                 <div className={showGraph ? "graph-pane" : "graph-pane-hidden"}>
-                    <button
-                        className="opened-graph-button"
-                        onClick={
-                            () => setShowGraph(false)
-                        }
-                    >
-                        X
-                    </button>
                     <ReactFlow
                         nodes={nodes}
                         edges={edges}
