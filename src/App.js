@@ -263,7 +263,8 @@ function App() {
                                 {"Result "}
                             </span>
                             <span className=" clear-results-button tooltip">
-                            <span className="tooltiptext ltooltiptext">Delete the results</span>
+                            <Tooltip title="Delete the results" placement="bottom" arrow>
+                            <span>
                             <button
                                 className="clear-results-button"
                                 onClick={clearResultsCallback}
@@ -271,6 +272,8 @@ function App() {
                             >
                                 <CloseIcon/>
                             </button>
+                            </span>
+                            </Tooltip>
                             </span>
                         </h2>
                         {
