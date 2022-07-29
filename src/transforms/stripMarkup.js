@@ -12,7 +12,7 @@ const localStripMarkupActions = {
         workspace.lastWord = "";
         workspace.waitingMarkup = [];
         workspace.currentOccurrences = {};
-        workspace.lastMilestone = {}
+        workspace.PendingStartMilestones = [];
         output.stripped = {};
         return true;
       },
@@ -24,13 +24,12 @@ const localStripMarkupActions = {
       test: ({ context }) =>
         context.sequences[0].element.subType === "usfm:zaln",
       action: ({ context, workspace }) => {
-          const payload = {...context.sequences[0].element};
-          payload.subtype = payload.subType;
-          delete payload.subType;
+        const payload = context.sequences[0].element;
+        payload.subtype = payload.subType;
+        delete payload.subType;
         workspace.waitingMarkup.push(payload);
-        workspace.lastMilestone = {
-          payload
-        }
+        workspace.PendingStartMilestones.push(payload);
+        
       },
     },
   ],
@@ -38,7 +37,7 @@ const localStripMarkupActions = {
     {
       description: "Ignore zaln endMilestone events",
       test: ({ context }) =>
-        context.sequences[0].element.type === "endMilestone",
+        context.sequences[0].element.subType === "usfm:zaln",
       action: ({ context, workspace, output, config }) => {
         const { chapter, verses, lastWord: word } = workspace;
         const { verseWords: totalOccurrences } = config;
@@ -48,10 +47,10 @@ const localStripMarkupActions = {
           workspace.currentOccurrences[word],
           totalOccurrences[chapter][verses][word],
         ].join("--");
-          const payload = {...context.sequences[0].element};
-          payload.subtype = payload.subType;
-          delete payload.subType;
-          const record = {
+        const payload = { ...context.sequences[0].element };
+        payload.subtype = payload.subType;
+        delete payload.subType;
+        const record = {
           chapter: chapter,
           verses: verses,
           occurrence: workspace.currentOccurrences[word],
@@ -59,7 +58,7 @@ const localStripMarkupActions = {
           position: "after",
           word,
           payload,
-          startMilestone: workspace.lastMilestone.payload,
+          startMilestone: workspace.PendingStartMilestones.shift(),
         };
         if (
           !output.stripped[workspace.chapter][workspace.verses][strippedKey]
@@ -68,10 +67,13 @@ const localStripMarkupActions = {
             record,
           ];
         } else {
+
           output.stripped[workspace.chapter][workspace.verses][
             strippedKey
           ].push(record);
         }
+
+        return false;
       },
     },
   ],
@@ -80,9 +82,9 @@ const localStripMarkupActions = {
       description: "Ignore w startWrapper events",
       test: ({ context }) => context.sequences[0].element.subType === "usfm:w",
       action: ({ context, workspace }) => {
-          const payload = {...context.sequences[0].element};
-          payload.subtype = payload.subType;
-          delete payload.subType;
+        const payload = { ...context.sequences[0].element };
+        payload.subtype = payload.subType;
+        delete payload.subType;
         workspace.waitingMarkup.push(payload);
       },
     },
@@ -123,7 +125,10 @@ const localStripMarkupActions = {
                 occurrences: totalOccurrences[chapter][verses][word],
                 position: "before",
                 word,
-                payload: {...payload, ...(payload.subtype === "usfm:w" && {content: [word]})},
+                payload: {
+                  ...payload,
+                  ...(payload.subtype === "usfm:w" && { content: [word] }),
+                },
               };
               if (
                 !output.stripped[workspace.chapter][workspace.verses][
