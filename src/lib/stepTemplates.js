@@ -19,6 +19,7 @@ import stripMarkup from "../transforms/stripMarkup";
 import verseWords from "../transforms/verseWords";
 import mergeMarkup from "../transforms/mergeMarkup";
 import prepareJsonDiff from "../transforms/prepareJsonDiff";
+import uniqueWordsVerses from '../transforms/uniqueWordsVerses';
 
 const stepTemplates = {
     Transform: {
@@ -43,6 +44,7 @@ const stepTemplates = {
         verseWords,
         mergeMarkup,
         prepareJsonDiff
+        uniqueWordsVerses,
     },
     Source: {
         local: {
