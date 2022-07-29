@@ -6,6 +6,8 @@ import wordSearch from "../transforms/wordSearch";
 import justTheBible from "../transforms/justTheBible";
 import verseStats from "../transforms/verseStats";
 import proskommaQuery from "../transforms/proskommaQuery";
+import lightRegex from '../transforms/LightRegex';
+import regex from '../transforms/regex';
 
 const stepTemplates = {
     Source: {
@@ -31,6 +33,8 @@ const stepTemplates = {
         justTheBible,
         verseStats,
         proskommaQuery,
+        lightRegex,
+        regex,
     },
     Display: {
         text: {
