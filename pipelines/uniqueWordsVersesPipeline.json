@@ -5,7 +5,7 @@
     "type": "Source",
     "sourceLocation": "http",
     "outputType": "text",
-    "httpUrl": "https://git.door43.org/unfoldingWord/en_ust/raw/branch/master/66-JUD.usfm"
+    "httpUrl": "https://git.door43.org/unfoldingWord/en_ust/raw/branch/master/19-PSA.usfm"
   },
   {
     "id": 2,
@@ -69,7 +69,7 @@
   },
   {
     "id": 6,
-    "title": "Transform 6",
+    "title": "uniqueWordsVerses",
     "name": "uniqueWordsVerses",
     "type": "Transform",
     "inputs": [
@@ -90,18 +90,18 @@
         "type": "json"
       }
     ],
-    "description": "PERF=>JSON: unique words as verse meta content"
+    "description": "PERF=>JSON: tbd"
   },
   {
     "id": 7,
-    "title": "Display 7",
+    "title": "Unique Words Report",
     "type": "Display",
     "inputType": "json",
     "inputSource": "Transform 6 report"
   },
   {
     "id": 8,
-    "title": "Transform 8",
+    "title": "mergeReport",
     "name": "mergeReport",
     "type": "Transform",
     "inputs": [
@@ -126,7 +126,7 @@
   },
   {
     "id": 9,
-    "title": "Display 9",
+    "title": "Merged Report",
     "type": "Display",
     "inputType": "json",
     "inputSource": "Transform 8 perf"
