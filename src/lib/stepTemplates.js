@@ -1,11 +1,13 @@
-import usfm2perf from '../transforms/usfm2perf';
-import usx2perf from '../transforms/usx2perf';
-import perf2usfm from '../transforms/perf2usfm';
-import wordFrequency from '../transforms/wordFrequency';
+import usfm2perf from "../transforms/usfm2perf";
+import usx2perf from "../transforms/usx2perf";
+import perf2usfm from "../transforms/perf2usfm";
+import wordFrequency from "../transforms/wordFrequency";
 import wordSearch from "../transforms/wordSearch";
 import justTheBible from "../transforms/justTheBible";
 import verseStats from "../transforms/verseStats";
 import proskommaQuery from "../transforms/proskommaQuery";
+import lightRegex from '../transforms/lightRegex';
+import regex from '../transforms/regex';
 import validate from "../transforms/validate";
 import diffText from "../transforms/diffText";
 import diffJson from "../transforms/diffJson";
@@ -16,6 +18,11 @@ import longVerses1 from "../transforms/longVerses1";
 import mergeReport from "../transforms/mergeReport";
 import uniqueWords from "../transforms/uniqueWords";
 import remoteTransform from "../transforms/remoteTransform";
+import stripMarkup from "../transforms/stripMarkup";
+import verseWords from "../transforms/verseWords";
+import mergeMarkup from "../transforms/mergeMarkup";
+import prepareJsonDiff from "../transforms/prepareJsonDiff";
+import uniqueWordsVerses from '../transforms/uniqueWordsVerses';
 
 const stepTemplates = {
     Transform: {
@@ -37,13 +44,20 @@ const stepTemplates = {
         mergeReport,
         uniqueWords,
         remoteTransform,
+        stripMarkup,
+        verseWords,
+        mergeMarkup,
+        prepareJsonDiff,
+        uniqueWordsVerses,
+        lightRegex,
+        regex,
     },
     Source: {
         local: {
             type: "Source",
             sourceLocation: "local",
             localValue: "",
-            outputType: "text"
+            outputType: "text",
         },
         http: {
             type: "Source",
@@ -56,14 +70,14 @@ const stepTemplates = {
         text: {
             type: "Display",
             inputType: "text",
-            inputSource: ""
+            inputSource: "",
         },
         json: {
             type: "Display",
             inputType: "json",
-            inputSource: ""
-        }
-    }
-}
+            inputSource: "",
+        },
+    },
+};
 
 export default stepTemplates;

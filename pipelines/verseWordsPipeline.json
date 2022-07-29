@@ -41,43 +41,30 @@
     "description": "USFM=>PERF: Conversion via Proskomma"
   },
   {
-    "id": 5,
-    "title": "Search Term",
-    "type": "Source",
-    "sourceLocation": "local",
-    "localValue": "Jesus",
-    "outputType": "text"
-  },
-  {
-    "id": 6,
-    "title": "Transform 6",
-    "name": "wordSearch",
+    "id": 4,
+    "title": "Transform 4",
+    "name": "verseWords",
     "type": "Transform",
     "inputs": [
       {
         "name": "perf",
         "type": "json",
         "source": "Transform 3 perf"
-      },
-      {
-        "name": "searchString",
-        "type": "text",
-        "source": "Source 5"
       }
     ],
     "outputs": [
       {
-        "name": "matches",
+        "name": "verseWords",
         "type": "json"
       }
     ],
-    "description": "PERF=>JSON: Searches for a word"
+    "description": "PERF=>JSON: Counts words occurrences"
   },
   {
-    "id": 7,
-    "title": "Matches",
+    "id": 5,
+    "title": "Verse Words",
     "type": "Display",
     "inputType": "json",
-    "inputSource": "Transform 6 matches"
+    "inputSource": "Transform 4 verseWords"
   }
 ]
