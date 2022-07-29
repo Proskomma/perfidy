@@ -1,0 +1,50 @@
+[
+  {
+    "id": 1,
+    "title": "Remote Transform JSON",
+    "type": "Source",
+    "sourceLocation": "local",
+    "localValue": "{\"name\": \"transformMe\", \"description\": \"transform example\", \"title\": \"test\", \"inputs\": [], \"outputs\": []}",
+    "outputType": "json"
+  },
+  {
+    "id": 2,
+    "title": "Remote Transform URL",
+    "type": "Source",
+    "sourceLocation": "local",
+    "outputType": "text",
+    "localValue": "http://localhost:5000/api/json2json"
+  },
+  {
+    "id": 3,
+    "title": "Remote Transform",
+    "name": "remoteTransform",
+    "type": "Transform",
+    "inputs": [
+      {
+        "name": "request",
+        "type": "json",
+        "source": "Source 1"
+      },
+      {
+        "name": "url",
+        "type": "text",
+        "source": "Source 2"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "response",
+        "type": "json"
+      }
+    ],
+    "description": "JSON=>JSON: Sends JSON to remote server, gets JSON back"
+  },
+  {
+    "id": 4,
+    "title": "Display Remote Response",
+    "type": "Display",
+    "inputType": "json",
+    "inputSource": "Transform 3 response"
+  }
+]

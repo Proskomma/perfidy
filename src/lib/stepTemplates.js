@@ -15,6 +15,7 @@ import searchRegexGen from "../transforms/searchRegexGen";
 import longVerses1 from "../transforms/longVerses1";
 import mergeReport from "../transforms/mergeReport";
 import uniqueWords from "../transforms/uniqueWords";
+import remoteTransform from "../transforms/remoteTransform";
 
 const stepTemplates = {
     Transform: {
@@ -35,6 +36,7 @@ const stepTemplates = {
         longVerses1,
         mergeReport,
         uniqueWords,
+        remoteTransform,
     },
     Source: {
         local: {
