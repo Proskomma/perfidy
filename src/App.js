@@ -26,8 +26,7 @@ function App() {
     const [results, setResults] = useState([]);
     const [runIssues, setRunIssues] = useState([]);
     const [expandSpecs, setExpandSpecs] = useState(true);
-    const [open, setOpen] = React.useState(false);
-    const [anchorEl, setAnchorEl] = React.useState(null);
+    const [anchorEl, setAnchorEl] = useState(null);
     
 
     const { proskomma } = useProskomma({ verbose: false });
@@ -116,7 +115,7 @@ function App() {
         setAnchorEl(null);
       };
     
-    const opens = Boolean(anchorEl);
+    const open = Boolean(anchorEl);
     const id = open ? 'simple-popover' : undefined;
 
     return (
@@ -156,7 +155,7 @@ function App() {
                             </Tooltip>
                             <Popover
                               id={id}
-                              open={opens}
+                              open={open}
                               anchorEl={anchorEl}
                               onClose={handleCloses}
                               anchorOrigin={{
@@ -199,10 +198,8 @@ function App() {
                                 }
                             >
                                 <SaveIcon/>
-                                {/* SAVE */}
                             </button>
                             </Tooltip>
-                            <Tooltip title="Expand All Steps" placement="bottom" arrow>
                             <button
                                 size="small"
                                 variant='contained'
@@ -211,9 +208,17 @@ function App() {
                                     () => setExpandSpecs(!expandSpecs)
                                 }
                             >
-                                {expandSpecs ? <UnfoldLessIcon/> : <UnfoldMoreIcon/>}
+                                {expandSpecs ? 
+                                <Tooltip title="Expand All Steps" placement="bottom" arrow>
+                                <UnfoldLessIcon/> 
+                                </Tooltip>
+                                : 
+                                <Tooltip title="Collapse All Steps" placement="bottom" arrow>
+                                <UnfoldMoreIcon/>
+                                </Tooltip>
+                                }
                             </button>
-                            </Tooltip>
+                            
                         </h2>
                         {
                             specSteps.map(
