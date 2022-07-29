@@ -6,6 +6,8 @@ import wordSearch from "../transforms/wordSearch";
 import justTheBible from "../transforms/justTheBible";
 import verseStats from "../transforms/verseStats";
 import proskommaQuery from "../transforms/proskommaQuery";
+import lightRegex from '../transforms/lightRegex';
+import regex from '../transforms/regex';
 import validate from "../transforms/validate";
 import diffText from "../transforms/diffText";
 import diffJson from "../transforms/diffJson";
@@ -45,6 +47,8 @@ const stepTemplates = {
         mergeMarkup,
         prepareJsonDiff,
         uniqueWordsVerses,
+        lightRegex,
+        regex,
     },
     Source: {
         local: {
@@ -57,8 +61,8 @@ const stepTemplates = {
             type: "Source",
             sourceLocation: "http",
             httpUrl: "",
-            outputType: "text",
-        },
+            outputType: "text"
+        }
     },
     Display: {
         text: {
