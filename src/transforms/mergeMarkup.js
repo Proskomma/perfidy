@@ -80,6 +80,7 @@ const localMergeMarkupActions = {
                             skipStartMilestone = true;
                         }
 
+                        //TODO: Count number of opened alignments, to close them when there is a modified/new word in the current iteration.
                         before?.forEach(({ payload }) =>{
                             if (payload.type !== "start_milestone") {
                                 workspace.outputContentStack[0].push(payload)
@@ -90,11 +91,13 @@ const localMergeMarkupActions = {
                             }
                         })
 
+                        //TODO: Decrease number of opened alignments as they are being pushed
                         after?.forEach(({ payload }) => {
                             alignments.opened = false;
                             workspace.outputContentStack[0].push(payload)
                         });
 
+                        //TODO: Add as many endMilestones as there are opened in alignments.opened, and set the later to 0.
                         if (!before?.length) {
                             console.log(`pushing ${word} without wrappers`);
                             if (alignments.opened) {
@@ -189,3 +192,5 @@ const mergeMarkup = {
     code: mergeMarkupCode
 };
 export default mergeMarkup;
+
+
