@@ -1,5 +1,3 @@
-import xreg from "xregexp";
-
 function makeRegex(regTab, regex, word) {
   console.log(regTab);
   const words = ["AT_END",
@@ -62,7 +60,7 @@ function makeRegex(regTab, regex, word) {
       const str1 = `\\S*\\s*`
       const str2 = `\\s*\\S*`
       return `${regex}${str2.repeat(a[1])}${a[0]}${str1.repeat(a[1])}`;
-    
+
   }
 
 
@@ -76,7 +74,7 @@ function makeRegex(regTab, regex, word) {
     let skip = true;
     let skiptwice = false
     let rege = "";
-    regTab.map((re,id) => {
+    regTab.forEach((re,id) => {
       if (!skip && !skiptwice) {
         if (words.includes(re)) {
           count += 1;
@@ -85,7 +83,7 @@ function makeRegex(regTab, regex, word) {
           count -= 1;
         }
         if (count === 0) {
-          let truc = newRegTab; 
+          let truc = newRegTab;
           newRegTab = [];
           skip = true;
           count = 1;
@@ -118,20 +116,20 @@ function makeRegex(regTab, regex, word) {
 const lightRegexCode = function ({ lightRegex }) {
   let regex = lightRegex.split(")");
   let regTab = [];
-  regex.map((reg, id) => {
+  regex.forEach((reg, id) => {
     regTab.push(reg);
     if (id !== regex.length - 1) {
       regTab.push(")");
     }
   });
   regex = [];
-  regTab.map((re) => {
+  regTab.forEach((re) => {
     if (re !== "") {
       regex.push(re);
     }
   });
   regTab = [];
-  regex.map((re) => {
+  regex.forEach((re) => {
     re.split("(").map((r) => regTab.push(r));
   });
   regex = "";
