@@ -1,4 +1,4 @@
-import {ProskommaRenderFromJson, identityActions, mergeActions} from 'proskomma-json-tools';
+import {ProskommaRenderFromJson, transforms, mergeActions} from 'proskomma-json-tools';
 
 const localJustTheBibleActions = {
     startMilestone: [
@@ -35,9 +35,9 @@ const localJustTheBibleActions = {
     ],
     blockGraft: [
         {
-            description: "Ignore blockGraft events",
-            test: () => true,
-            action: () => {
+            description: "Ignore blockGraft events, except for title (\\mt)",
+            test: (environment) => environment.context.sequences[0].block.subType !== 'title',
+            action: (environment) => {
             }
         },
     ],
@@ -66,20 +66,20 @@ const justTheBibleCode = function ({perf}) {
             actions: mergeActions(
                 [
                     localJustTheBibleActions,
-                    identityActions
+                    transforms.identityActions
                 ]
             )
         }
     );
     const output = {};
     cl.renderDocument({docId: "", config: {}, output});
-    return {perf: output}; // identityActions currently put PERF directly in output
+    return {perf: output.perf}; // identityActions currently put PERF directly in output
 }
 
 const justTheBible = {
     name: "justTheBible",
     type: "Transform",
-    description: "Returns PERF stripped of most markup",
+    description: "PERF=>PERF: Strips most markup",
     inputs: [
         {
             name: "perf",

@@ -1,0 +1,37 @@
+[
+  {
+    "id": 1,
+    "title": "Search Terms",
+    "type": "Source",
+    "sourceLocation": "local",
+    "localValue": "Marie & Joseph || Fred",
+    "outputType": "text"
+  },
+  {
+    "id": 4,
+    "title": "Generate Pk Search Data",
+    "name": "searchRegexGen",
+    "type": "Transform",
+    "inputs": [
+      {
+        "name": "searchString",
+        "type": "text",
+        "source": "Source 1"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "searchData",
+        "type": "json"
+      }
+    ],
+    "description": "TEXT=>TEXT: Generate a regex from a user's search terms"
+  },
+  {
+    "id": 3,
+    "title": "Generated Search Data",
+    "type": "Display",
+    "inputType": "json",
+    "inputSource": "Transform 4 searchData"
+  }
+]

@@ -34,7 +34,12 @@ function LoadSteps({setSpecSteps, setNextStepId}) {
             const loadedJson = JSON.parse(event.target.result);
             loadedJson
                 .filter(st => st.type === "Transform")
-                .forEach(st => st.code = stepTemplates.Transform[st.name].code);
+                .forEach(
+                    st => {
+                        st.code = stepTemplates.Transform[st.name].code;
+                        st.description = stepTemplates.Transform[st.name].description;
+                    }
+                );
             setSpecSteps(loadedJson);
             const lastId = Math.max(...loadedJson.map(st => parseInt(st.id)));
             setNextStepId(lastId + 1);
@@ -52,7 +57,7 @@ function LoadSteps({setSpecSteps, setNextStepId}) {
                 onChange={handleFileChange}
             />
 
-            <button  className="spec-button" onClick={handleClick}>{">P"}</button>
+            <button className="spec-button" onClick={handleClick}>{">P"}</button>
         </span>
     );
 }

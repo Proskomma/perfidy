@@ -303,3 +303,26 @@ select {
 .collapsed-button-right {
     float: right;
 }
+
+.transform-help-content {
+    float: right;
+    width: 150px;
+    background-color: transparent;
+    color: #fff;
+    text-align: center;
+    position: relative;
+    right: 0em;
+    top: 10px;
+}
+
+.editor-tab {
+    background-color: #1e1e1e;
+    padding: 0.3em 0.5rem;
+    border: 1px solid hsl(0deg 0% 9%);
+    margin-top: 0.5rem;
+    color: #d4d4d4;
+}
+button.editor-tab:disabled {
+    border-bottom: 2px solid lime;
+    color: #56c156;
+}

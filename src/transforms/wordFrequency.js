@@ -1,6 +1,6 @@
 import {ProskommaRenderFromJson} from 'proskomma-json-tools';
 
-const localWordCountActions = {
+const localWordFrequencyActions = {
     startDocument: [
         {
             description: "Set up word object",
@@ -38,17 +38,17 @@ const localWordCountActions = {
     ],
 };
 
-const perfUniqueWordCountCode = function ({perf}) {
-    const cl = new ProskommaRenderFromJson({srcJson: perf, actions: localWordCountActions});
+const wordFrequencyCode = function ({perf}) {
+    const cl = new ProskommaRenderFromJson({srcJson: perf, actions: localWordFrequencyActions});
     const output = {};
     cl.renderDocument({docId: "", config: {}, output});
         return {words: output.words};
 }
 
-const perfUniqueWordCount = {
-    name: "perfUniqueWordCount",
+const wordFrequency = {
+    name: "wordFrequency",
         type: "Transform",
-        description: "Counts the occurrence of each word in a PERF document",
+        description: "PERF=>JSON: Calculates word frequency",
         inputs: [
         {
             name: "perf",
@@ -62,7 +62,7 @@ const perfUniqueWordCount = {
             type: "json",
         }
     ],
-        code: perfUniqueWordCountCode
+        code: wordFrequencyCode
 }
 
-export default perfUniqueWordCount;
+export default wordFrequency;

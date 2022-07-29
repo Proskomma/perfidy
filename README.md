@@ -11,6 +11,9 @@ npm start
 This is currently at an advanced conceptual stage. In the meantime there are tooltips for all buttons.
 
 ### About Pipelines
+#### TLDR
+Try loading and running the examples in the `pipelines` directory of this repo.
+
 #### Overview
 A Perfidy pipeline is a way to pass data from multiple places through multiple functions and then view multiple results. The pipeline consists of three types of step:
 - __Sources__, each of which provides exactly one piece of text or JSON data, either locally (ie from a textbox) or from an HTTP source
@@ -18,9 +21,6 @@ A Perfidy pipeline is a way to pass data from multiple places through multiple f
 - __Transforms__, each of which has one or more input (from a source or from the output of another transform) and one or more output (which could be used by a display or another transform)
 
 Together, these steps form a directed graph through which data moves, being transformed along the way.
-
-#### Demo Pipeline
-Load `demo_pipeline.json` from the `pipelines` directory of the repo using the `>P` button.
 
 #### Workflow
 - Create or load a pipeline in the `Spec` pane
@@ -64,7 +64,7 @@ In addition, PerfRender maintains some 'vertical' state as it traverses the JSON
 
 Any output and any state not provided in the PerfRender context must be managed explicitly. PerfRender provides workspace and output objects to do this.
 
-In many cases the amount of additional state that needs to be tracked is quite limited, and that state can be structured for maximum convenience and efficiency for the task in hand. For tasks where the required state begins to look like reconstructing the entire JSON tree, it may make sense to consider a non-streaming approach.
+In many cases the amount of additional state that needs to be tracked is quite limited, and that state can be structured for maximum convenience and efficiency for the task in hand. For tasks where the required state begins to look like reconstructing the entire JSON tree, it may make sense to consider a non-streaming approach. `mergePerfText` in the `transforms` directory is an example of a task that could be done via a streaming model, but which is much easier to do by writing a tree-walking recursive function.
 
 #### Adding or Modifying PERF-Based Transforms
 Transforms are defined in the `transforms` directory and declared to the UI in `lib/stepTemplates`. These code changes should hot-load in the React dev server, but __you will probably need to refresh the web page__ so that the latest templates are used to build the pipeline. (Saved data should still load as long as you don't change existing template names or signatures.)
@@ -141,6 +141,9 @@ This mechanism supports multiple ways to structure the code, eg
 Note - in the case of multiple actions returning falsy values - that conditions in the `test` function do not have the same semantics as tests inside the `action` function. A failing `test` in this case will mean that subsequent actions will be tested, whereas a failing test inside an action will mean that no subsequent actions will be tested.
 
 `proskomma-json-tools` exports a `mergeActions` function which may be used to combine multiple action objects.
+
+#### The Identity Transform
+This is a PERF transform which uses PerfRender events to build a deep copy of its input. Used in isolation, this is rarely useful. However, when used as a default with other actions, via `mergeActions`, it is possible to make changes to a PERF document by specifying the changes and copying the rest. The `justTheBible` transform is a simple example of this - the identity transform behaviour is overriden for the classes of data that are to be removed.
 
 #### Development Aids
 PerfRender may be instantiated with an optional `debugLevel` value between 0 and 2:
