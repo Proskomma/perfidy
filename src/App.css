@@ -340,3 +340,20 @@ button.editor-tab:disabled {
     border-bottom: 2px solid lime;
     color: #56c156;
 }
+
+.graph-button {
+    float: left;
+    background-color: transparent;
+    color: #AAA;
+    font-weight: bold;
+    font-size: large
+}
+
+.opened-graph-button {
+    float: right;
+    background-color: transparent;
+    color: #AAA;
+    font-weight: bold;
+    font-size: large
+}
+

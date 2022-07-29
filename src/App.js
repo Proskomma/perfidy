@@ -34,7 +34,7 @@ function App() {
     const [edges, setEdges, onEdgesChange] = useEdgesState([]);
     const onConnect = useCallback((params) => setEdges((eds) => addEdge(params, eds)), [setEdges]);
     const onInit = (reactFlowInstance) => {
-        console.log('flow loaded:', reactFlowInstance);
+        // console.log('flow loaded:', reactFlowInstance);
         setFlowInstance(reactFlowInstance)
     }
 
@@ -216,6 +216,14 @@ function App() {
             </header>
             <div className="content">
                 <div className={showGraph ? "graph-pane" : "graph-pane-hidden"}>
+                    <button
+                        className="opened-graph-button"
+                        onClick={
+                            () => setShowGraph(false)
+                        }
+                    >
+                        X
+                    </button>
                     <ReactFlow
                         nodes={nodes}
                         edges={edges}
@@ -237,27 +245,16 @@ function App() {
                         <Background color="#aaa" gap={16} />
                     </ReactFlow>
                 </div>
-                <div className="spec-pane">
-                    <div className="spec-inner">
-                    {(nodes && nodes.length>0) && (
-                        <span className="graph-button">
-                            <span className="tooltiptext rtooltiptext">Graph view</span>
-                            <button
-                                className="graph-button"
-                                onClick={
-                                    () => setShowGraph(!showGraph)
-                                }
-                            >
-                                {showGraph ? "-" : "+"}
-                            </button>
-                        </span>
-                    )}
-                        <h2 className="spec-title">
+                {!showGraph &&
+                <>
+                    <div className="spec-pane">
+                        <div className="spec-inner">
+                            <h2 className="spec-title">
                             <span className="tooltip">
                                 <span className="tooltiptext rtooltiptext">Build your Pipeline Here</span>
                                 {"Spec "}
                             </span>
-                            <span className=" add-step-button tooltip">
+                                <span className=" add-step-button tooltip">
                                 <span className="tooltiptext ltooltiptext">Add a Display Step</span>
                                 <button
                                     className="add-step-button"
@@ -266,7 +263,7 @@ function App() {
                                     +D
                                 </button>
                             </span>
-                            <span className=" add-step-button tooltip">
+                                <span className=" add-step-button tooltip">
                                 <span className="tooltiptext ltooltiptext">Add a Transform Step</span>
                                 <button
                                     className="add-step-button"
@@ -275,7 +272,7 @@ function App() {
                                     +T
                                 </button>
                             </span>
-                            <span className=" add-step-button tooltip">
+                                <span className=" add-step-button tooltip">
                                 <span className="tooltiptext ltooltiptext">Add a Source Step</span>
                                 <button
                                     className="add-step-button"
@@ -284,14 +281,14 @@ function App() {
                                     +S
                                 </button>
                             </span>
-                            <span className=" spec-button tooltip">
+                                <span className=" spec-button tooltip">
                                 <span className="tooltiptext rtooltiptext">Load Steps from File</span>
                                 <LoadSteps
-                                    setSpecSteps={setNodeAndSpecSteps}
+                                    setSpecSteps={setNodeAndSpecStep}
                                     setNextStepId={setNextStepId}
                                 />
                             </span>
-                            <span className=" spec-button tooltip">
+                                <span className=" spec-button tooltip">
                                 <span className="tooltiptext rtooltiptext">Save Steps to File</span>
                                 <button
                                     className="spec-button"
@@ -306,7 +303,7 @@ function App() {
                                                     2
                                                 )
                                                 ],
-                                                { type: 'application/json' }
+                                                {type: 'application/json'}
                                             );
                                             a.href = URL.createObjectURL(blob);
                                             a.addEventListener('click', (e) => {
@@ -319,7 +316,7 @@ function App() {
                                     {"P>"}
                                 </button>
                             </span>
-                            <span className=" spec-button tooltip">
+                                <span className=" spec-button tooltip">
                                 <span className="tooltiptext rtooltiptext">Expand All Steps</span>
                                 <button
                                     className="spec-button"
@@ -330,27 +327,40 @@ function App() {
                                     {expandSpecs ? "><" : "<>"}
                                 </button>
                             </span>
-                        </h2>
-                        {
-                            specSteps.map(
-                                (ss, n) =>
-                                    <StepSpec
-                                        key={n}
-                                        spec={ss}
-                                        expand={expandSpecs}
-                                        deleteCallback={deleteCallback}
-                                        updateCallback={updateCallback}
-                                        moveCallback={moveCallback}
-                                        position={n}
-                                        nSteps={specSteps.length}
-                                    />
-                            )
-                        }
+                                {(nodes && nodes.length > 0) && (
+                                    <span className="graph-button tooltip">
+                            <span className="tooltiptext rtooltiptext">Graph view</span>
+                            <button
+                                className="graph-button"
+                                onClick={
+                                    () => setShowGraph(!showGraph)
+                                }
+                            >
+                                {showGraph ? "[L]" : "[G]"}
+                            </button>
+                        </span>
+                                )}
+                            </h2>
+                            {
+                                specSteps.map(
+                                    (ss, n) =>
+                                        <StepSpec
+                                            key={n}
+                                            spec={ss}
+                                            expand={expandSpecs}
+                                            deleteCallback={deleteCallback}
+                                            updateCallback={updateCallback}
+                                            moveCallback={moveCallback}
+                                            position={n}
+                                            nSteps={specSteps.length}
+                                        />
+                                )
+                            }
+                        </div>
                     </div>
-                </div>
-                <div className="result-pane">
-                    <div className="result-inner">
-                        <h2 className="result-title">
+                    <div className="result-pane">
+                        <div className="result-inner">
+                            <h2 className="result-title">
                             <span className=" run-button tooltip">
                                 <span className="tooltiptext rtooltiptext">Run the steps</span>
                                 <button
@@ -366,11 +376,11 @@ function App() {
                                     {">>"}
                                 </button>
                             </span>
-                            <span className="tooltip">
+                                <span className="tooltip">
                                 <span className="tooltiptext rtooltiptext">See the Results of your Pipeline Here</span>
-                                {"Result "}
+                                    {"Result "}
                             </span>
-                            <span className=" clear-results-button tooltip">
+                                <span className=" clear-results-button tooltip">
                                 <span className="tooltiptext ltooltiptext">Delete the results</span>
                                 <button
                                     className="clear-results-button"
@@ -380,18 +390,20 @@ function App() {
                                     X
                                 </button>
                             </span>
-                        </h2>
-                        {
-                            runIssues.length > 0 &&
-                            <DisplayIssues issues={runIssues} />
-                        }
-                        {
-                            runIssues.length === 0 && 
-                            <EditorWrapper results={results} />
-                        }
-                        
+                            </h2>
+                            {
+                                runIssues.length > 0 &&
+                                <DisplayIssues issues={runIssues}/>
+                            }
+                            {
+                                runIssues.length === 0 &&
+                                <EditorWrapper results={results}/>
+                            }
+
+                        </div>
                     </div>
-                </div>
+                </>
+                }
             </div>
         </div>
     );
