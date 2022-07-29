@@ -12,6 +12,7 @@ const localStripMarkupActions = {
         workspace.lastWord = "";
         workspace.waitingMarkup = [];
         workspace.currentOccurrences = {};
+        workspace.lastMilestone = {}
         output.stripped = {};
         return true;
       },
@@ -24,6 +25,9 @@ const localStripMarkupActions = {
         context.sequences[0].element.subType === "usfm:zaln",
       action: ({ context, workspace }) => {
         workspace.waitingMarkup.push(context.sequences[0].element);
+        workspace.lastMilestone = {
+          payload: context.sequences[0].element
+        }
       },
     },
   ],
@@ -31,7 +35,7 @@ const localStripMarkupActions = {
     {
       description: "Ignore zaln endMilestone events",
       test: ({ context }) =>
-        context.sequences[0].element.subType === "usfm:zaln",
+        context.sequences[0].element.type === "endMilestone",
       action: ({ context, workspace, output, config }) => {
         const { chapter, verses, lastWord: word } = workspace;
         const { verseWords: totalOccurrences } = config;
@@ -49,6 +53,7 @@ const localStripMarkupActions = {
           position: "after",
           word,
           payload: context.sequences[0].element,
+          startMilestone: workspace.lastMilestone.payload,
         };
         if (
           !output.stripped[workspace.chapter][workspace.verses][strippedKey]

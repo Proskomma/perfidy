@@ -3,21 +3,24 @@ import xre from "xregexp";
 
 const lexingRegexes = [
     [
-        "printable",
-        "wordLike",
-        xre("([\\p{Letter}\\p{Number}\\p{Mark}\\u2060]{1,127})"),
+        "printable", "wordLike", xre("([\\p{Letter}\\p{Number}\\p{Mark}\\u2060]{1,127})"),
     ],
-    ["printable", "lineSpace", xre("([\\p{Separator}\t]{1,127})")],
     [
-        "printable",
-        "punctuation",
-        xre(
-            "([\\p{Punctuation}\\p{Math_Symbol}\\p{Currency_Symbol}\\p{Modifier_Symbol}\\p{Other_Symbol}])"
-        ),
+        "printable", "lineSpace", xre("([\\p{Separator}\t]{1,127})")
     ],
-    ["bad", "unknown", xre("(.)")],
+    [
+        "printable", "punctuation", xre("([\\p{Punctuation}\\p{Math_Symbol}\\p{Currency_Symbol}\\p{Modifier_Symbol}\\p{Other_Symbol}])"),
+    ],
+    [
+        "bad", "unknown", xre("(.)")
+    ],
 ];
 const re = xre.union(lexingRegexes.map((x) => x[2]));
+
+const endMilestone = {
+    "type": "end_milestone",
+    "subType": "usfm:zaln"
+}
 
 const localMergeMarkupActions = {
     startDocument: [
@@ -29,91 +32,131 @@ const localMergeMarkupActions = {
                 workspace.verses = null;
                 workspace.currentOccurrences = {};
                 return true;
-            },
+            }
         },
     ],
     text: [
         {
             description: "add-to-text",
             test: () => true,
-            action: ({ config, context, workspace, output }) => {
+            action: (
+                { config, context, workspace, output }
+            ) => {
                 try {
                     const text = context.sequences[0].element.text;
                     const words = xre.match(text, re, "all");
                     const { chapter, verses } = workspace;
-                    if (!verses) return true;
+                    if (!verses)
+                        return true;
+
                     const { totalOccurrences, strippedMarkup } = config;
+
+                    const alignments = {
+                        opened: null
+                    };
                     for (const word of words) {
+                        
+                        const isWord = xre.match(word, lexingRegexes[0][2], "all");
+                        if (!isWord.length) {
+                            workspace.outputContentStack[0].push(word);
+                            continue;
+                        }
+
                         workspace.currentOccurrences[word] ??= 0;
                         workspace.currentOccurrences[word]++;
-                        const strippedKey = (position) =>
-                            [
-                                position,
-                                word,
-                                workspace.currentOccurrences[word],
-                                totalOccurrences[chapter][verses][word],
-                            ].join("--");
 
-                        const before =
-                            strippedMarkup[chapter][verses][strippedKey("before")]?.map(
-                                ({ payload }) => workspace.outputContentStack[0].push(payload)
-                            )
-                        const after = 
-                            strippedMarkup[chapter][verses][strippedKey("after")]?.map(
-                                ({ payload }) => workspace.outputContentStack[0].push(payload)
-                            );
+                        const strippedKey = (position) => [
+                            position, word, workspace.currentOccurrences[word], totalOccurrences[chapter][verses][word],
+                        ].join("--");
 
-                        if (!before && !after) workspace.outputContentStack[0].push(word);
+                        const markup = strippedMarkup[chapter][verses];
+                        let skipStartMilestone = false;
+
+                        const after = markup[strippedKey("after")];
+                        const before = markup[strippedKey("before")];
+
+                        if (after?.length && !alignments.opened) {
+                            after.map( ({ startMilestone }) => workspace.outputContentStack[0].push(startMilestone));
+                            skipStartMilestone = true;
+                        }
+
+                        before?.forEach(({ payload }) =>{
+                            if (payload.type !== "start_milestone") {
+                                workspace.outputContentStack[0].push(payload)
+                            }
+                            if (payload.type === "start_milestone" && !skipStartMilestone) {
+                                workspace.outputContentStack[0].push(payload);
+                                alignments.opened = true;
+                            }
+                        })
+
+                        after?.forEach(({ payload }) => {
+                            alignments.opened = false;
+                            workspace.outputContentStack[0].push(payload)
+                        });
+
+                        if (!before?.length) {
+                            console.log(`pushing ${word} without wrappers`);
+                            if (alignments.opened) {
+                                workspace.outputContentStack[0].push(endMilestone);
+                                alignments.opened = false;
+                            }
+                            workspace.outputContentStack[0].push(word);
+                        }
+
                     }
                     return false;
                 } catch (err) {
                     console.error(err);
                     throw err;
                 }
-            },
+            }
         },
     ],
     mark: [
         {
             description: "mark-chapters",
             test: ({ context }) => context.sequences[0].element.subType === "chapter",
-            action: ({ config, context, workspace, output }) => {
+            action: (
+                { config, context, workspace, output }
+            ) => {
                 const element = context.sequences[0].element;
                 workspace.chapter = element.atts["number"];
                 workspace.verses = 0;
                 return true;
-            },
-        },
-        {
+            }
+        }, {
             description: "mark-verses",
             test: ({ context }) => context.sequences[0].element.subType === "verses",
-            action: ({ config, context, workspace, output }) => {
+            action: (
+                { config, context, workspace, output }
+            ) => {
                 const element = context.sequences[0].element;
                 workspace.verses = element.atts["number"];
-                workspace.currentOccurrences = { something: "abel" };
+                workspace.currentOccurrences = {
+                    something: "abel"
+                };
                 return true;
-            },
+            }
         },
-    ],
+    ]
 };
 
 const mergeMarkupCode = function ({ perf, verseWords: totalOccurrences, stripped: strippedMarkup }) {
-    const cl = new ProskommaRenderFromJson(
-        {
-            srcJson: perf,
-            actions: mergeActions(
-                [
-                    localMergeMarkupActions,
-                    transforms.identityActions
-                ]
-            )
-        }
-    );
+    const cl = new ProskommaRenderFromJson({
+        srcJson: perf,
+        actions: mergeActions(
+            [localMergeMarkupActions, transforms.identityActions]
+        )
+    });
     const output = {};
     cl.renderDocument({
         docId: "",
-        config: { totalOccurrences, strippedMarkup },
-        output,
+        config: {
+            totalOccurrences,
+            strippedMarkup
+        },
+        output
     });
     return { perf: output.perf }; // identityActions currently put PERF directly in output
 }
@@ -126,25 +169,23 @@ const mergeMarkup = {
         {
             name: "perf",
             type: "json",
-            source: "",
-        },
-        {
+            source: ""
+        }, {
             name: "stripped",
             type: "json",
-            source: "",
-        },
-        {
+            source: ""
+        }, {
             name: "verseWords",
             type: "json",
-            source: "",
+            source: ""
         },
     ],
     outputs: [
         {
             name: "perf",
-            type: "json",
+            type: "json"
         },
     ],
-    code: mergeMarkupCode,
+    code: mergeMarkupCode
 };
 export default mergeMarkup;
