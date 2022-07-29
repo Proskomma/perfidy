@@ -1,7 +1,8 @@
 import Axios from "axios";
 
 const remoteTransformCode = async ({request, url}) => {
-    console.log(request);
+    console.log("URL: "+url);
+    console.log("REQUEST:", request);
     const response = await Axios.post(url, request, {
         headers: {
             'Access-Control-Allow-Origin': '*',
@@ -9,7 +10,7 @@ const remoteTransformCode = async ({request, url}) => {
         },
         crossDomain: true,
     });
-    console.log("RESPONSE", response);
+    console.log("RESPONSE:", response);
     return {response: response.data};
 };
 
@@ -27,7 +28,7 @@ const remoteTranform = {
             name: "url",
             type: "text",
             source: ""
-        },
+        },  
 
     ],
     outputs: [
