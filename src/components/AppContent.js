@@ -1,14 +1,6 @@
 import React, { useState } from "react";
 import {
   Box,
-  ButtonBase,
-  ButtonGroup,
-  Divider,
-  List,
-  ListSubheader,
-  Tooltip,
-  IconButton,
-  Stack,
 } from "@mui/material";
 import { ResultPane } from "./ResultPane";
 import { SpecPane } from "./SpecPane";
@@ -24,7 +16,7 @@ function AppContent() {
       <ResizableDrawer>
         <SpecPane specSteps={specSteps} setSpecSteps={setSpecSteps}></SpecPane>
       </ResizableDrawer>
-      <Box>
+      <Box sx={{ display: "flex" }}>
         <ResultPane specSteps={specSteps}></ResultPane>
       </Box>
     </Box>

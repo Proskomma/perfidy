@@ -1,9 +1,11 @@
 // Based on https://bobbyhadz.com/blog/react-open-file-input-on-button-click
+import { IconButton, Tooltip } from '@mui/material';
 import {useRef} from 'react';
 
 import stepTemplates from "../lib/stepTemplates";
+import UploadIcon from "@mui/icons-material/Upload";
 
-function LoadSteps({setSpecSteps, setNextStepId}) {
+function LoadStepsButton({setSpecSteps, setNextStepId}) {
 
     const inputRef = useRef(null);
 
@@ -49,17 +51,20 @@ function LoadSteps({setSpecSteps, setNextStepId}) {
     };
 
     return (
-        <span className="spec-button">
-            <input
-                style={{display: 'none'}}
-                ref={inputRef}
-                type="file"
-                onChange={handleFileChange}
-            />
-
-            <button className="spec-button" onClick={handleClick}>{">P"}</button>
-        </span>
+      <>
+        <input
+          style={{ display: "none" }}
+          ref={inputRef}
+          type="file"
+          onChange={handleFileChange}
+        />
+        <Tooltip title="Save Steps to File">
+          <IconButton size={"small"} onClick={handleClick}>
+            <UploadIcon fontSize="inherit"></UploadIcon>
+          </IconButton>
+        </Tooltip>
+      </>
     );
 }
 
-export default LoadSteps;
+export default LoadStepsButton;

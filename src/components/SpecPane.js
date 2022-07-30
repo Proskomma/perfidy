@@ -1,36 +1,46 @@
 import React, { useState } from "react";
-import deepCopy from "deep-copy-all";
+
 import StepSpec from "./StepSpec";
 import stepTemplates from "../lib/stepTemplates";
-import LoadSteps from "./LoadSteps";
-import { Box, ButtonBase, Divider, List, ListSubheader, Stack, Tooltip, IconButton, ListItem, Typography } from "@mui/material";
-import DownloadIcon from '@mui/icons-material/Download';
-import UploadIcon from '@mui/icons-material/Upload';
+import {
+    Box,
+    Tooltip, Typography,
+} from "@mui/material";
 
-function ActionButton({ children, ...props }) {
-    return (
-        <ButtonBase
-            variant="contained"
-            size="small"
-            sx={{
-                fontSize: ".8rem",
-                fontWeight: "bold",
-                borderRadius: 0.5,
-                p: 0.2,
-                ":hover": {
-                    bgcolor: "#ffffff1a",
-                },
-            }}
-            {...props}
-        >{children}</ButtonBase>
-    );
-}
+import { ActionButton } from "./ActionButton";
+import PaneSection from "./PaneSection";
+import Pane from "./Pane";
+import PaneItem from "./PaneItem";
+import PaneHeader from "./PaneHeader";
+import SaveStepsButton from "./SaveStepsButton";
+import LoadStepsButton from "./LoadStepsButton";
 
 const stepTypes = ["Source", "Transform", "Display"];
 
+
 export function SpecPane({ setSpecSteps, specSteps }) {
     const [nextStepId, setNextStepId] = useState(1);
-    const [expandSpecs, setExpandSpecs] = useState(true);
+    const [expandSpecs] = useState(true);
+
+    const stepsTools = stepTypes.map((type, key) => (
+        <Tooltip title={`Add a ${type} Step`} key={`step-${key}`}>
+            <ActionButton
+                onClick={(e) => {
+                    e.stopPropagation();
+                    addStepCallback(type);
+                }}
+            >
+                {type[0].toUpperCase()}+
+            </ActionButton>
+        </Tooltip>
+    ));
+
+    const specTools = (
+        <>
+            <SaveStepsButton steps={specSteps} />
+            <LoadStepsButton />
+        </>
+    );
 
     const moveCallback = (specPosition, direction) => {
         let specs = [...specSteps];
@@ -43,20 +53,9 @@ export function SpecPane({ setSpecSteps, specSteps }) {
         setSpecSteps(specs);
     };
 
-    const deleteCallback = (deleteId) => setSpecSteps((specSteps) => specSteps.filter((v) => v.id !== deleteId));
+    const deleteCallback = (deleteId) =>
+        setSpecSteps((specSteps) => specSteps.filter((v) => v.id !== deleteId));
 
-
-    const cleanSteps = (steps) => {
-        const ret = deepCopy(steps);
-        for (const step of ret) {
-            delete step.value;
-            delete step.result;
-            if (step.inputs) {
-                step.inputs.forEach((i) => delete i.value);
-            }
-        }
-        return ret;
-    };
 
 
     const defaultTemplate = (stepType) => {
@@ -68,7 +67,6 @@ export function SpecPane({ setSpecSteps, specSteps }) {
             return stepTemplates.Display.text;
         }
     };
-
 
     const addStepCallback = (stepType) => {
         setSpecSteps((specSteps) => [
@@ -88,10 +86,13 @@ export function SpecPane({ setSpecSteps, specSteps }) {
             Transform: newSpec.name || "usfm2perf",
             Display: newSpec.inputType || "text",
         };
-        const newTemplate = stepTemplates[newSpec.type][newSpecSubtypes[newSpec.type]];
+        const newTemplate =
+            stepTemplates[newSpec.type][newSpecSubtypes[newSpec.type]];
         for (const key of Object.keys(newSpec)) {
-            if (!["id", "title"].includes(key) &&
-                !Object.keys(newTemplate).includes(key)) {
+            if (
+                !["id", "title"].includes(key) &&
+                !Object.keys(newTemplate).includes(key)
+            ) {
                 delete newSpec[key];
             }
         }
@@ -101,93 +102,25 @@ export function SpecPane({ setSpecSteps, specSteps }) {
                 newSpec[key] = newTemplate[key];
             }
         }
-        setSpecSteps((specSteps) => specSteps.map((v) => (v.id === newSpec.id ? newSpec : v))
+        setSpecSteps((specSteps) =>
+            specSteps.map((v) => (v.id === newSpec.id ? newSpec : v))
         );
     };
 
-
     return (
-        <Box sx={{ height: "100%", display: "grid", gridTemplateRows: "1fr 1fr auto" }}>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-            padding: "0.2rem 1rem",
-          }}
-        >
-          <Tooltip title="Build your Pipeline Here">
-            <Typography
-              variant="button"
-              sx={{
-                color: (theme) => theme.palette.text.disabled,
-                fontSize: "0.6rem",
-              }}
-            >
-              Spec
-            </Typography>
-          </Tooltip>
-          <Stack
-            alignItems="center"
-            direction="row"
-            justifyContent="flex-end"
-            spacing={0.3}
-          >
-            <Tooltip title="Save Steps to File">
-              <IconButton size={"small"}>
-                <DownloadIcon fontSize="inherit"></DownloadIcon>
-              </IconButton>
-            </Tooltip>
-            <Tooltip title="Load Steps from File">
-              <IconButton size={"small"}>
-                <UploadIcon fontSize="inherit"></UploadIcon>
-              </IconButton>
-            </Tooltip>
-          </Stack>
-        </Box>
-        <Divider></Divider>
-        <List
-          sx={{
-            width: "100%",
-            height: "100%",
-          }}
-          subheader={
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                boxSizing: "border-box",
-              }}
-            >
-              <Tooltip title="Build your Pipeline Here">
-                <ListSubheader
-                  sx={{ fontSize: "0.8rem", lineHeight: "1.6rem" }}
-                >
-                  Steps
-                </ListSubheader>
-              </Tooltip>
-              <Stack
-                alignItems="center"
-                direction="row"
-                justifyContent="flex-end"
-                spacing={0.3}
-              >
-                {stepTypes.map((type, key) => (
-                  <Tooltip title={`Add a ${type} Step`} key={`step-${key}`}>
-                    <ActionButton onClick={() => addStepCallback(type)}>
-                      {type[0].toUpperCase()}+
-                    </ActionButton>
-                  </Tooltip>
-                ))}
-              </Stack>
-            </Box>
-          }
-        >
-          <Divider></Divider>
-          <Box sx={{ overflow: "auto", height:"100%" }}>
-            <div className="spec-inner">
-              {specSteps.map((ss, n) => (
+      <Pane
+        subheader={
+          <PaneHeader
+            text={"Spec"}
+            tools={specTools}
+            tooltip={"Start your pipeline here"}
+          />
+        }
+      >
+        <PaneSection subheader={"steps"} tools={stepsTools} isOpen={true}>
+          {specSteps.length ? (
+            specSteps.map((ss, n) => (
+              <PaneItem>
                 <StepSpec
                   key={n}
                   spec={ss}
@@ -198,10 +131,24 @@ export function SpecPane({ setSpecSteps, specSteps }) {
                   position={n}
                   nSteps={specSteps.length}
                 />
-              ))}
-            </div>
-          </Box>
-        </List>
-      </Box>
+              </PaneItem>
+            ))
+          ) : (
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "2rem",
+              }}
+            >
+              <Typography variant="overline" sx={{color: (theme) => theme.palette.text.disabled}}>
+                Empty
+              </Typography>
+            </Box>
+          )}
+        </PaneSection>
+        <PaneSection subheader={"other"}></PaneSection>
+      </Pane>
     );
 }

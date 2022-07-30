@@ -62,7 +62,7 @@ export default function ResizableDrawer({ children }) {
         },
       }}
     >
-      <Toolbar />
+      <Toolbar variant="dense" />
       <Box onMouseDown={(e) => handleMouseDown(e)} sx={draggerStyles} />
       {children}
       <Divider />
