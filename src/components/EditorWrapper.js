@@ -91,7 +91,6 @@ function EditorWrapper({ results }) {
           );
         })}
         <Editor
-          height="80vh"
           theme="vs-dark"
           path={editorContent.title}
           defaultLanguage={editorContent.inputType}
