@@ -1,104 +1,114 @@
+import { Box, FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material";
 import React from "react";
 
-function SourceStepSpecDetails({spec, updateCallback}) {
-    const jsonValueColor = content => {
+function SourceStepSpecDetails({ spec, updateCallback }) {
+    const isInvalidJson = content => {
         try {
             JSON.parse(content);
-            return "white";
+            return false;
         } catch (err) {
-            return "#FF6666";
+            return true;
         }
     }
-    return <>
-        <div className="step-spec-field">
-            <label className="step-spec-field-label" htmlFor={`sourceLocation-${spec.id}`}>Location</label>
-            <select
-                name={`sourceLocation-${spec.id}`}
-                onChange={
-                    e => {
-                        const newSpec = {
-                            ...spec,
-                            sourceLocation: e.target.value
-                        }
-                        updateCallback(newSpec);
-                    }
-                }
-                defaultValue={spec.sourceLocation}
-            >
-                {
-                    ['local', 'http'].map((op, n) => <option key={n} value={op}>{op}</option>)
-                }
-            </select>
-        </div>
-        <div className="step-spec-field">
-            <label className="step-spec-field-label" htmlFor={`outputType-${spec.id}`}>Output Type</label>
-            <select
-                name={`outputType-${spec.id}`}
-                onChange={
-                    e => {
-                        const newSpec = {
-                            ...spec,
-                            outputType: e.target.value
-                        }
-                        updateCallback(newSpec);
-                    }
-                }
-                defaultValue={spec.outputType}
-            >
-                {
-                    ['text', 'json'].map((op, n) => <option key={n} value={op}>{op}</option>)
-                }
-            </select>
-        </div>
-        {
-            spec.sourceLocation === 'local' &&
-            <div className="step-spec-field">
-                <label
-                    className="step-spec-field-label"
-                    htmlFor={`localValue-${spec.id}`}
-                    style={{color: spec.outputType === 'json' ? jsonValueColor(spec.localValue) : "white"}}
-                >
-                    Value
-                </label>
-                <textarea
-                    rows="1"
-                    cols="30"
-                    name={`localValue-${spec.id}`}
-                    onChange={
-                        e => {
+    return (
+        <>
+            <Box sx={{ display: "flex", flexWrap: "wrap" }}>
+                <FormControl sx={{ m: 1, minWidth: 80, flexGrow: 1 }} size="small">
+                    <InputLabel id={`sourceLocation-${spec.id}`}>Location</InputLabel>
+                    <Select
+                        labelId={`sourceLocation-${spec.id}`}
+                        label={"Location"}
+                        onChange={(e) => {
                             const newSpec = {
                                 ...spec,
-                                localValue: e.target.value || ""
+                                sourceLocation: e.target.value,
                             };
                             updateCallback(newSpec);
-                        }
-                    }
-                    defaultValue={spec.localValue}
-                />
-            </div>
-        }
-        {
-            spec.sourceLocation === 'http' &&
-            <div className="step-spec-field">
-                <label className="step-spec-field-label" htmlFor={`httpUrl-${spec.id}`}>URL</label>
-                <textarea
-                    rows="1"
-                    cols="30"
-                    name={`httpUrl-${spec.id}`}
-                    onChange={
-                        e => {
+                        }}
+                        defaultValue={spec.sourceLocation}
+                        a
+                    >
+                        {["local", "http"].map((op, n) => (
+                            <MenuItem key={n} value={op}>
+                                {op}
+                            </MenuItem>
+                        ))}
+                    </Select>
+                </FormControl>
+                <FormControl sx={{ m: 1, minWidth: 80, flexGrow: 1 }} size="small">
+                    <InputLabel id={`outputType-${spec.id}`}>Output Type</InputLabel>
+                    <Select
+                        labelId={`outputType-${spec.id}`}
+                        label={"Output Type"}
+                        onChange={(e) => {
                             const newSpec = {
                                 ...spec,
-                                httpUrl: e.target.value || ""
+                                outputType: e.target.value,
                             };
                             updateCallback(newSpec);
-                        }
-                    }
-                    value={spec.httpUrl}
-                />
-            </div>
-        }
-    </>
+                        }}
+                        defaultValue={spec.outputType}
+                        a
+                    >
+                        {["text", "json"].map((op, n) => (
+                            <MenuItem key={n} value={op}>
+                                {op}
+                            </MenuItem>
+                        ))}
+                    </Select>
+                </FormControl>
+            </Box>
+            <Box sx={{ display: "flex", flexWrap: "wrap" }}>
+                {spec.sourceLocation === "local" && (
+                    <FormControl sx={{ m: 1, minWidth: 80, flexGrow: 1 }} size="small">
+                        <TextField
+                            multiline
+                            maxRows={4}
+                            error={
+                                spec.outputType === "json" && isInvalidJson(spec.localValue)
+                            }
+                            label="Value"
+                            name={`localValue-${spec.id}`}
+                            onChange={(e) => {
+                                const newSpec = {
+                                    ...spec,
+                                    localValue: e.target.value || "",
+                                };
+                                updateCallback(newSpec);
+                            }}
+                            defaultValue={spec.localValue}
+                            size="small"
+                        />
+                    </FormControl>
+                )}
+                {spec.sourceLocation === "http" && (
+                    <FormControl
+                        sx={{ m: 1, minWidth: 80, flexGrow: 1 }}
+                        size="small"
+                    >
+                        <TextField
+                            multiline
+                            maxRows={4}
+                            error={
+                                spec.outputType === "json" && isInvalidJson(spec.httpUrl)
+                            }
+                            label="URL"
+                            name={`httpUrl-${spec.id}`}
+                            onChange={(e) => {
+                                const newSpec = {
+                                    ...spec,
+                                    httpUrl: e.target.value || "",
+                                };
+                                updateCallback(newSpec);
+                            }}
+                            defaultValue={spec.httpUrl}
+                            size="small"
+                        />
+                    </FormControl>
+                )}
+            </Box>
+        </>
+    );
 }
 
 export default SourceStepSpecDetails;

@@ -2,7 +2,7 @@ import React, { useCallback } from "react";
 import { Divider, Drawer, Toolbar } from "@mui/material";
 import { Box } from "@mui/system";
 
-export const defaultDrawerWidth = 240;
+export const defaultDrawerWidth = 340;
 const minDrawerWidth = 50;
 const maxDrawerWidth = 1000;
 
