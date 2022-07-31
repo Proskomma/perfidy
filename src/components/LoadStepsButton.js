@@ -58,7 +58,7 @@ function LoadStepsButton({setSpecSteps, setNextStepId}) {
           type="file"
           onChange={handleFileChange}
         />
-        <Tooltip title="Save Steps to File">
+        <Tooltip title="Load Steps from File">
           <IconButton size={"small"} onClick={handleClick}>
             <UploadIcon fontSize="inherit"></UploadIcon>
           </IconButton>

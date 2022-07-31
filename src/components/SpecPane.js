@@ -38,7 +38,7 @@ export function SpecPane({ setSpecSteps, specSteps }) {
     const specTools = (
         <>
             <SaveStepsButton steps={specSteps} />
-            <LoadStepsButton />
+            <LoadStepsButton setSpecSteps={setSpecSteps} setNextStepId={setNextStepId} />
         </>
     );
 

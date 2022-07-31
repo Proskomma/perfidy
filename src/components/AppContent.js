@@ -12,11 +12,11 @@ function AppContent() {
   const [specSteps, setSpecSteps] = useState([]);
 
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box sx={{ display: "flex", flexGrow: 1 }}>
       <ResizableDrawer>
         <SpecPane specSteps={specSteps} setSpecSteps={setSpecSteps}></SpecPane>
       </ResizableDrawer>
-      <Box sx={{ display: "flex" }}>
+      <Box sx={{ display: "flex", flexGrow: 1 }}>
         <ResultPane specSteps={specSteps}></ResultPane>
       </Box>
     </Box>

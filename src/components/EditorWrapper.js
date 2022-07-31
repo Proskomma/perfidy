@@ -94,6 +94,7 @@ function EditorWrapper({ results }) {
           theme="vs-dark"
           path={editorContent.title}
           defaultLanguage={editorContent.inputType}
+          width="auto"
           defaultValue={
             typeof editorContent.value === "object"
               ? JSON.stringify(editorContent.value, null, 2)
