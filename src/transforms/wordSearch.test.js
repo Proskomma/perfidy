@@ -91,11 +91,12 @@ const matchI = [
 ]
 
 const tests = [
-  // Case Insensitve Testing
+  // Case Insensitive Testing
   { searchString: 'paul', ignoreCase: '1', partialMatch: '0', logic: '', regex: '0', perf, expect: matchPaul },
   { searchString: 'pa?l', ignoreCase: '1', partialMatch: '0', logic: '', regex: '0', perf, expect: matchPaul },
   { searchString: 'p*l', ignoreCase: '1', partialMatch: '0', logic: '', regex: '0', perf, expect: matchPaul },
   { searchString: 'pau', ignoreCase: '1', partialMatch: '0', logic: '', regex: '0', perf, expect: [] },
+  { searchString: 'p*u', ignoreCase: '1', partialMatch: '0', logic: '', regex: '0', perf, expect: [] },
   // Case Sensitive Testing
   { searchString: 'paul', ignoreCase: '0', partialMatch: '0', logic: '', regex: '0', perf, expect: [] },
   { searchString: 'Paul', ignoreCase: '0', partialMatch: '0', logic: '', regex: '0', perf, expect: matchPaul },
