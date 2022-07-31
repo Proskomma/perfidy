@@ -7,30 +7,37 @@ import { Avatar } from '@mui/material';
 
 function AppHeader() {
   return (
-    <><AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }} >
-      <Toolbar variant="dense">
-        <Avatar
-          alt="Perfidy"
-          src="favicon.ico"
-          variant="square"
-          sx={{ width: 24, height: 24, mr: ".5rem" }} />
-        <Box
-          sx={{
-            display: "grid",
-            gridTemplateColumns: "auto auto",
-            gap: ".5rem",
-            alignItems: "center",
-          }}
-        >
-          <Typography variant="h6" component="div">
-            Perfidy
-          </Typography>
-          <Typography variant="caption" component="div">
-            - an IDE for PERF
-          </Typography>
-        </Box>
-      </Toolbar>
-    </AppBar><Toolbar /></>
+    <>
+      <AppBar
+        position="fixed"
+        sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
+      >
+        <Toolbar variant="dense">
+          <Avatar
+            alt="Perfidy"
+            src="favicon.ico"
+            variant="square"
+            sx={{ width: 24, height: 24, mr: ".5rem" }}
+          />
+          <Box
+            sx={{
+              display: "grid",
+              gridTemplateColumns: "auto auto",
+              gap: ".5rem",
+              alignItems: "center",
+            }}
+          >
+            <Typography variant="h6" component="div">
+              Perfidy
+            </Typography>
+            <Typography variant="caption" component="div">
+              - an IDE for PERF
+            </Typography>
+          </Box>
+        </Toolbar>
+      </AppBar>
+      <Toolbar variant="dense" />
+    </>
   );
 }
 

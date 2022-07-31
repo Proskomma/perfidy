@@ -4,6 +4,8 @@ import runCallback from "../lib/runCallback";
 import DisplayIssues from "./DisplayIssues";
 import EditorWrapper from "./EditorWrapper";
 import { Box, Button, Tooltip } from "@mui/material";
+import PaneHeader from "./PaneHeader";
+import Pane from "./Pane";
 
 export function ResultPane({ specSteps }) {
   const { proskomma } = useProskomma({ verbose: false });
@@ -15,9 +17,10 @@ export function ResultPane({ specSteps }) {
   };
 
   return (
-    <Box sx={{ display: "flex", flex: 1, flexDirection: "column" }}>
-      <Box>
-        <Box>
+    <Pane sx={{ display: "flex", flex: 1, flexDirection: "column" }} subheader={
+          <PaneHeader
+            text={"Results"}
+            tools={<Box>
           <Tooltip title={`Run the steps`}>
             <Button
               onClick={() =>
@@ -41,11 +44,13 @@ export function ResultPane({ specSteps }) {
               {"X"}
             </Button>
           </Tooltip>
-        </Box>
-      </Box>
+        </Box>}
+            tooltip={"See the pipeline results here"}
+          />
+        }>
 
       {runIssues.length > 0 && <DisplayIssues issues={runIssues} />}
       {runIssues.length === 0 && <EditorWrapper results={results} />}
-    </Box>
+    </Pane>
   );
 }
