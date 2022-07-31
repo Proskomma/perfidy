@@ -1,49 +1,67 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Editor from "@monaco-editor/react";
+import { Box, Button, Tooltip } from '@mui/material';
 
 const cleanEditorContent = {
-    title: "index",
-    value: "",
-    inputType: "json"
+  title: "index",
+  value: "",
+  inputType: "json"
 }
 
 const defaultOptions = { readOnly: true, domReadOnly: true };
 
 function EditorWrapper({ results }) {
-    const [editorContent, setEditorContent] = useState(cleanEditorContent);
-    const [editorOptions, setEditorOptions] = useState(defaultOptions);
+  const [editorContent, setEditorContent] = useState(cleanEditorContent);
+  const [editorOptions, setEditorOptions] = useState(defaultOptions);
 
-    const editorRef = useRef(null);
+  const editorRef = useRef(null);
 
-    useEffect(() => {
-        console.log("updated editor");
-        editorRef.current?.focus();
-    }, [editorContent?.id]);
+  useEffect(() => {
+    console.log("updated editor");
+    editorRef.current?.focus();
+  }, [editorContent?.id]);
 
-    const firstResult = results[0]?.id
+  const firstResult = results[0]?.id
 
-    useEffect(() => {
-        if (!editorContent.id && firstResult) setEditorContent(results[results.length - 1])
-        if (!results.length && editorContent.id) setEditorContent(cleanEditorContent);
-    }, [firstResult, editorContent, results])
+  useEffect(() => {
+    if (!editorContent.id && firstResult) setEditorContent(results[results.length - 1])
+    if (!results.length && editorContent.id) setEditorContent(cleanEditorContent);
+  }, [firstResult, editorContent, results])
 
-    return (
-      <>
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        flexGrow: 1,
+        flexDirection: "column",
+        bgcolor: "#1e1e1e",
+      }}
+    >
+      <Box sx={{ display: "flex", flexGrow: 1, flexDirection: "row" }}>
+        <Box sx={{ display: "flex", flexGrow: 1 }}>
+          {results.map((r, n) => {
+            return (
+              <Tooltip title={`${r.type} ${r.id}`} key={n}>
+                <Button
+                  disabled={editorContent.title === r.title}
+                  onClick={() => setEditorContent(r)}
+                >
+                  {r.title}
+                </Button>
+              </Tooltip>
+            );
+          })}
+        </Box>
         {firstResult && (
-          <>
-            <span className="add-step-button tooltip">
-              <span className="tooltiptext ltooltiptext">
-                Save display to File
-              </span>
-              <button
-                className="result-button"
+          <Box>
+            <Tooltip title={`Save display to File`}>
+              <Button
                 onClick={() => {
                   const a = document.createElement("a");
                   a.download = `${editorContent.title
                     .toLowerCase()
-                    .replace(" ", "_")}.${
-                    typeof editorContent.value === "string" ? "txt" : "json"
-                  }`;
+                    .replace(" ", "_")}.${typeof editorContent.value === "string" ? "txt" : "json"
+                    }`;
                   const blob = new Blob(
                     [
                       typeof editorContent.value === "string"
@@ -60,12 +78,10 @@ function EditorWrapper({ results }) {
                 }}
               >
                 {"R>"}
-              </button>
-            </span>
-            <span className="add-step-button tooltip">
-              <span className="tooltiptext ltooltiptext">Toggle word wrap</span>
-              <button
-                className="result-button"
+              </Button>
+            </Tooltip>
+            <Tooltip title={`Toggle word wrap`}>
+              <Button
                 onClick={() =>
                   setEditorOptions((options) => ({
                     ...options,
@@ -74,37 +90,26 @@ function EditorWrapper({ results }) {
                 }
               >
                 {"W"}
-              </button>
-            </span>
-          </>
+              </Button>
+            </Tooltip>
+          </Box>
         )}
-        {results.map((r, n) => {
-          return (
-            <button
-              className="editor-tab"
-              disabled={editorContent.title === r.title}
-              onClick={() => setEditorContent(r)}
-              key={n}
-            >
-              {r.title}
-            </button>
-          );
-        })}
-        <Editor
-          theme="vs-dark"
-          path={editorContent.title}
-          defaultLanguage={editorContent.inputType}
-          width="auto"
-          defaultValue={
-            typeof editorContent.value === "object"
-              ? JSON.stringify(editorContent.value, null, 2)
-              : editorContent.value
-          }
-          options={editorOptions}
-          onMount={(editor) => (editorRef.current = editor)}
-        />
-      </>
-    );
+      </Box>
+      <Editor
+        theme="vs-dark"
+        path={editorContent.title}
+        defaultLanguage={editorContent.inputType}
+        width="auto"
+        defaultValue={
+          typeof editorContent.value === "object"
+            ? JSON.stringify(editorContent.value, null, 2)
+            : editorContent.value
+        }
+        options={editorOptions}
+        onMount={(editor) => (editorRef.current = editor)}
+      />
+    </Box>
+  );
 }
 
 export default EditorWrapper
