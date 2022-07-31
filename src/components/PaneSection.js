@@ -1,8 +1,7 @@
 import { Collapse, Divider, List, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 import React from 'react'
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight"
-  import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-;
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
 function PaneSection({ subheader, tools, children, isOpen = false }) {
 
@@ -14,7 +13,7 @@ function PaneSection({ subheader, tools, children, isOpen = false }) {
 
   return (
     <>
-      <ListItemButton onClick={handleClick} sx={{flex: "0 0"}}>
+      <ListItemButton onClick={handleClick} sx={{ flex: "0 0" }}>
         <Divider></Divider>
         <ListItemIcon>
           {open ? <KeyboardArrowDownIcon /> : <KeyboardArrowRightIcon />}
@@ -22,7 +21,12 @@ function PaneSection({ subheader, tools, children, isOpen = false }) {
         <ListItemText primary={subheader} />
         {open && tools}
       </ListItemButton>
-      <Collapse sx={{overflow:"auto"}} in={open} timeout="auto" unmountOnExit>
+      <Collapse
+        sx={{ overflow: "auto" }}
+        in={open}
+        timeout="auto"
+        unmountOnExit
+      >
         <List component="div" disablePadding>
           {children}
         </List>
