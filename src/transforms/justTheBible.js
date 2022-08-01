@@ -80,6 +80,7 @@ const justTheBible = {
     name: "justTheBible",
     type: "Transform",
     description: "PERF=>PERF: Strips most markup",
+    documentation: "This transform removes milestones, wrappers and most marks. It has been used in several pipelines. It may also be stripping metaContent.",
     inputs: [
         {
             name: "perf",
