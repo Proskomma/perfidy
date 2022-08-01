@@ -5,19 +5,19 @@
     "type": "Source",
     "sourceLocation": "local",
     "outputType": "text",
-    "localValue": "http://localhost:5000/api/json2json"
+    "localValue": "http://localhost:5001/api/synctransform"
   },
   {
     "id": 2,
-    "title": "Remote Transform JSON",
+    "title": "Remote Transform Input",
     "type": "Source",
     "sourceLocation": "local",
-    "localValue": "{\"return\": \"hello world\"}",
+    "localValue": "{\n  \"name\": \"Mark\",\n  \"location\": \"France\"\n}",
     "outputType": "json"
   },
   {
-    "id": 3,
-    "title": "Remote Transform",
+    "id": 7,
+    "title": "The Transform",
     "name": "remoteTransform",
     "type": "Transform",
     "inputs": [
@@ -34,17 +34,17 @@
     ],
     "outputs": [
       {
-        "name": "data",
+        "name": "response",
         "type": "json"
       }
     ],
     "description": "JSON=>JSON: Sends JSON to remote server, gets JSON back"
   },
   {
-    "id": 4,
-    "title": "Display Remote Output",
+    "id": 8,
+    "title": "Response from Transform",
     "type": "Display",
     "inputType": "json",
-    "inputSource": "Transform 3 data"
+    "inputSource": "Transform 7 response"
   }
 ]
