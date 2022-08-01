@@ -18,11 +18,12 @@ const remoteTransformCode = async ({url, input1, proskomma}) => {
         },
         crossDomain: true,
     });
-    console.log("RESPONSE:", response);
-    return {data: response.data["result"]};
+    console.log("RESPONSE:", response.data);
+    return {"data": "hello, world!"}
+    // return {data: response.data["result"]};
 };
 
-const remoteTranform = {
+const remoteTransform = {
     name: "remoteTransform-",
     type: "Transform",
     description: "JSON=>JSON: Sends JSON to remote server, gets JSON back",
@@ -31,7 +32,7 @@ const remoteTranform = {
             name: "url",
             type: "text",
             source: ""
-        },  
+        },
         {
             name: "input1",
             type: "json",
@@ -47,4 +48,4 @@ const remoteTranform = {
     code: remoteTransformCode
 }
 
-export default remoteTranform;
+export default remoteTransform;
