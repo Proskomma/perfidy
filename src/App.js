@@ -17,6 +17,8 @@ import Popover from '@mui/material/Popover';
 import CloseIcon from '@mui/icons-material/Close';
 import MenuItem from '@mui/material/MenuItem';
 
+import flattenedTypes from "./lib/types";
+
 import './App.css';
 import EditorWrapper from './components/EditorWrapper';
 
@@ -30,6 +32,7 @@ function App() {
 
 
     const {proskomma} = useProskomma({verbose: false});
+    console.log(flattenedTypes);
 
     const cleanSteps = steps => {
         const ret = deepCopy(steps);
