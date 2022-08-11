@@ -23,6 +23,7 @@ import verseWords from "../transforms/verseWords";
 import mergeMarkup from "../transforms/mergeMarkup";
 import prepareJsonDiff from "../transforms/prepareJsonDiff";
 import uniqueWordsVerses from '../transforms/uniqueWordsVerses';
+import makeAlignment from '../transforms/makeAlignment';
 
 const stepTemplates = {
     Transform: {
@@ -51,6 +52,7 @@ const stepTemplates = {
         uniqueWordsVerses,
         lightRegex,
         regex,
+        makeAlignment,
     },
     Source: {
         local: {
