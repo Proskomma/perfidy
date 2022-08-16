@@ -141,9 +141,9 @@ const localToUsfmActions = {
             action: ({context, workspace}) => {
                 const element = context.sequences[0].element;
                 if (element.subType === 'chapter') {
-                    wsCheckAndPushTag(workspace,'c',`\n\\c ${element.atts['number']}\n`);
+                    wsCheckAndPushTag(workspace,'c',`\n\\c ${element.atts['number']}`);
                 } else if (element.subType === 'verses') {
-                    wsCheckAndPushTag(workspace,'v',`\\v ${element.atts['number']}\n`);
+                    wsCheckAndPushTag(workspace,'v',`\n\\v ${element.atts['number']} `);
                 }
             }
         },
