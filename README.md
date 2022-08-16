@@ -56,6 +56,25 @@ Unlike SAX, which generates events based on basic XML syntax, PerfRender's event
 - endMilestone
 - text
 
+#### ToolChain
+
+Tests first then the action
+
+1. startDocment
+2. startSequence
+   1. blockGraft
+   2. startParagraph
+      1. startMilestone
+      2. mark
+      3. startWrapper
+      4. text
+      5. endWrapper
+      6. endMilestone
+   3. endParagraph
+3. endSequence
+
+
+
 By default, all the callbacks are no-ops, so rendering with no actions will traverse the tree, setting up and tearing down context along the way, and output an empty object.
 
 Actions may be added for any or all of the events. This model works particularly well for 'cherry-picking' specific information while ignoring the complexity of the rest of the document. For example, for tasks that just require the canonical text, a single `text` action handler will provide all that text, and just that text, via a series of callbacks, regardless of milestones, nested markup etc.

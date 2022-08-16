@@ -32,7 +32,8 @@ function App() {
     const {proskomma} = useProskomma({verbose: false});
 
     const cleanSteps = steps => {
-        const ret = deepCopy(steps);
+        // const ret = deepCopy(steps);
+        const ret = JSON.parse(JSON.stringify(steps));
         for (const step of ret) {
             delete step.value;
             delete step.result;
@@ -42,7 +43,6 @@ function App() {
         }
         return ret;
     }
-
     const defaultTemplate = stepType => {
         if (stepType === "Source") {
             return stepTemplates.Source.local;
@@ -182,9 +182,12 @@ function App() {
                                         () => {
                                             const a = document.createElement('a');
                                             a.download = 'mySpecSteps.json';
+                                            console.log("steps BEFORE", specSteps);
+                                            let cleanedSteps = cleanSteps(specSteps);
+                                            console.log("steps AFTER", specSteps);
                                             const blob = new Blob(
                                                 [JSON.stringify(
-                                                    cleanSteps(specSteps),
+                                                    cleanedSteps,
                                                     null,
                                                     2
                                                 )

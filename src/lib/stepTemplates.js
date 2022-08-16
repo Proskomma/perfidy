@@ -24,6 +24,7 @@ import mergeMarkup from "../transforms/mergeMarkup";
 import prepareJsonDiff from "../transforms/prepareJsonDiff";
 import uniqueWordsVerses from '../transforms/uniqueWordsVerses';
 import makeAlignment from '../transforms/makeAlignment';
+import getReportFromGreekAndPTX from '../transforms/getReportFromGreekAndPTX';
 
 const stepTemplates = {
     Transform: {
@@ -53,6 +54,7 @@ const stepTemplates = {
         lightRegex,
         regex,
         makeAlignment,
+        getReportFromGreekAndPTX,
     },
     Source: {
         local: {

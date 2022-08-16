@@ -73,7 +73,7 @@ const justTheBibleCode = function ({perf}) {
     );
     const output = {};
     cl.renderDocument({docId: "", config: {}, output});
-    return {perf: output.perf}; // identityActions currently put PERF directly in output
+    return {wtf: output.perf}; // identityActions currently put PERF directly in output
 }
 
 const justTheBible = {
@@ -90,7 +90,7 @@ const justTheBible = {
     ],
     outputs: [
         {
-            name: "perf",
+            name: "wtf",
             type: "json",
         }
     ],
