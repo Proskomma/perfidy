@@ -366,7 +366,7 @@
      inkscape:pageshadow="2"
      inkscape:zoom="0.97472265"
      inkscape:cx="394.36822"
-     inkscape:cy="435.9807"
+     inkscape:cy="723.2419"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -387,7 +387,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -518,17 +518,6 @@
          style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.58611107px;font-family:sans-serif;-inkscape-font-specification:'sans-serif Italic';stroke-width:0.26458332">makeAlignment</tspan></text>
     <text
        xml:space="preserve"
-       style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.58611107px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif Italic';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
-       x="157.2323"
-       y="80.955643"
-       id="text871"><tspan
-         sodipodi:role="line"
-         id="tspan869"
-         x="157.2323"
-         y="80.955643"
-         style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:'sans-serif Italic';stroke-width:0.26458332">ptx2uwAlignment</tspan></text>
-    <text
-       xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.58611107px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
        x="35.983341"
        y="102.57638"
@@ -551,22 +540,6 @@
          style="stroke-width:0.26458332">GREEK ALIGNMENT</tspan></text>
     <text
        xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.58611107px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
-       x="175.34016"
-       y="102.57638"
-       id="text875"><tspan
-         sodipodi:role="line"
-         id="tspan873"
-         x="175.34016"
-         y="102.57638"
-         style="text-align:center;text-anchor:middle;stroke-width:0.26458332">PTX ALIGNMENT</tspan><tspan
-         sodipodi:role="line"
-         x="175.34016"
-         y="108.30901"
-         style="text-align:center;text-anchor:middle;stroke-width:0.26458332"
-         id="tspan877">(in uW format)</tspan></text>
-    <text
-       xml:space="preserve"
        style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.58611107px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif Italic';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
        x="122.23756"
        y="129.66103"
@@ -575,7 +548,7 @@
          id="tspan879"
          x="122.23756"
          y="129.66103"
-         style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:'sans-serif Italic';stroke-width:0.26458332">mergeAlignments</tspan></text>
+         style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:'sans-serif Italic';stroke-width:0.26458332">mergePtxAlignments</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:4.58611107px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
@@ -687,7 +660,7 @@
            x="-60"
            y="302.51965"
            style="-inkscape-font-specification:'sans-serif Italic';font-family:sans-serif;font-weight:normal;font-style:italic;font-stretch:normal;font-variant:normal;stroke-width:3.77952756;stroke-miterlimit:4;stroke-dasharray:none" /></flowRegion><flowPara
-         id="flowPara925"></flowPara></flowRoot>    <path
+         id="flowPara925" /></flowRoot>    <path
        style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none;marker-end:url(#marker1379)"
        d="m 108.47917,21.833325 v 7.937499"
        id="path1314"
@@ -698,10 +671,11 @@
        id="path1333"
        inkscape:connector-curvature="0" />
     <path
-       style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none;marker-end:url(#marker1407)"
-       d="M 179.91666,21.833325 V 72.104156"
+       style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker1407)"
+       d="M 179.91666,21.833325 148.16667,122.375"
        id="path1335"
-       inkscape:connector-curvature="0" />
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc" />
     <path
        style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none;marker-end:url(#marker1435)"
        d="m 47.624999,42.99999 v 7.9375"
@@ -723,11 +697,6 @@
        id="path1343"
        inkscape:connector-curvature="0" />
     <path
-       style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none;marker-end:url(#marker1607)"
-       d="m 179.91666,85.333323 v 7.9375"
-       id="path1345"
-       inkscape:connector-curvature="0" />
-    <path
        style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none;marker-end:url(#marker1665)"
        d="m 108.47917,85.333323 v 7.9375"
        id="path1347"
@@ -741,11 +710,6 @@
        style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none;marker-end:url(#marker1799)"
        d="m 108.47917,106.49999 26.45833,13.22917"
        id="path1351"
-       inkscape:connector-curvature="0" />
-    <path
-       style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none;marker-end:url(#marker1875)"
-       d="M 179.91666,111.79166 158.75,119.72916"
-       id="path1353"
        inkscape:connector-curvature="0" />
     <path
        style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none;marker-end:url(#marker1957)"
