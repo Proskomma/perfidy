@@ -132,19 +132,23 @@ class Ptxhandler {
             "pos" : wordInt
         };;
     }
+
+    getFrenchWord(chapter, verse, word) {
+        return this.arrayPtx[chapter][verse][word]["word"] ?? "";
+    }
 }
 
-const handleGreekOccurences = function (arrayGreekWords) {
-    let len = arrayGreekWords.length;
+const handleOccurences = function (arrayWords) {
+    let len = arrayWords.length;
     let occurences = new Map();
-    let posOccurence = [...arrayGreekWords];
+    let posOccurence = [...arrayWords];
     for(let i = 0; i < len; i++) {
-        if(occurences.has(arrayGreekWords[i])) {
-            occurences.set(arrayGreekWords[i], occurences.get(arrayGreekWords[i]) + 1);
+        if(occurences.has(arrayWords[i]) && arrayWords[i] !== "") {
+            occurences.set(arrayWords[i], occurences.get(arrayWords[i]) + 1);
         } else {
-            occurences.set(arrayGreekWords[i], 1);
+            occurences.set(arrayWords[i], 1);
         }
-        posOccurence[i] = occurences.get(arrayGreekWords[i]);
+        posOccurence[i] = occurences.get(arrayWords[i]);
     };
     return [occurences, posOccurence];
 }
@@ -158,17 +162,14 @@ const makeAlignmentActions = {
                 const { PTX } = config;
                 workspace.handler = new Ptxhandler(PTX);
                 workspace.handler.startParsing();
-                workspace.chapter = null;
-                workspace.verses = null;
-                workspace.wordPos = null;
+                workspace.chapter = 1;
+                workspace.verses = 1;
+                workspace.wordPos = 1;
                 workspace.greekWordsInVerse = [];
                 workspace.frenchWordsInVerse = [];
-                workspace.greekTextOccurences = 0;
-                workspace.textOccurences = 0;
-                workspace.greekTextOccurencePos = 0;
-                workspace.textOccurencePos = 0;
-                workspace.greekTextPosition = 0;
-                workspace.text = "";
+                workspace.greekTextPosition = 1;
+                workspace.greekText = "";
+                workspace.frenchText = "";
                 workspace.inwrap = true;
                 output.report = [];
             }
@@ -198,6 +199,7 @@ const makeAlignmentActions = {
                     workspace.handler.addInfosToWord(workspace.chapter, workspace.verses, workspace.wordPos, "lemma", lemma);
                     workspace.handler.addInfosToWord(workspace.chapter, workspace.verses, workspace.wordPos, "morph", morph);
                 } else {
+                    // TODO : manage when a word is missing in the PTX file
                     workspace.handler.addInfosToWord(workspace.chapter, workspace.verses, workspace.wordPos, "lemma", lemma);
                     workspace.handler.addInfosToWord(workspace.chapter, workspace.verses, workspace.wordPos, "morph", morph);
                 }
@@ -210,10 +212,12 @@ const makeAlignmentActions = {
             test: ({ context }) => context.sequences[0].element.subType === "usfm:w",
             action: ({ workspace }) => {
                 // we get the greek text from the workspace because it is the only one we have access to ... => elem.content === undefined
-                let greekWord = workspace.text;
+                let greekWord = workspace.greekText;
                 workspace.greekWordsInVerse.push(greekWord);
                 workspace.handler.addInfosToWord(workspace.chapter, workspace.verses, workspace.wordPos, "content", greekWord);
                 
+                let frenchWord = workspace.handler.getFrenchWord(workspace.chapter, workspace.verses, workspace.wordPos);
+                workspace.frenchWordsInVerse.push(frenchWord);
                 workspace.greekTextPosition += 1;
                 workspace.wordPos += 1;
                 workspace.inwrap = false;
@@ -229,7 +233,7 @@ const makeAlignmentActions = {
             test: ({context}) => {
                 return ["chapter", "verses"].includes(context.sequences[0].element.subType);
             },
-            action: ({config, context, workspace}) => {
+            action: ({context, workspace}) => {
                 const element = context.sequences[0].element;
                 if (element.subType === "chapter") {
                     workspace.chapter = element.atts["number"];
@@ -238,19 +242,28 @@ const makeAlignmentActions = {
                     let occurences = null;
                     let posOccurence = null;
                     if(workspace.greekWordsInVerse[0] !== undefined && workspace.verses !== 0) {
-                        [occurences, posOccurence] = handleGreekOccurences(workspace.greekWordsInVerse);
+                        [occurences, posOccurence] = handleOccurences(workspace.greekWordsInVerse);
                         for(let i = 0; i < workspace.greekWordsInVerse.length; i++) {
-                            // workspace.handler.addInfosToWord(workspace.chapter, workspace.verses, i, "content", workspace.greekWordsInVerse[i]);
-                            // think about i+1 because the first word is 1 and not 0
                             let occs = occurences.get(workspace.greekWordsInVerse[i]);
+                            // think about i+1 because the first word is 1 and not 0
                             workspace.handler.addInfosToWord(workspace.chapter, workspace.verses, i+1, "greekoccurences", occs);
                             workspace.handler.addInfosToWord(workspace.chapter, workspace.verses, i+1, "greekoccurence", posOccurence[i]);
+                        }
+                    }
+                    if(workspace.frenchWordsInVerse[0] !== undefined && workspace.verses !== 0) {
+                        [occurences, posOccurence] = handleOccurences(workspace.frenchWordsInVerse);
+                        for(let i = 0; i < workspace.greekWordsInVerse.length; i++) {
+                            let occs = occurences.get(workspace.frenchWordsInVerse[i]);
+                            // think about i+1 because the first word is 1 and not 0
+                            workspace.handler.addInfosToWord(workspace.chapter, workspace.verses, i+1, "frenchoccurences", occs);
+                            workspace.handler.addInfosToWord(workspace.chapter, workspace.verses, i+1, "frenchoccurence", posOccurence[i]);
                         }
                     }
                     workspace.verses = element.atts["number"];
                     workspace.greekWordsInVerse = [];
                     workspace.frenchWordsInVerse = [];
                     workspace.wordPos = 1;
+                    workspace.greekTextPosition = 1;
                 }
             }
         },
@@ -261,7 +274,7 @@ const makeAlignmentActions = {
             test: () => true,
             action: ({context, workspace}) => {
                 if(workspace.inwrap) {
-                    workspace.text = context.sequences[0].element.text;
+                    workspace.greekText = context.sequences[0].element.text;
                 }
             }
         }
@@ -287,7 +300,6 @@ const makeReportCode = function ({PTX, perf}) {
         }
     );
     const output = {};
-    // output.report = handler.getArrayPtx();
     cl.renderDocument({docId: "", config: {PTX}, output});
     return {report: output.report};
 }

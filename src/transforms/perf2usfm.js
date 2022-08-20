@@ -153,7 +153,7 @@ const localToUsfmActions = {
             description: "Build output",
             test: () => true,
             action: ({workspace, output}) => {
-                const reorderedChapters = workspace.usfmBits[0]
+                const reorderedChapters = workspace.usfmBits[0];
                 output.usfm = reorderedChapters.join('');
             }
         },
@@ -174,7 +174,7 @@ const localToUsfmActions = {
                         })
                         wsPushStr(workspace,`\\*`);
                     } else if (element.subType === "usfm:ts") {
-                        wsCheckAndPushTag(workspace,'ts',`\n\n\\ts\\* `)
+                        wsCheckAndPushTag(workspace,'ts',`\n\n\\ts\\* `);
                     }
                 }
             }
@@ -194,7 +194,7 @@ const localToUsfmActions = {
             description: "Handle start of wrapper",
             test: () => true,
             action: ({context,workspace}) => {
-                upNestingLevel(workspace,context.sequences[0].element)
+                upNestingLevel(workspace,context.sequences[0].element);
             }
         }
     ],

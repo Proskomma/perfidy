@@ -1,161 +1,262 @@
-import {ProskommaRenderFromJson, transforms, mergeActions} from 'proskomma-json-tools';
+import {usfmHelps, ProskommaRenderFromJson} from 'proskomma-json-tools';
 
-const processMilestone = (workspace, milestoneInfos) => {
-    workspace.milestones.push(milestoneInfos);
+const initNestedLevel = (workspace,level) => {
+    workspace.nestInx=level
+    workspace.usfmBits[level] = [];
 }
 
-const processOutputMilestones = (workspace, output, text) => {
-    if (workspace.chapter && workspace.verses) {
-        output.report.push(
-            {
-                chapter: workspace.chapter,
-                verses: workspace.verses,
-                milestone: workspace.milestones,
-                wrapper: workspace.wrappers,
-                text: workspace.text,
-                // textOccurencesArray: [1, 1, 1, 2, 4],
-                // workspace.greekTextOccurences = 0,
-                // workspace.textOccurences = 0,
-                // workspace.greekTextOccurencePos = 0,
-                // workspace.textOccurencePos = 0,
-                // workspace.text = ""
-            }
-        );
+const wsPushStrAtLevel = (workspace,str,level = 0) => {
+    str && workspace.usfmBits[level].push(str);
+}
+
+const wsPushStr = (workspace,str) =>
+    wsPushStrAtLevel(workspace,str,workspace.nestInx)
+
+const upNestingLevel = (workspace,saveEl) => {
+    workspace.savedEl.push(saveEl)
+    initNestedLevel(workspace,workspace.nestInx+1)
+}
+const wsCheckAndPushTag = (workspace,tag,str) => {
+    const checkTags = ['ts', 'c', ...usfmHelps.bodyTags]
+    // Strategy - delay output and wait until able to keep the strict order
+    // unless tag is outside of valid list
+    // then output all delayed items and current one (while keeping the order) 
+    if (checkTags.includes(tag)) {
+        if (usfmHelps.bodyTags.includes(tag)) {
+            workspace.strictTagOrderStore.usfmBits.push(str)
+        } else {
+            workspace.strictTagOrderStore[tag] = str
+        }
+    } else {
+        wsPushStr(workspace,workspace.strictTagOrderStore.ts)
+        wsPushStr(workspace,workspace.strictTagOrderStore.c)
+        wsPushStr(workspace,workspace.strictTagOrderStore.usfmBits.join())
+        wsPushStr(workspace,str)
+        workspace.strictTagOrderStore = {usfmBits: []}
     }
 }
 
-const makeAlignmentActions = {
+const popNestedElement = (workspace) => workspace.savedEl.pop()
+
+const popNestedUsfmBits = (workspace) => {
+    // To do: probably first output all content in "strictTagOrder"
+    const retArr = workspace.usfmBits[workspace.nestInx]
+    workspace.usfmBits[workspace.nestInx] = [];
+    return retArr
+}
+
+const downNestingLevel = workspace => {
+    const tempArr = popNestedUsfmBits(workspace)
+    if (workspace.nestInx>0){
+        workspace.nestInx--
+    }
+    workspace.usfmBits[workspace.nestInx].push(...tempArr)
+}
+
+const oneifyTag = t => {
+    if (['toc', 'toca', 'mt'].includes(t)) {
+        return t + '1';
+    }
+    return t;
+}
+
+const localToUsfmActions = {
     startDocument: [
         {
-            description: "Set up state variables and output",
-            test: () => {return true;},
-            // action: ({config, context, workspace, output}) => {
-            //     workspace.chapter = null;
-            //     workspace.verses = null;
-            //     workspace.matches = new Set([]);
-            //     workspace.chunks = [];
-            //     output.report = {};
-            //     if (config.regex) {
-                    
-            //     }
-            // }
+            description: "Set up environment",
+            test: () => true,
+            action: ({context, workspace}) => {
+                workspace.usfmBits = [];
+                workspace.savedEl = [];
+                workspace.strictTagOrderStore = {usfmBits: []}
+                initNestedLevel(workspace,0);
+                for (
+                    let [key, value] of
+                    Object.entries(context.document.metadata.document)
+                        .filter(kv => !['tags', 'properties', 'bookCode'].includes(kv[0]))
+                    ) {
+                        wsCheckAndPushTag(workspace,key,`\\${oneifyTag(key)} ${value}\n`);
+                };
+            }
+        },
+    ],
+    blockGraft: [
+        {
+            description: "Follow block grafts",
+            test: ({context}) => ['title', 'heading', 'introduction'].includes(context.sequences[0].block.subType),
+            action: (environment) => {
+                const target = environment.context.sequences[0].block.target;
+                if (target) {
+                    environment.context.renderer.renderSequenceId(environment, target);
+                }
+            }
+        }
+    ],
+    inlineGraft: [
+        {
+            description: "Follow inline grafts",
+            test: () => false,
+            action: (environment) => {
+                const target = environment.context.sequences[0].element.target;
+                if (target) {
+                    environment.context.renderer.renderSequenceId(environment, target);
+                }
+            }
+        }
+    ],
+
+    startParagraph: [
+        {
+            description: "Output paragraph tag",
+            test: () => true,
+            action: ({context, workspace}) => {
+                const tag = context.sequences[0].block.subType.split(':')[1]
+                wsCheckAndPushTag(workspace,tag,`\n\\${oneifyTag(tag)}\n`);
+            }
+        }
+    ],
+    endParagraph: [
+        {
+            description: "Output nl",
+            test: () => true,
+            action: ({workspace}) => {
+                wsPushStr(workspace,`\n`);
+            }
+        }
+    ],
+    text: [
+        {
+            description: "Output text",
+            test: () => true,
+            action: ({context, workspace}) => {
+                const text = context.sequences[0].element.text;
+                wsPushStr(workspace,text);
+            }
+        },
+    ],
+    mark: [
+        {
+            description: "Output chapter or verses",
+            test: () => true,
+            action: ({context, workspace}) => {
+                const element = context.sequences[0].element;
+                if (element.subType === 'chapter') {
+                    wsCheckAndPushTag(workspace,'c',`\n\\c ${element.atts['number']}\n`);
+                } else if (element.subType === 'verses') {
+                    wsCheckAndPushTag(workspace,'v',`\\v ${element.atts['number']}\n`);
+                }
+            }
+        },
+    ],
+    endDocument: [
+        {
+            description: "Build output",
+            test: () => true,
             action: ({workspace, output}) => {
-                workspace.chapter = null;
-                workspace.verses = null;
-                workspace.milestones = [];
-                workspace.wrappers = [];
-                workspace.greekTextOccurences = 0;
-                workspace.textOccurences = 0;
-                workspace.greekTextOccurencePos = 0;
-                workspace.textOccurencePos = 0;
-                workspace.text = "";
-                output.report = [];
+                const reorderedChapters = workspace.usfmBits[0];
+                output.usfm = reorderedChapters.join('');
             }
         },
     ],
     startMilestone: [
         {
-            description: "what to do when we start a milestone",
-            test: ({context}) => {
-                if (context.sequences[0].element.subType === "usfm:zaln") {
-                    return true;
+            description: "Output start of milestone",
+            test: () => true,
+            action: ({context,workspace}) => {
+                const element = context.sequences[0].element;
+                if (element && element.atts) {
+                    if (Object.keys(element.atts).length>0) {
+                        wsPushStr(workspace,`\\zaln-s |`);
+                        let separatorCh = "";
+                        Object.keys(element.atts).forEach(key => {
+                            wsPushStr(workspace,`${separatorCh}${key}="${element.atts[key]}"`);
+                            separatorCh = " "
+                        })
+                        wsPushStr(workspace,`\\*`);
+                    } else if (element.subType === "usfm:ts") {
+                        wsCheckAndPushTag(workspace,'ts',`\n\n\\ts\\* `);
+                    }
                 }
-                return false;
-            },
-            action: ({context, workspace, output}) => {
-                console.log("startMilestone context : ", workspace.chapter, " verse ", workspace.verses, " context : ", context);
             }
         }
     ],
     endMilestone: [
         {
-            description: "Wrapup the current milestone into the output.report",
-            test: ({context}) => {
-                if (context.sequences[0].element.subType === "usfm:zaln") {
-                    return true;
-                }
-                return false;
-            },
-            action: ({context, workspace, output}) => {
-                console.log("startMilestone context : ", workspace.chapter, " verse ", workspace.verses, " context : ", context);
+            description: "Output end of milestone",
+            test: () => true,
+            action: ({workspace}) => {
+                wsPushStr(workspace,`\\zaln-e\\*`);
             }
         }
     ],
-    // startmilestone: ["type": "start_milestone", "subType": "usfm:zaln",
-    mark: [
+    startWrapper: [
         {
-            description: "Ignore mark events, except for chapter and verses",
-            // test: ({context}) => {
-            //     console.log("### ACTION mark");
-            //     return !['chapter', 'verses'].includes(context.sequences[0].element.subType);
-            // },
+            description: "Handle start of wrapper",
             test: () => true,
-            action: ({config, context, workspace, output}) => {
-                // console.log("##### MARK workspace : ", workspace);
-                const element = context.sequences[0].element;
-                // console.log("mark", element.subType, element.content);
-                if (element.subType === 'chapter') {
-                    // processAlignment(config, workspace, output);
-                    workspace.chapter = element.atts['number'];
-                    workspace.verses = 0;
-                } else if (element.subType === 'verses') {
-                    // processAlignment(config, workspace, output);
-                    workspace.verses = element.atts['number'];
-                }
-            }
-        },
-    ],
-    text: [
-        {
-            // ?????????????? TODO ask Mark if this is the right way to initialize the context
-            description: "Process text events",
-            test: () => true,
-            action: ({config, context, workspace, output}) => {
-                // let workspace = environment.workspace;
-                // // TODO ? workspace.contect vs context ??
-                // // if(context.sequences[0] > 0) {
-                //     console.log("########### context ########### : ", context);
-                // // }
-                // console.log("########### workspace ########### : ", workspace);
-                // const element = context.sequences[0].element;
-                // const text = element.text;
-                // console.log("text : ", text);
-                // processAlignment(workspace, environment.output, text);
+            action: ({context,workspace}) => {
+                upNestingLevel(workspace,context.sequences[0].element);
             }
         }
-    ]
+    ],
+    endWrapper: [
+        {
+            description: "Output start and end of wrapper, incl. wrapped text",
+            test: () => true,
+            action: ({context,workspace}) => {
+                const savedStartEl = popNestedElement(workspace)
+                const nestedUsfmBits = popNestedUsfmBits(workspace)
+                downNestingLevel(workspace)
+                if (savedStartEl
+                    && savedStartEl.atts
+                    && Object.keys(savedStartEl.atts).length>0)
+                {
+                    wsPushStr(workspace,`\\w ${nestedUsfmBits.join('')}|`);
+                    let separatorCh = "";
+                    Object.keys(savedStartEl.atts).forEach(key => {
+                        wsPushStr(workspace,
+                            `${separatorCh}${key}="${savedStartEl.atts[key]}"`);
+                        separatorCh = " "
+                    })
+                }
+                wsPushStr(workspace,`\\w*`);
+            }
+        }
+    ],
 };
 
-const makeAlignmentCode = function ({perf}) {
+const perf2usfmCode = function ({perf, report}) {
     const cl = new ProskommaRenderFromJson(
         {
-            srcJson: perf,
-            actions: makeAlignmentActions
+            srcJson: perf, actions: localToUsfmActions
         }
     );
     const output = {};
-    cl.renderDocument({docId: "", config: {}, output});
-    return {report: output.report};
+    cl.renderDocument({docId: "", config: {report}, output});
+        return {usfm: output.usfm};
 }
 
-const makeAlignment = {
-    name: "makeAlignment",
+const perf2usfm = {
+    name: "perf2usfm",
     type: "Transform",
-    description: "PERF=>JSON: Generates alignment report",
+    description: "PERF=>USFM",
     inputs: [
         {
             name: "perf",
             type: "json",
             source: ""
         },
-    ],
-    outputs: [
         {
             name: "report",
             type: "json",
+            source: ""
+        },
+    ],
+    outputs: [
+        {
+            name: "usfm",
+            type: "text",
         }
     ],
-    code: makeAlignmentCode
+    code: perf2usfmCode
 }
-
-export default makeAlignment;
+export default perf2usfm;
