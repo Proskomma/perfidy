@@ -5,7 +5,7 @@
     "type": "Source",
     "sourceLocation": "http",
     "outputType": "text",
-    "httpUrl": "https://git.door43.org/unfoldingWord/en_ust/raw/branch/master/57-TIT.usfm"
+    "httpUrl": "https://raw.githubusercontent.com/Proskomma/proskomma-json-tools/mvh/v0_5/test/test_data/webbe_mrk.usfm"
   },
   {
     "id": 2,
