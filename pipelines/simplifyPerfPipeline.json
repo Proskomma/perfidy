@@ -81,6 +81,26 @@
     "description": "PERF=>PERF: Merge consecutive text strings"
   },
   {
+    "id": 10,
+    "title": "PERF to USFM",
+    "name": "perf2usfm",
+    "type": "Transform",
+    "inputs": [
+      {
+        "name": "perf",
+        "type": "json",
+        "source": "Transform 7 perf"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "usfm",
+        "type": "text"
+      }
+    ],
+    "description": "PERF=>USFM"
+  },
+  {
     "id": 5,
     "title": "Original PERF",
     "type": "Display",
@@ -100,5 +120,12 @@
     "type": "Display",
     "inputType": "json",
     "inputSource": "Transform 7 perf"
+  },
+  {
+    "id": 9,
+    "title": "Simplified USFM",
+    "type": "Display",
+    "inputType": "text",
+    "inputSource": "Transform 10 usfm"
   }
 ]

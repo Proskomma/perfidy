@@ -1,18 +1,18 @@
-import {ProskommaRenderFromJson, transforms, mergeActions} from 'proskomma-json-tools';
+import {PerfRenderFromJson, transforms, mergeActions} from 'proskomma-json-tools';
 
 const reportRecordsForCV = function (report, chapter, verses) {
 
-  return report.filter( 
+  return report.filter(
     (record) => record.chapter === chapter && record.verses === verses
   )
-} 
+}
 
 const localmergeReportActions = {
   startDocument: [
     {
       description: "setup",
       test: () => true,
-      action: ({workspace}) => { 
+      action: ({workspace}) => {
         workspace.chapter = null;
         workspace.verses = null;
         return true;
@@ -60,20 +60,20 @@ const localmergeReportActions = {
 };
 
 const mergeReportCode = function ({perf, report}) {
-    const cl = new ProskommaRenderFromJson(
+    const cl = new PerfRenderFromJson(
         {
             srcJson: perf,
             actions: mergeActions(
                 [
                     localmergeReportActions,
-                    transforms.identityActions
+                    transforms.perf2perf.identityActions
                 ]
             )
         }
     );
     const output = {};
     cl.renderDocument({docId: "", config: {report}, output});
-    return {perf: output.perf}; // identityActions currently put PERF directly in output
+    return {perf: output.perf};
 }
 
 const mergeReport = {
