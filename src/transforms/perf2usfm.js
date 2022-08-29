@@ -194,7 +194,7 @@ const localToUsfmActions = {
             description: "Handle start of wrapper",
             test: () => true,
             action: ({context,workspace}) => {
-                // console.log(context.sequences[0].element.subType);
+                console.log(context.sequences[0].element.subType);
                 upNestingLevel(workspace,context.sequences[0].element)
             }
         }

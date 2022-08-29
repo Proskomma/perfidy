@@ -12,7 +12,7 @@
     "title": "Selectors",
     "type": "Source",
     "sourceLocation": "local",
-    "localValue": "{\"org\": \"dcs\", \"lang\": \"en\", \"abbr\": \"ust\"}",
+    "localValue": "{\"lang\": \"eng\", \"abbr\": \"ust\"}",
     "outputType": "json"
   },
   {

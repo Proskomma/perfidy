@@ -1,10 +1,9 @@
 import React, {useState} from 'react';
-import {useProskomma} from 'proskomma-react-hooks';
+import {Proskomma} from 'proskomma';
 import deepCopy from 'deep-copy-all';
 import StepSpec from "./components/StepSpec";
 import stepTemplates from "./lib/stepTemplates";
 import runCallback from "./lib/runCallback";
-// import DisplayResult from "./components/DisplayResult";
 import DisplayIssues from "./components/DisplayIssues";
 import LoadSteps from "./components/LoadSteps";
 import Tooltip from '@mui/material/Tooltip';
@@ -31,7 +30,7 @@ function App() {
     const [anchorEl, setAnchorEl] = useState(null);
 
 
-    const {proskomma} = useProskomma({verbose: false});
+    const proskomma = new Proskomma();
     console.log(flattenedTypes);
 
     const cleanSteps = steps => {
