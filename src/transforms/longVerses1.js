@@ -1,5 +1,5 @@
 import xre from 'xregexp';
-import {ProskommaRenderFromJson} from 'proskomma-json-tools';
+import {PerfRenderFromJson} from 'proskomma-json-tools';
 
 const processVerse = (config, workspace, output) => {
     if (workspace.chapter && workspace.verses && workspace.verseLength > config.maxLength) {
@@ -67,7 +67,7 @@ const longVerses1Actions = {
 };
 
 const longVerses1Code = function ({perf}) {
-    const cl = new ProskommaRenderFromJson({srcJson: perf, actions: longVerses1Actions});
+    const cl = new PerfRenderFromJson({srcJson: perf, actions: longVerses1Actions});
     const output = {};
     cl.renderDocument({docId: "", config: {maxLength: 60}, output});
     return {report: output.report};

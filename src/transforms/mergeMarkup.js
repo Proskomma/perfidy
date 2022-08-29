@@ -1,4 +1,4 @@
-import { ProskommaRenderFromJson, transforms, mergeActions } from 'proskomma-json-tools';
+import { PerfRenderFromJson, transforms, mergeActions } from 'proskomma-json-tools';
 import xre from "xregexp";
 
 const lexingRegexes = [
@@ -55,7 +55,7 @@ const localMergeMarkupActions = {
                         opened: null
                     };
                     for (const word of words) {
-                        
+
                         const isWord = xre.match(word, lexingRegexes[0][2], "all");
                         if (!isWord.length) {
                             workspace.outputContentStack[0].push(word);
@@ -146,10 +146,10 @@ const localMergeMarkupActions = {
 };
 
 const mergeMarkupCode = function ({ perf, verseWords: totalOccurrences, stripped: strippedMarkup }) {
-    const cl = new ProskommaRenderFromJson({
+    const cl = new PerfRenderFromJson({
         srcJson: perf,
         actions: mergeActions(
-            [localMergeMarkupActions, transforms.identityActions]
+            [localMergeMarkupActions, transforms.perf2perf.identityActions]
         )
     });
     const output = {};

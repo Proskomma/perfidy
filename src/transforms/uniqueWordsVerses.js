@@ -1,4 +1,4 @@
-import {ProskommaRenderFromJson} from 'proskomma-json-tools';
+import {PerfRenderFromJson} from 'proskomma-json-tools';
 
 const processVerse = (config, workspace, output) => {
     if (workspace.chapter && workspace.verses && workspace.matchedWords.length > 0) {
@@ -63,7 +63,7 @@ const uniqueWordsVersesActions = {
                     for ( const incomingWord of config.words ) {
                         if (incomingWord[0] === word ) {
                             workspace.matchedWords.push(word);
-                        } 
+                        }
                     }
                 }
             }
@@ -72,7 +72,7 @@ const uniqueWordsVersesActions = {
 };
 
 const uniqueWordsVersesCode = function ({perf, words}) {
-    const cl = new ProskommaRenderFromJson({srcJson: perf, actions: uniqueWordsVersesActions});
+    const cl = new PerfRenderFromJson({srcJson: perf, actions: uniqueWordsVersesActions});
     const output = {};
     cl.renderDocument({docId: "", config: {words}, output});
     return {report: output.report};

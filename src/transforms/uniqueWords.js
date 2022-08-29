@@ -1,4 +1,4 @@
-import {ProskommaRenderFromJson} from 'proskomma-json-tools';
+import {PerfRenderFromJson} from 'proskomma-json-tools';
 
 const localuniqueWordsActions = {
     startDocument: [
@@ -39,7 +39,7 @@ const localuniqueWordsActions = {
 };
 
 const uniqueWordsCode = function ({perf}) {
-    const cl = new ProskommaRenderFromJson({srcJson: perf, actions: localuniqueWordsActions});
+    const cl = new PerfRenderFromJson({srcJson: perf, actions: localuniqueWordsActions});
     const output = {};
     cl.renderDocument({docId: "", config: {}, output});
         return {words: output.words};

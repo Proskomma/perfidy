@@ -1,4 +1,4 @@
-import {ProskommaRenderFromJson} from 'proskomma-json-tools';
+import {PerfRenderFromJson} from 'proskomma-json-tools';
 
 const processVerse = (workspace, output) => {
     const lengthKey = `${workspace.verseLength}`;
@@ -101,7 +101,7 @@ const verseStatsActions = {
 };
 
 const verseStatsCode = function ({perf}) {
-    const cl = new ProskommaRenderFromJson({srcJson: perf, actions: verseStatsActions});
+    const cl = new PerfRenderFromJson({srcJson: perf, actions: verseStatsActions});
     const output = {};
     cl.renderDocument({docId: "", config: {}, output});
     return {stats: output.stats};

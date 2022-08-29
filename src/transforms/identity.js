@@ -1,10 +1,10 @@
-import {ProskommaRenderFromJson, transforms} from 'proskomma-json-tools';
+import {PerfRenderFromJson, transforms} from 'proskomma-json-tools';
 
 const identityCode = function ({perf}) {
-    const cl = new ProskommaRenderFromJson(
+    const cl = new PerfRenderFromJson(
         {
             srcJson: perf,
-            actions: transforms.identityActions
+            actions: transforms.perf2perf.identityActions
         }
     );
     const output = {};
