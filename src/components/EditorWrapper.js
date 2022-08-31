@@ -16,7 +16,7 @@ function EditorWrapper({ results }) {
     const editorRef = useRef(null);
 
     useEffect(() => {
-        console.log("updated editor");
+        // console.log("updated editor");
         editorRef.current?.focus();
     }, [editorContent?.id]);
 
@@ -26,7 +26,7 @@ function EditorWrapper({ results }) {
         if (!editorContent.id && firstResult) setEditorContent(results[results.length - 1])
         if (!results.length && editorContent.id) setEditorContent(cleanEditorContent);
     }, [firstResult, editorContent, results])
-    console.log({editorContent})
+    // console.log({editorContent})
 
     return (
         <>
