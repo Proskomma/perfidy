@@ -1,4 +1,4 @@
-import {ProskommaRenderFromJson} from 'proskomma-json-tools';
+import {PerfRenderFromJson} from 'proskomma-json-tools';
 
 const localWordFrequencyActions = {
     startDocument: [
@@ -39,7 +39,7 @@ const localWordFrequencyActions = {
 };
 
 const wordFrequencyCode = function ({perf}) {
-    const cl = new ProskommaRenderFromJson({srcJson: perf, actions: localWordFrequencyActions});
+    const cl = new PerfRenderFromJson({srcJson: perf, actions: localWordFrequencyActions});
     const output = {};
     cl.renderDocument({docId: "", config: {}, output});
         return {words: output.words};

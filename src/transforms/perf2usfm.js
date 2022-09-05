@@ -1,4 +1,4 @@
-import {usfmHelps, ProskommaRenderFromJson} from 'proskomma-json-tools';
+import {usfmHelps, PerfRenderFromJson} from 'proskomma-json-tools';
 
 const initNestedLevel = (workspace,level) => {
     workspace.nestInx=level
@@ -20,7 +20,7 @@ const wsCheckAndPushTag = (workspace,tag,str) => {
     const checkTags = ['ts', 'c', ...usfmHelps.bodyTags]
     // Strategy - delay output and wait until able to keep the strict order
     // unless tag is outside of valid list
-    // then output all delayed items and current one (while keeping the order) 
+    // then output all delayed items and current one (while keeping the order)
     if (checkTags.includes(tag)) {
         if (usfmHelps.bodyTags.includes(tag)) {
             workspace.strictTagOrderStore.usfmBits.push(str)
@@ -194,6 +194,7 @@ const localToUsfmActions = {
             description: "Handle start of wrapper",
             test: () => true,
             action: ({context,workspace}) => {
+                // console.log(context.sequences[0].element.subType);
                 upNestingLevel(workspace,context.sequences[0].element);
             }
         }
