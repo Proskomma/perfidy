@@ -1,0 +1,174 @@
+[
+  {
+    "id": 1,
+    "title": "USFM from DCS",
+    "type": "Source",
+    "sourceLocation": "http",
+    "outputType": "text",
+    "httpUrl": "https://raw.githubusercontent.com/Proskomma/perfidy/main/dataSources/lsg_tit.usfm"
+  },
+  {
+    "id": 2,
+    "title": "Selectors",
+    "type": "Source",
+    "sourceLocation": "local",
+    "localValue": "{\"org\": \"dcs\", \"lang\": \"fr\", \"abbr\": \"ust\"}",
+    "outputType": "json"
+  },
+  {
+    "id": 3,
+    "title": "USFM to PERF",
+    "name": "usfm2perf",
+    "type": "Transform",
+    "inputs": [
+      {
+        "name": "usfm",
+        "type": "text",
+        "source": "Source 1"
+      },
+      {
+        "name": "selectors",
+        "type": "json",
+        "source": "Source 2"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "perf",
+        "type": "json"
+      }
+    ],
+    "description": "USFM=>PERF: Conversion via Proskomma"
+  },
+  {
+    "id": 5,
+    "title": "PTX",
+    "type": "Source",
+    "sourceLocation": "http",
+    "outputType": "text",
+    "httpUrl": "https://raw.githubusercontent.com/Proskomma/perfidy/main/dataSources/ptx_tit_alignment.json"
+  },
+  {
+    "id": 12,
+    "title": "Transform 12",
+    "name": "getReportFromGreekAndPTX",
+    "type": "Transform",
+    "inputs": [
+      {
+        "name": "perf",
+        "type": "json",
+        "source": "Transform 3 perf"
+      },
+      {
+        "name": "PTX",
+        "type": "text",
+        "source": "Source 5"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "report",
+        "type": "json"
+      }
+    ],
+    "description": "PERF=>JSON: Generates alignment report"
+  },
+  {
+    "id": 13,
+    "title": "PTX",
+    "type": "Display",
+    "inputType": "text",
+    "inputSource": "Source 5"
+  },
+  {
+    "id": 14,
+    "title": "PARSE PTX",
+    "type": "Display",
+    "inputType": "text",
+    "inputSource": "Transform 12 report"
+  },
+  {
+    "id": 15,
+    "title": "PERF",
+    "type": "Display",
+    "inputType": "json",
+    "inputSource": "Transform 3 perf"
+  },
+  {
+    "id": 19,
+    "title": "Source 19",
+    "type": "Source",
+    "sourceLocation": "http",
+    "outputType": "text",
+    "httpUrl": "https://git.door43.org/KentR1235/fr_lsg_tit_book/raw/branch/master/fr_lsg_tit_book.usfm"
+  },
+  {
+    "id": 20,
+    "title": "Transform 20",
+    "name": "usfm2perf",
+    "type": "Transform",
+    "inputs": [
+      {
+        "name": "usfm",
+        "type": "text",
+        "source": "Source 19"
+      },
+      {
+        "name": "selectors",
+        "type": "json",
+        "source": "Source 2"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "perf",
+        "type": "json"
+      }
+    ],
+    "description": "USFM=>PERF: Conversion via Proskomma"
+  },
+  {
+    "id": 21,
+    "title": "Target PERF",
+    "type": "Display",
+    "inputType": "json",
+    "inputSource": "Transform 20 perf"
+  },
+  {
+    "id": 22,
+    "title": "Transform 22",
+    "name": "makeAlignment",
+    "type": "Transform",
+    "inputs": [
+      {
+        "name": "perf",
+        "type": "json",
+        "source": "Transform 3 perf"
+      },
+      {
+        "name": "report",
+        "type": "json",
+        "source": "Transform 12 report"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "perf",
+        "type": "json"
+      },
+      {
+        "name": "issues",
+        "type": "json",
+        "source": ""
+      }
+    ],
+    "description": "PERF=>PERF adds report to verses"
+  },
+  {
+    "id": 23,
+    "title": "Display 23",
+    "type": "Display",
+    "inputType": "json",
+    "inputSource": "Transform 22 perf"
+  }
+]

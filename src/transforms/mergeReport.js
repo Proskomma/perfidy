@@ -1,3 +1,5 @@
+// https://github.com/Proskomma/proskomma-json-tools/blob/main/src/transforms/identityActions.js
+
 import {ProskommaRenderFromJson, transforms, mergeActions} from 'proskomma-json-tools';
 
 const reportRecordsForCV = function (report, chapter, verses) {

@@ -55,8 +55,6 @@ class Ptxhandler {
             };
             this.wordstotal++;
         }
-
-        console.log("PTX parsed", this.arrayPtx);
     }
 
     /**
@@ -284,7 +282,6 @@ const makeAlignmentActions = {
             description: "Build output",
             test: () => true,
             action: ({workspace, output}) => {
-                console.log(workspace.handler.getArrayPtx());
                 output.report = workspace.handler.getArrayPtx();
             }
         },

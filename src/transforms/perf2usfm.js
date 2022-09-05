@@ -225,7 +225,12 @@ const localToUsfmActions = {
 };
 
 const perf2usfmCode = function ({perf}) {
-    const cl = new ProskommaRenderFromJson({srcJson: perf, actions: localToUsfmActions});
+    const cl = new ProskommaRenderFromJson(
+        {
+            srcJson: perf,
+            actions: localToUsfmActions
+        }
+    );
     const output = {};
     cl.renderDocument({docId: "", config: {}, output});
         return {usfm: output.usfm};
