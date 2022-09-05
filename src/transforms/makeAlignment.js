@@ -121,7 +121,6 @@ const makeAlignmentActions = {
                 let elem = structuredClone(context.sequences[0].element);
                 workspace.arraytext = text.split(" ");
                 let lenWords = workspace.arrayWords.length;
-                console.log("########### workspace.arrayWords ###########", workspace.arrayWords);
                 let currentWord = "";
                 let tempPunctuation = "";
                 workspace.arraytext.forEach((word) => {
@@ -154,7 +153,6 @@ const makeAlignmentActions = {
                     let found = false;
                     let i = 1;
                     
-                    console.log("CURRENT WORD == ", word);
                     while(i < lenWords) {
                         if("word" in workspace.arrayWords[i]) {
                             currentWord = workspace.arrayWords[i]["word"];
@@ -191,8 +189,7 @@ const makeAlignmentActions = {
                         workspace.outputContentStack[0].push(elem.text + " ");
                     }
                 });
-                // console.log("elem", text);
-                // console.log("workspace.arraytext", workspace.arraytext);
+
                 return false;
             }
         },
