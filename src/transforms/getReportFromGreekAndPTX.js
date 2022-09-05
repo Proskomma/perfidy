@@ -1,4 +1,4 @@
-import {ProskommaRenderFromJson, transforms, mergeActions} from 'proskomma-json-tools';
+import {PerfRenderFromJson, transforms, mergeActions} from 'proskomma-json-tools';
 
 class Ptxhandler {
     constructor(PTX) {
@@ -290,7 +290,7 @@ const makeAlignmentActions = {
 
 const makeReportCode = function ({PTX, perf}) {
     // console.log("getRawStringFromChapterVerse(1, 1) : ", handler.getRawStringFromChapterVerse(1, 1));
-    const cl = new ProskommaRenderFromJson(
+    const cl = new PerfRenderFromJson(
         {
             srcJson: perf,
             actions: makeAlignmentActions

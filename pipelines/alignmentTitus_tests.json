@@ -12,7 +12,7 @@
     "title": "Selectors",
     "type": "Source",
     "sourceLocation": "local",
-    "localValue": "{\"org\": \"dcs\", \"lang\": \"fr\", \"abbr\": \"ust\"}",
+    "localValue": "{\"lang\": \"fra\", \"abbr\": \"ust\"}",
     "outputType": "json"
   },
   {
@@ -84,7 +84,7 @@
     "id": 14,
     "title": "PARSE PTX",
     "type": "Display",
-    "inputType": "text",
+    "inputType": "json",
     "inputSource": "Transform 12 report"
   },
   {
@@ -95,63 +95,23 @@
     "inputSource": "Transform 3 perf"
   },
   {
-    "id": 16,
-    "title": "Source 16",
-    "type": "Source",
-    "sourceLocation": "http",
-    "outputType": "text",
-    "httpUrl": "https://git.door43.org/KentR1235/fr_lsg_tit_book/raw/branch/master/fr_lsg_tit_book.usfm"
-  },
-  {
-    "id": 17,
-    "title": "Transform 17",
-    "name": "usfm2perf",
-    "type": "Transform",
-    "inputs": [
-      {
-        "name": "usfm",
-        "type": "text",
-        "source": "Source 16"
-      },
-      {
-        "name": "selectors",
-        "type": "json",
-        "source": "Source 2"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "perf",
-        "type": "json"
-      }
-    ],
-    "description": "USFM=>PERF: Conversion via Proskomma"
-  },
-  {
-    "id": 18,
-    "title": "alignmed Tite",
-    "type": "Display",
-    "inputType": "text",
-    "inputSource": "Transform 17 perf"
-  },
-  {
-    "id": 19,
-    "title": "Source 19",
+    "id": 21,
+    "title": "Source 21",
     "type": "Source",
     "sourceLocation": "http",
     "outputType": "text",
     "httpUrl": "https://raw.githubusercontent.com/Proskomma/perfidy/ptxAlign/dataSources/lsg_tit.usfm"
   },
   {
-    "id": 20,
-    "title": "Transform 20",
+    "id": 22,
+    "title": "Transform 22",
     "name": "usfm2perf",
     "type": "Transform",
     "inputs": [
       {
         "name": "usfm",
         "type": "text",
-        "source": "Source 19"
+        "source": "Source 21"
       },
       {
         "name": "selectors",
@@ -168,10 +128,47 @@
     "description": "USFM=>PERF: Conversion via Proskomma"
   },
   {
-    "id": 21,
-    "title": "Raw Tite",
+    "id": 23,
+    "title": "Raw TITE",
     "type": "Display",
-    "inputType": "text",
-    "inputSource": "Transform 20 perf"
+    "inputType": "json",
+    "inputSource": "Transform 22 perf"
+  },
+  {
+    "id": 24,
+    "title": "Transform 24",
+    "name": "makeAlignment",
+    "type": "Transform",
+    "inputs": [
+      {
+        "name": "perf",
+        "type": "json",
+        "source": "Transform 22 perf"
+      },
+      {
+        "name": "report",
+        "type": "json",
+        "source": "Transform 12 report"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "perf",
+        "type": "json"
+      },
+      {
+        "name": "issues",
+        "type": "json",
+        "source": ""
+      }
+    ],
+    "description": "PERF=>PERF adds report to verses"
+  },
+  {
+    "id": 25,
+    "title": "TESTS align Tite",
+    "type": "Display",
+    "inputType": "json",
+    "inputSource": "Transform 24 perf"
   }
 ]

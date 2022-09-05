@@ -167,7 +167,7 @@ This is a PERF transform which uses PerfRender events to build a deep copy of it
 #### Development Aids
 PerfRender may be instantiated with an optional `debugLevel` value between 0 and 2:
 ```
-new ProskommaRenderFromJson({debugLevel:2, ...});
+new PerfRenderFromJson({debugLevel:2, ...});
 ```
 - Level 0 produces no output
 - Level 1 outputs executed actions to the console

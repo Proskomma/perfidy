@@ -184,9 +184,9 @@ function App() {
                                         () => {
                                             const a = document.createElement('a');
                                             a.download = 'mySpecSteps.json';
-                                            console.log("steps BEFORE", specSteps);
+                                            // console.log("steps BEFORE", specSteps);
                                             let cleanedSteps = cleanSteps(specSteps);
-                                            console.log("steps AFTER", specSteps);
+                                            // console.log("steps AFTER", specSteps);
                                             const blob = new Blob(
                                                 [JSON.stringify(
                                                     cleanedSteps,

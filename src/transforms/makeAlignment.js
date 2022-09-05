@@ -1,4 +1,4 @@
-import { ProskommaRenderFromJson, transforms, mergeActions } from 'proskomma-json-tools';
+import { PerfRenderFromJson, transforms, mergeActions } from 'proskomma-json-tools';
 
 const reportRecordsForCV = function (report, chapter, verses) {
 
@@ -118,8 +118,17 @@ const makeAlignmentActions = {
                 // end milestone
                 // text
                 const text = context.sequences[0].element.text;
+                let elem = structuredClone(context.sequences[0].element);
                 workspace.arraytext = text.split(" ");
+                let lenWords = workspace.arrayWords.length;
+                console.log("########### workspace.arrayWords ###########", workspace.arrayWords);
+                let currentWord = "";
+                let tempPunctuation = "";
                 workspace.arraytext.forEach((word) => {
+                    if(word === " ") {
+                        workspace.outputContentStack[0].push(word);
+                        return;
+                    }
                     let lenW = word.length;
                     let charFirst = word.charAt(0);
                     let charLast = word.charAt(lenW-1);
@@ -128,34 +137,63 @@ const makeAlignmentActions = {
                     //     let realtxt = charFirst;
                     //     let elem = structuredClone(context.sequences[0].element);
                     //     elem.text = realtxt;
-                    //     workspace.outputContentStack[0].push(elem);
-
-
                     // }
-                    if(endOrBeginPunctuation(word, true)) {
-                        let realW = word.substring(0, lenW-2);
-                        let realtxt = charLast;
-                        let elem = structuredClone(context.sequences[0].element);
-                        elem.text = realtxt;
-                        let currentWord = "";
 
-                        while(currentWord != undefined) {
-                            currentWord = workspace.arrayWords[0];
-                            if(currentWord == realW.trim()) {
+                    // if the word ends by a punctuation we remove it
+                    
+                    let punct = false;
+                    if(endOrBeginPunctuation(word, true)) {
+                        let realW = word.trim().substring(0, lenW-1);
+                        tempPunctuation = charLast;
+                        elem.text = realW;
+                        punct = true;
+                    } else {
+                        elem.text = word;
+                    }
+                    
+                    let found = false;
+                    let i = 1;
+                    
+                    console.log("CURRENT WORD == ", word);
+                    while(i < lenWords) {
+                        if("word" in workspace.arrayWords[i]) {
+                            currentWord = workspace.arrayWords[i]["word"];
+                            if(currentWord == elem.text) {
+                                found = true;
                                 break;
                             }
-                            workspace.arrayWords.shift();
                         }
+                        i++;
+                    }
 
-                        // TODO startmilestone etc ...
-                        let startM = buildANewStartMilestone();
+                    if(found) {
+                        // startmilestone etc ...
+                        let theWrapper = workspace.arrayWords[i];
+                        let startM = buildANewStartMilestone(theWrapper["strong"], theWrapper["lemma"], theWrapper["content"], theWrapper["morph"],
+                        theWrapper["greekoccurence"] ?? 1, theWrapper["greekoccurences"] ?? 1);
 
-                        workspace.outputContentStack[0].push(elem);
+                        workspace.outputContentStack[0].push(startM);
+
+                        let wrapper = buildWrapper(elem.text, theWrapper["frenchoccurence"] ?? 1, theWrapper["frenchoccurences"] ?? 1);
+
+                        workspace.outputContentStack[0].push(wrapper);
+                        
+                        let endM = buildnewEndMileStone();
+                        
+                        workspace.outputContentStack[0].push(endM);
+
+                        if(punct) {
+                            workspace.outputContentStack[0].push(tempPunctuation + " ");
+                        } else {
+                            workspace.outputContentStack[0].push(" ");
+                        }
+                    } else {
+                        workspace.outputContentStack[0].push(elem.text + " ");
                     }
                 });
-                console.log("elem", text);
-                console.log("workspace.arraytext", workspace.arraytext);
-                return true;
+                // console.log("elem", text);
+                // console.log("workspace.arraytext", workspace.arraytext);
+                return false;
             }
         },
     ],
@@ -171,7 +209,7 @@ const makeAlignmentActions = {
     ],
     endSequence: [
         {
-            description: "Ignore endSequence events",
+            description: "get endSequence events",
             test: () => true,
             action: ({ workspace }) => {
                 if (workspace.beginRealtext) {
@@ -205,6 +243,7 @@ const makeAlignmentActions = {
                     type: element.type,
                     subtype: element.subType,
                 };
+                
                 const verseRecords = reportRecordsForCV(config.report, workspace.chapter, workspace.verses);
                 if (verseRecords.length > 0) {
                     markRecord.metaContent = [];
@@ -254,37 +293,21 @@ const makeAlignmentActions = {
             action: () => {
             }
         },
-    ],
-    startMilestone: [
-        {
-            description: "Ignore startMilestone events",
-            test: () => true,
-            action: () => {
-            }
-        },
-    ],
-    endMilestone: [
-        {
-            description: "Ignore endMilestone events",
-            test: () => true,
-            action: () => {
-            }
-        },
-    ],
+    ]
 };
 
 const mergeReportCode = function ({ perf, report }) {
+    
     const actions = mergeActions(
         [
             makeAlignmentActions,
-            transforms.identityActions
+            transforms.perf2perf.identityActions
         ]
     );
-    const cl = new ProskommaRenderFromJson(
+    const cl = new PerfRenderFromJson(
         {
             srcJson: perf,
-            actions,
-            debugLevel: 1
+            actions
         }
     );
     const output = {};

@@ -15,7 +15,6 @@ import mergePerfText from "../transforms/mergePerfText";
 import identity from "../transforms/identity";
 import searchRegexGen from "../transforms/searchRegexGen";
 import longVerses1 from "../transforms/longVerses1";
-import mergeReport from "../transforms/mergeReport";
 import uniqueWords from "../transforms/uniqueWords";
 import remoteTransform from "../transforms/remoteTransform";
 import stripMarkup from "../transforms/stripMarkup";
@@ -43,7 +42,6 @@ const stepTemplates = {
         perf2usfm,
         searchRegexGen,
         longVerses1,
-        mergeReport,
         uniqueWords,
         remoteTransform,
         stripMarkup,

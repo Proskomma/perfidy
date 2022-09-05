@@ -226,7 +226,7 @@ const localToUsfmActions = {
 };
 
 const perf2usfmCode = function ({perf}) {
-    const cl = new ProskommaRenderFromJson(
+    const cl = new PerfRenderFromJson(
         {
             srcJson: perf,
             actions: localToUsfmActions
