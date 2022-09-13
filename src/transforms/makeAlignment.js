@@ -14,8 +14,8 @@ const reportRecordsForCV = function (report, chapter, verses) {
  * @returns {boolean}
  */
 const endOrBeginPunctuation = function (word, end=false) {
-    let startPunctuation = /^[.,:!?]/;
-    let endPunctuation = /[.,:!?]$/;
+    let startPunctuation = /^[.,:!?;]/;
+    let endPunctuation = /[.,:!?;]$/;
     if(!end) {
         return startPunctuation.test(word);
     }
@@ -119,7 +119,7 @@ const makeAlignmentActions = {
                 // text
                 const text = context.sequences[0].element.text;
                 let elem = structuredClone(context.sequences[0].element);
-                workspace.arraytext = text.split(" ");
+                workspace.arraytext = text.split(/[\s’'\-]/);
                 let lenWords = workspace.arrayWords.length;
                 let currentWord = "";
                 let tempPunctuation = "";
