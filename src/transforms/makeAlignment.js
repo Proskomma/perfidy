@@ -1,10 +1,16 @@
 import { PerfRenderFromJson, transforms, mergeActions } from 'proskomma-json-tools';
 
+/**
+ * 
+ * @param {Array} report 
+ * @param {String} chapter 
+ * @param {String} verses 
+ * @returns {Array}
+ */
 const reportRecordsForCV = function (report, chapter, verses) {
-
     return report.filter(
         (record) => record.chapter === chapter && record.verses === verses
-    )
+    ) ?? [];
 }
 
 /**
@@ -111,7 +117,7 @@ const makeAlignmentActions = {
     text: [
         {
             description: "Output text",
-            test: ({ workspace }) => workspace.isInVerse,
+            test: ({ workspace }) => workspace.isInVerse && workspace.arrayWords !== undefined && workspace.arrayWords.length > 0,
             action: ({ context, workspace, config }) => {
                 // start milestone
                 // wrapper
@@ -154,7 +160,7 @@ const makeAlignmentActions = {
                     let i = 1;
                     
                     while(i < lenWords) {
-                        if("word" in workspace.arrayWords[i]) {
+                        if(workspace.arrayWords[i] !== undefined && "word" in workspace.arrayWords[i]) {
                             currentWord = workspace.arrayWords[i]["word"];
                             if(currentWord == elem.text) {
                                 found = true;

@@ -1,5 +1,18 @@
 import {PerfRenderFromJson, transforms, mergeActions} from 'proskomma-json-tools';
 
+// import Axios from "axios";
+
+// try {
+//     console.log(`Fetching HTTP content for Source ${specStep.id}`);
+//     const response = await Axios.get(specStep.httpUrl);
+//     if (response.status !== 200) {
+//         newRunIssues.push(`Status code ${response.status} when fetching content by HTTP(S) for Source ${specStep.id}`);
+//     }
+//     specStep.value = response.data;
+// } catch (err) {
+//     newRunIssues.push(`Exception when fetching content by HTTP(S) for Source ${specStep.id}: ${err}`);
+// }
+
 class Ptxhandler {
     constructor(PTX) {
         this.PTX = JSON.parse(JSON.stringify(PTX));
@@ -59,6 +72,19 @@ class Ptxhandler {
 
     /**
      * 
+     * @param {Integer} chapter wanted chapter
+     * @param {Integer} verse wanted verse
+     * @param {Integer} word wanted word
+     * @returns if the chapter, verse and word exist, return True, else False
+     */
+    checkAllDimensions(chapter, verse, word) {
+        return this.arrayPtx[chapter] !== undefined
+            && this.arrayPtx[chapter][verse] !== undefined
+            && this.arrayPtx[chapter][verse][word] !== undefined;
+    }
+
+    /**
+     * 
      * @param {string(int)} chapter 
      * @param {string} verse 
      * @returns {[string]}
@@ -100,39 +126,55 @@ class Ptxhandler {
     }
 
     getSingleWordFromChapterVerse(chapter, verse, word) {
-        return this.arrayPtx[chapter][verse][word];
+        if(this.checkAllDimensions(chapter, verse, word)) {
+            return this.arrayPtx[chapter][verse][word];
+        }
+        return {};
     }
 
     getStrong(chapter, verse, word) {
-        let cWord = this.arrayPtx[chapter][verse][word];
-        if(cWord === undefined) {
-            return false;
+        if(this.checkAllDimensions(chapter, verse, word)) {
+            let cWord = this.arrayPtx[chapter][verse][word];
+            if(cWord === undefined) {
+                return "";
+            }
+            return cWord["strong"];            
         }
-        return cWord["strong"];
+        return "";
     }
 
     getTargetLinkValue(chapter, verse, word) {
-        return this.arrayPtx[chapter][verse][word]["targetLinkValue"];
+        if(this.checkAllDimensions(chapter, verse, word)) {
+            return this.arrayPtx[chapter][verse][word]["targetLinkValue"] ?? null;
+        }
+        return null;
     }
 
     addInfosToWord(chapter, verse, word, key, info) {
-        if(this.arrayPtx[chapter][verse][word] === undefined) {
-            this.addWord(chapter, verse, word, null);
+        if(this.checkAllDimensions(chapter, verse, word)) {
+            if(this.arrayPtx[chapter][verse][word] === undefined) {
+                this.addWord(chapter, verse, word);
+            }
+            this.arrayPtx[chapter][verse][word][key] = info;
         }
-        this.arrayPtx[chapter][verse][word][key] = info;
     }
 
-    addWord(chapter, verse, wordInt, infos) {
-        this.arrayPtx[chapter][verse][wordInt] = {
-            ...infos,
-            "chapter" : parseInt(chapter),
-            "verse" : parseInt(verse),
-            "pos" : wordInt
-        };;
+    addWord(chapter, verse, wordInt, infos=null) {
+        if(this.checkAllDimensions(chapter, verse, wordInt)) {
+            this.arrayPtx[chapter][verse][wordInt] = {
+                ...infos,
+                "chapter" : parseInt(chapter),
+                "verse" : parseInt(verse),
+                "pos" : wordInt
+            };
+        }
     }
 
     getFrenchWord(chapter, verse, word) {
-        return this.arrayPtx[chapter][verse][word]["word"] ?? "";
+        if(this.checkAllDimensions(chapter, verse, word)) {
+            return this.arrayPtx[chapter][verse][word]["word"] ?? "";
+        }
+        return "";
     }
 }
 
@@ -295,8 +337,8 @@ const makeReportCode = function ({PTX, perf}) {
             srcJson: perf,
             actions: makeAlignmentActions
         }
-    );
-    const output = {};
+        );
+        const output = {};
     cl.renderDocument({docId: "", config: {PTX}, output});
     return {report: output.report};
 }
