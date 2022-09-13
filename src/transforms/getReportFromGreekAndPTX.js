@@ -337,8 +337,8 @@ const makeReportCode = function ({PTX, perf}) {
             srcJson: perf,
             actions: makeAlignmentActions
         }
-        );
-        const output = {};
+    );
+    const output = {};
     cl.renderDocument({docId: "", config: {PTX}, output});
     return {report: output.report};
 }

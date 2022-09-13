@@ -129,7 +129,7 @@
   },
   {
     "id": 23,
-    "title": "Raw TITE",
+    "title": "Raw PERF",
     "type": "Display",
     "inputType": "json",
     "inputSource": "Transform 22 perf"
@@ -166,7 +166,7 @@
   },
   {
     "id": 25,
-    "title": "TESTS align Tite",
+    "title": "TESTS aligned PERF",
     "type": "Display",
     "inputType": "json",
     "inputSource": "Transform 24 perf"
