@@ -50,7 +50,6 @@ const calculateUsfmChapterPositionsActions = {
             description: "Populate report",
             test: () => true,
             action: ({workspace, output}) => {
-                console.log(workspace.blockRecords);
                 for (const [recordN, record] of Object.entries(workspace.blockRecords)) {
                     if (!record.perfChapter) {
                         continue;
