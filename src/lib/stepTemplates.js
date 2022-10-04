@@ -24,6 +24,7 @@ import mergeMarkup from "../transforms/mergeMarkup";
 import prepareJsonDiff from "../transforms/prepareJsonDiff";
 import uniqueWordsVerses from '../transforms/uniqueWordsVerses';
 import perf2PkJson from "../transforms/perf2PkJson";
+import calculateUsfmChapterPositions from "../transforms/calculateUsfmChapterPositions";
 
 const stepTemplates = {
     Transform: {
@@ -53,6 +54,7 @@ const stepTemplates = {
         lightRegex,
         regex,
         perf2PkJson,
+        calculateUsfmChapterPositions,
     },
     Source: {
         local: {

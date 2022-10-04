@@ -31,7 +31,7 @@ function App() {
 
 
     const proskomma = new Proskomma();
-    console.log(flattenedTypes);
+    // console.log(flattenedTypes);
 
     const cleanSteps = steps => {
         const ret = deepCopy(steps);

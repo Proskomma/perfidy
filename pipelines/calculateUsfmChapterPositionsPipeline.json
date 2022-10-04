@@ -1,0 +1,77 @@
+[
+  {
+    "id": 1,
+    "title": "USFM from DCS",
+    "type": "Source",
+    "sourceLocation": "http",
+    "outputType": "text",
+    "httpUrl": "https://raw.githubusercontent.com/Bridgeconn/usfm-grammar/master/test/resources/20-PSAeng-web.usfm"
+  },
+  {
+    "id": 2,
+    "title": "Selectors",
+    "type": "Source",
+    "sourceLocation": "local",
+    "localValue": "{\"lang\": \"eng\", \"abbr\": \"ust\"}",
+    "outputType": "json"
+  },
+  {
+    "id": 3,
+    "title": "USFM to PERF",
+    "name": "usfm2perf",
+    "type": "Transform",
+    "inputs": [
+      {
+        "name": "usfm",
+        "type": "text",
+        "source": "Source 1"
+      },
+      {
+        "name": "selectors",
+        "type": "json",
+        "source": "Source 2"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "perf",
+        "type": "json"
+      }
+    ],
+    "description": "USFM=>PERF: Conversion via Proskomma"
+  },
+  {
+    "id": 5,
+    "title": "Calculate Chapter Positions",
+    "name": "calculateUsfmChapterPositions",
+    "type": "Transform",
+    "inputs": [
+      {
+        "name": "perf",
+        "type": "json",
+        "source": "Transform 3 perf"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "report",
+        "type": "json"
+      }
+    ],
+    "description": "PERF=>JSON: Generates positions for inserting chapter numbers into USFM"
+  },
+  {
+    "id": 4,
+    "title": "Imported PERF",
+    "type": "Display",
+    "inputType": "json",
+    "inputSource": "Transform 3 perf"
+  },
+  {
+    "id": 6,
+    "title": "Chapter Positions",
+    "type": "Display",
+    "inputType": "json",
+    "inputSource": "Transform 5 report"
+  }
+]
