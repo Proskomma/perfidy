@@ -227,7 +227,18 @@ const perf2PkJsonActions = {
             {
                 description: 'Add scope and update state',
                 test: () => true,
-                action: () => {
+                action: ({context, workspace}) => {
+                    const element = context.sequences[0].element;
+                    const wrapperScope = `${element.subType === 'usfm:w' ? 'spanWithAtts' : 'span'}/${element.subType.split(':')[1]}`;
+                    if (!workspace.block.is.includes(wrapperScope)) {
+                        workspace.block.is.push(wrapperScope);
+                    }
+                    workspace.os.push(wrapperScope);
+                    workspace.block.items.push({
+                        type: 'scope',
+                        subType: "start",
+                        payload: wrapperScope,
+                    });
                 },
             },
         ],
@@ -236,7 +247,15 @@ const perf2PkJsonActions = {
             {
                 description: 'Remove scope and update state',
                 test: () => true,
-                action: () => {
+                action: ({context, workspace}) => {
+                    const element = context.sequences[0].element;
+                    const wrapperScope = `${element.subType === 'usfm:w' ? 'spanWithAtts' : 'span'}/${element.subType.split(':')[1]}`;
+                    workspace.os = workspace.os.filter(s => s !== wrapperScope);
+                    workspace.block.items.push({
+                        type: 'scope',
+                        subType: "end",
+                        payload: wrapperScope,
+                    });
                 },
             },
         ],
