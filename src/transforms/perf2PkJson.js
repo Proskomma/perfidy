@@ -240,16 +240,19 @@ const perf2PkJsonActions = {
                     payload: milestoneScope,
                 });
                 for (const [attKey, attValue] of Object.entries(element.atts || {})) {
-                    const attScope = `attribute/milestone/${element.subType.split(':')[1]}/${attKey}/0/${attValue}`;
-                    if (!workspace.block.is.includes(attScope)) {
-                        workspace.block.is.push(attScope);
+                    const valueParts = attValue.toString().split(',');
+                    for (const [partN, part] of valueParts.entries()) {
+                        const attScope = `attribute/milestone/${element.subType.split(':')[1]}/${attKey}/${partN}/${part}`;
+                        if (!workspace.block.is.includes(attScope)) {
+                            workspace.block.is.push(attScope);
+                        }
+                        workspace.os.push(attScope);
+                        workspace.block.items.push({
+                            type: 'scope',
+                            subType: "start",
+                            payload: attScope,
+                        });
                     }
-                    workspace.os.push(attScope);
-                    workspace.block.items.push({
-                        type: 'scope',
-                        subType: "start",
-                        payload: attScope,
-                    });
                 }
             },
         },
@@ -299,16 +302,19 @@ const perf2PkJsonActions = {
                         payload: wrapperScope,
                     });
                     for (const [attKey, attValue] of Object.entries(element.atts || {})) {
-                        const attScope = `attribute/spanWithAtts/w/${attKey}/0/${attValue}`;
-                        if (!workspace.block.is.includes(attScope)) {
-                            workspace.block.is.push(attScope);
+                        const valueParts = attValue.toString().split(',');
+                        for (const [partN, part] of valueParts.entries()) {
+                            const attScope = `attribute/spanWithAtts/w/${attKey}/${partN}/${part}`;
+                            if (!workspace.block.is.includes(attScope)) {
+                                workspace.block.is.push(attScope);
+                            }
+                            workspace.os.push(attScope);
+                            workspace.block.items.push({
+                                type: 'scope',
+                                subType: "start",
+                                payload: attScope,
+                            });
                         }
-                        workspace.os.push(attScope);
-                        workspace.block.items.push({
-                            type: 'scope',
-                            subType: "start",
-                            payload: attScope,
-                        });
                     }
                 },
             },
@@ -321,13 +327,16 @@ const perf2PkJsonActions = {
                 action: ({context, workspace}) => {
                     const element = context.sequences[0].element;
                     for (const [attKey, attValue] of [...Object.entries(element.atts || {})].reverse()) {
-                        const attScope = `attribute/spanWithAtts/w/${attKey}/0/${attValue}`;
-                        workspace.os = workspace.os.filter(o => o !== attScope);
-                        workspace.block.items.push({
-                            type: 'scope',
-                            subType: "end",
-                            payload: attScope,
-                        });
+                        const valueParts = attValue.toString().split(',');
+                        for (const [partN, part] of [...valueParts.entries()].reverse()) {
+                            const attScope = `attribute/spanWithAtts/w/${attKey}/${partN}/${part}`;
+                            workspace.os = workspace.os.filter(o => o !== attScope);
+                            workspace.block.items.push({
+                                type: 'scope',
+                                subType: "end",
+                                payload: attScope,
+                            });
+                        }
                     }
                     const wrapperScope = `${element.subType === 'usfm:w' ? 'spanWithAtts' : 'span'}/${element.subType.split(':')[1]}`;
                     workspace.os = workspace.os.filter(s => s !== wrapperScope);
