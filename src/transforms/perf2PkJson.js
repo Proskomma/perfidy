@@ -77,6 +77,7 @@ const perf2PkJsonActions = {
                     workspace.sequenceId = null;
                     workspace.block = null;
                     workspace.os = [];
+                    workspace.waitingBlockGrafts = [];
                 },
             },
         ],
@@ -103,27 +104,36 @@ const perf2PkJsonActions = {
             },
         ],
 
-        blockGraft: [
-            {
-                description: 'Follow block grafts',
-                test: ({context}) => ['title', 'heading', 'introduction'].includes(context.sequences[0].block.subType),
-                action: (environment) => {
-                    const target = environment.context.sequences[0].block.target;
-                    if (target) {
-                        environment.context.renderer.renderSequenceId(environment, target);
-                    }
-                },
+    blockGraft: [
+        {
+            description: 'Stash for next para',
+            test: () => true,
+            action: ({context, workspace}) => {
+                const target = context.sequences[0].block.target;
+                if (target) {
+                    workspace.waitingBlockGrafts.push({
+                        type: "graft",
+                        subType: context.sequences[0].block.subType,
+                        payload: context.sequences[0].block.target,
+                    })
+                }
             },
-        ],
+        },
+    ],
 
-        inlineGraft: [
+    inlineGraft: [
             {
                 description: 'Follow inline grafts',
-                test: () => false,
-                action: (environment) => {
-                    const target = environment.context.sequences[0].element.target;
+                test: () => true,
+                action: ({context, workspace}) => {
+                    const target = context.sequences[0].element.target;
                     if (target) {
-                        environment.context.renderer.renderSequenceId(environment, target);
+                        workspace.block.items.push({
+                            type: "graft",
+                            subType: context.sequences[0].element.subType,
+                            payload: context.sequences[0].element.target,
+                        })
+
                     }
                 },
             },
@@ -146,6 +156,7 @@ const perf2PkJsonActions = {
                             subType: 'start',
                             payload: `blockTag/${context.sequences[0].block.subType.split(':')[1]}`,
                         },
+                        bg: [...workspace.waitingBlockGrafts],
                         items: [],
                     };
                     output.pkJson[workspace.sequenceId].push(workspace.block);
@@ -158,6 +169,7 @@ const perf2PkJsonActions = {
                 test: () => true,
                 action: ({workspace}) => {
                     closeParagraphScopes(workspace);
+                    workspace.waitingBlockGrafts = [];
                 },
             },
         ],
