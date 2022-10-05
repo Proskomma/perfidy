@@ -223,7 +223,66 @@ const perf2PkJsonActions = {
             },
         ],
 
-        startWrapper: [
+    startMilestone: [
+        {
+            description: 'Add scope and update state',
+            test: () => true,
+            action: ({context, workspace}) => {
+                const element = context.sequences[0].element;
+                const milestoneScope = `milestone/${element.subType.split(':')[1]}`;
+                if (!workspace.block.is.includes(milestoneScope)) {
+                    workspace.block.is.push(milestoneScope);
+                }
+                workspace.os.push(milestoneScope);
+                workspace.block.items.push({
+                    type: 'scope',
+                    subType: "start",
+                    payload: milestoneScope,
+                });
+                for (const [attKey, attValue] of Object.entries(element.atts || {})) {
+                    const attScope = `attribute/milestone/${element.subType.split(':')[1]}/${attKey}/0/${attValue}`;
+                    if (!workspace.block.is.includes(attScope)) {
+                        workspace.block.is.push(attScope);
+                    }
+                    workspace.os.push(attScope);
+                    workspace.block.items.push({
+                        type: 'scope',
+                        subType: "start",
+                        payload: attScope,
+                    });
+                }
+            },
+        },
+    ],
+
+    endMilestone: [
+        {
+            description: 'Remove scope and update state',
+            test: () => true,
+            action: ({context, workspace}) => {
+                const element = context.sequences[0].element;
+                const attScopeRoot = `attribute/milestone/${element.subType.split(':')[1]}`;
+                for (const att of [...workspace.os.filter(s => s.startsWith(attScopeRoot))].reverse()) {
+                    workspace.os = workspace.os.filter(o => o !== att);
+                    workspace.block.items.push({
+                        type: 'scope',
+                        subType: "end",
+                        payload: att,
+                    });
+                }
+                const milestoneScope = `milestone/${element.subType.split(':')[1]}`;
+                workspace.os = workspace.os.filter(s => s !== milestoneScope);
+                workspace.block.items.push({
+                    type: 'scope',
+                    subType: "end",
+                    payload: milestoneScope,
+                });
+
+            },
+        },
+    ],
+
+    startWrapper: [
             {
                 description: 'Add scope and update state',
                 test: () => true,
