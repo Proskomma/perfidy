@@ -389,7 +389,36 @@ const perf2PkJsonActions = {
                     }
                 },
             },
-        ]
+        ],
+
+        endDocument: [
+            {
+                description: 'Rework hanging end cv scopes',
+                test: () => true,
+                action: ({output}) => {
+                    const sequenceBlocks = Object.values(output.pkJson)[0];
+                    for (let blockN = 1; blockN < sequenceBlocks.length; blockN++) {
+                        let thisBlockItems = sequenceBlocks[blockN].items;
+                        const lastBlockItems = sequenceBlocks[blockN - 1].items;
+                        let itemN = 0;
+                        while (itemN < thisBlockItems.length) {
+                            const item = thisBlockItems[itemN];
+                            if (item.type !== 'scope' || item.subType !== 'end') {
+                                break;
+                            }
+                            itemN++;
+                        }
+                        while (itemN > 0) {
+                            const movingScope = thisBlockItems.shift();
+                            lastBlockItems.push(movingScope);
+                            sequenceBlocks[blockN].os = sequenceBlocks[blockN].os.filter(s => s !== movingScope.payload);
+                            itemN--;
+                        }
+                    }
+                },
+            },
+        ],
+
     }
 
 ;
