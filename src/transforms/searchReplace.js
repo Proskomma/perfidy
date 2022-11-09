@@ -4,12 +4,6 @@ import {
   mergeActions,
 } from "proskomma-json-tools";
 
-/**
- * Evals string for matching regex syntax
- * @param {string|RegExp} input
- * @returns {RegExp}
- */
-
 const searchReplaceActions = {
   startDocument: [
     {
