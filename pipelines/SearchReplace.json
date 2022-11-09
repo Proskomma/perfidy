@@ -1,0 +1,229 @@
+[
+  {
+    "id": 1,
+    "title": "USFM from DCS",
+    "type": "Source",
+    "sourceLocation": "http",
+    "outputType": "text",
+    "httpUrl": "https://git.door43.org/unfoldingWord/en_ult/raw/branch/master/57-TIT.usfm"
+  },
+  {
+    "id": 2,
+    "title": "Selectors",
+    "type": "Source",
+    "sourceLocation": "local",
+    "localValue": "{\"lang\": \"eng\", \"abbr\": \"ust\"}",
+    "outputType": "json"
+  },
+  {
+    "id": 3,
+    "title": "USFM to PERF",
+    "name": "usfm2perf",
+    "type": "Transform",
+    "inputs": [
+      {
+        "name": "usfm",
+        "type": "text",
+        "source": "Source 1"
+      },
+      {
+        "name": "selectors",
+        "type": "json",
+        "source": "Source 2"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "perf",
+        "type": "json"
+      }
+    ],
+    "description": "USFM=>PERF: Conversion via Proskomma"
+  },
+  {
+    "id": 4,
+    "title": "Count orig perf words",
+    "name": "verseWords",
+    "type": "Transform",
+    "inputs": [
+      {
+        "name": "perf",
+        "type": "json",
+        "source": "Transform 3 perf"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "verseWords",
+        "type": "json"
+      }
+    ],
+    "description": "PERF=>JSON: Counts words occurrences"
+  },
+  {
+    "id": 6,
+    "title": "Strip Markup",
+    "name": "stripMarkup",
+    "type": "Transform",
+    "inputs": [
+      {
+        "name": "perf",
+        "type": "json",
+        "source": "Transform 3 perf"
+      },
+      {
+        "name": "verseWords",
+        "type": "json",
+        "source": "Transform 4 verseWords"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "perf",
+        "type": "json"
+      },
+      {
+        "name": "stripped",
+        "type": "json"
+      }
+    ],
+    "description": "PERF=>PERF: Strips alignment markup"
+  },
+  {
+    "id": 9,
+    "title": "Merge Text in Stripped PERF",
+    "name": "mergePerfText",
+    "type": "Transform",
+    "inputs": [
+      {
+        "name": "perf",
+        "type": "json",
+        "source": "Transform 6 perf"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "perf",
+        "type": "json"
+      }
+    ],
+    "description": "PERF=>PERF: Merge consecutive text strings"
+  },
+  {
+    "id": 19,
+    "title": "Seach params",
+    "type": "Source",
+    "sourceLocation": "local",
+    "localValue": "{\"target\": \"/{(.+?)}/gi\", \"replacement\": \"$1\", \"config\": {\"isRegex\": \"true\"}}",
+    "outputType": "json"
+  },
+  {
+    "id": 20,
+    "title": "Search",
+    "name": "searchReplace",
+    "type": "Transform",
+    "inputs": [
+      {
+        "name": "perf",
+        "type": "json",
+        "source": "Transform 9 perf"
+      },
+      {
+        "name": "params",
+        "type": "json",
+        "source": "Source 19"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "results",
+        "type": "json"
+      }
+    ],
+    "description": "Search the given word"
+  },
+  {
+    "id": 25,
+    "title": "Search Results",
+    "type": "Display",
+    "inputType": "json",
+    "inputSource": "Transform 20 results"
+  },
+  {
+    "id": 12,
+    "title": "Count stripped perf words",
+    "name": "verseWords",
+    "type": "Transform",
+    "inputs": [
+      {
+        "name": "perf",
+        "type": "json",
+        "source": "Transform 9 perf"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "verseWords",
+        "type": "json"
+      }
+    ],
+    "description": "PERF=>JSON: Counts words occurrences"
+  },
+  {
+    "id": 13,
+    "title": "Merge Back Into Stripped (roundtrip)",
+    "name": "mergeMarkup",
+    "type": "Transform",
+    "inputs": [
+      {
+        "name": "perf",
+        "type": "json",
+        "source": "Transform 9 perf"
+      },
+      {
+        "name": "stripped",
+        "type": "json",
+        "source": "Transform 6 stripped"
+      },
+      {
+        "name": "verseWords",
+        "type": "json",
+        "source": "Transform 12 verseWords"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "perf",
+        "type": "json"
+      }
+    ],
+    "description": "PERF=>PERF adds report to verses"
+  },
+  {
+    "id": 17,
+    "title": "Merge Merged PERF Text",
+    "name": "mergePerfText",
+    "type": "Transform",
+    "inputs": [
+      {
+        "name": "perf",
+        "type": "json",
+        "source": "Transform 13 perf"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "perf",
+        "type": "json"
+      }
+    ],
+    "description": "PERF=>PERF: Merge consecutive text strings"
+  },
+  {
+    "id": 14,
+    "title": "Merged Perf (roundtrip)",
+    "type": "Display",
+    "inputType": "json",
+    "inputSource": "Transform 17 perf"
+  }
+]
