@@ -6,8 +6,8 @@ import wordSearch from "../transforms/wordSearch";
 import justTheBible from "../transforms/justTheBible";
 import verseStats from "../transforms/verseStats";
 import proskommaQuery from "../transforms/proskommaQuery";
-import lightRegex from '../transforms/lightRegex';
-import regex from '../transforms/regex';
+import lightRegex from "../transforms/lightRegex";
+import regex from "../transforms/regex";
 import validate from "../transforms/validate";
 import diffText from "../transforms/diffText";
 import diffJson from "../transforms/diffJson";
@@ -22,66 +22,68 @@ import stripMarkup from "../transforms/stripMarkup";
 import verseWords from "../transforms/verseWords";
 import mergeMarkup from "../transforms/mergeMarkup";
 import prepareJsonDiff from "../transforms/prepareJsonDiff";
-import uniqueWordsVerses from '../transforms/uniqueWordsVerses';
+import uniqueWordsVerses from "../transforms/uniqueWordsVerses";
+import searchReplace from "../transforms/searchReplace";
 import perf2PkJson from "../transforms/perf2PkJson";
 import calculateUsfmChapterPositions from "../transforms/calculateUsfmChapterPositions";
 
 const stepTemplates = {
-    Transform: {
-        usfm2perf,
-        usx2perf,
-        proskommaQuery,
-        validate,
-        diffText,
-        diffJson,
-        identity,
-        justTheBible,
-        mergePerfText,
-        wordFrequency,
-        wordSearch,
-        verseStats,
-        perf2usfm,
-        searchRegexGen,
-        longVerses1,
-        mergeReport,
-        uniqueWords,
-        remoteTransform,
-        stripMarkup,
-        verseWords,
-        mergeMarkup,
-        prepareJsonDiff,
-        uniqueWordsVerses,
-        lightRegex,
-        regex,
-        perf2PkJson,
-        calculateUsfmChapterPositions,
+  Transform: {
+    usfm2perf,
+    usx2perf,
+    proskommaQuery,
+    validate,
+    diffText,
+    diffJson,
+    identity,
+    justTheBible,
+    mergePerfText,
+    wordFrequency,
+    wordSearch,
+    verseStats,
+    perf2usfm,
+    searchRegexGen,
+    longVerses1,
+    mergeReport,
+    uniqueWords,
+    remoteTransform,
+    stripMarkup,
+    verseWords,
+    mergeMarkup,
+    prepareJsonDiff,
+    uniqueWordsVerses,
+    lightRegex,
+    regex,
+    perf2PkJson,
+    calculateUsfmChapterPositions,
+    searchReplace,
+  },
+  Source: {
+    local: {
+      type: "Source",
+      sourceLocation: "local",
+      localValue: "",
+      outputType: "text",
     },
-    Source: {
-        local: {
-            type: "Source",
-            sourceLocation: "local",
-            localValue: "",
-            outputType: "text",
-        },
-        http: {
-            type: "Source",
-            sourceLocation: "http",
-            httpUrl: "",
-            outputType: "text"
-        }
+    http: {
+      type: "Source",
+      sourceLocation: "http",
+      httpUrl: "",
+      outputType: "text",
     },
-    Display: {
-        text: {
-            type: "Display",
-            inputType: "text",
-            inputSource: "",
-        },
-        json: {
-            type: "Display",
-            inputType: "json",
-            inputSource: "",
-        },
+  },
+  Display: {
+    text: {
+      type: "Display",
+      inputType: "text",
+      inputSource: "",
     },
+    json: {
+      type: "Display",
+      inputType: "json",
+      inputSource: "",
+    },
+  },
 };
 
 export default stepTemplates;
