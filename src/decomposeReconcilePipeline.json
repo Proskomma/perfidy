@@ -1,0 +1,270 @@
+[
+  {
+    "id": 1,
+    "title": "USFM from DCS",
+    "type": "Source",
+    "sourceLocation": "http",
+    "outputType": "text",
+    "httpUrl": "https://git.door43.org/abelper8/es-419_2pe_text_ulb/raw/branch/master/front/test_usfm"
+  },
+  {
+    "id": 2,
+    "title": "Selectors",
+    "type": "Source",
+    "sourceLocation": "local",
+    "localValue": "{\"lang\": \"eng\", \"abbr\": \"ult\"}",
+    "outputType": "json"
+  },
+  {
+    "id": 3,
+    "title": "USFM to PERF",
+    "name": "usfmToPerf",
+    "type": "Transform",
+    "inputs": [
+      {
+        "name": "usfm",
+        "type": "text",
+        "source": "Source 1"
+      },
+      {
+        "name": "selectors",
+        "type": "json",
+        "source": "Source 2"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "perf",
+        "type": "json"
+      }
+    ],
+    "description": "USFM=>PERF: Conversion via Proskomma"
+  },
+  {
+    "id": 4,
+    "title": "Original PERF",
+    "type": "Display",
+    "inputType": "json",
+    "inputSource": "Transform 3 perf"
+  },
+  {
+    "id": 5,
+    "title": "Decompose PERF",
+    "name": "decomposePerf",
+    "type": "Transform",
+    "inputs": [
+      {
+        "name": "perf",
+        "type": "json",
+        "source": "Transform 3 perf"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "perf",
+        "type": "json"
+      },
+      {
+        "name": "extractedAlignment",
+        "type": "json"
+      },
+      {
+        "name": "extractedInlineElements",
+        "type": "json"
+      },
+      {
+        "name": "verseTextMap",
+        "type": "json"
+      }
+    ],
+    "description": "PERF=>PERF: Decompose text and markup"
+  },
+  {
+    "id": 6,
+    "title": "Decomposed PERF",
+    "type": "Display",
+    "inputType": "json",
+    "inputSource": "Transform 5 perf"
+  },
+  {
+    "id": 7,
+    "title": "Extracted Alignment",
+    "type": "Display",
+    "inputType": "json",
+    "inputSource": "Transform 5 extractedAlignment"
+  },
+  {
+    "id": 8,
+    "title": "Extracted Inline Elements",
+    "type": "Display",
+    "inputType": "json",
+    "inputSource": "Transform 5 extractedInlineElements"
+  },
+  {
+    "id": 9,
+    "title": "Verse Text Map",
+    "type": "Display",
+    "inputType": "json",
+    "inputSource": "Transform 5 verseTextMap"
+  },
+  {
+    "id": 10,
+    "title": "Reconcile Alignment",
+    "name": "reconcileAlignment",
+    "type": "Transform",
+    "inputs": [
+      {
+        "name": "perf",
+        "type": "json",
+        "source": "Transform 5 perf"
+      },
+      {
+        "name": "extractedAlignment",
+        "type": "json",
+        "source": "Transform 5 extractedAlignment"
+      },
+      {
+        "name": "verseTextMap",
+        "type": "json",
+        "source": "Transform 5 verseTextMap"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "perf",
+        "type": "json"
+      },
+      {
+        "name": "unalignedWords",
+        "type": "json"
+      }
+    ],
+    "description": "PERF=>PERF: Reconciles alignment markup with verse contents"
+  },
+  {
+    "id": 11,
+    "title": "Alignment Reconciled PERF",
+    "type": "Display",
+    "inputType": "json",
+    "inputSource": "Transform 10 perf"
+  },
+  {
+    "id": 12,
+    "title": "Unaligned Words",
+    "type": "Display",
+    "inputType": "json",
+    "inputSource": "Transform 10 unalignedWords"
+  },
+  {
+    "id": 13,
+    "title": "Reconcile Verse Elements",
+    "name": "reconcileVerseElements",
+    "type": "Transform",
+    "inputs": [
+      {
+        "name": "perf",
+        "type": "json",
+        "source": "Transform 5 perf"
+      },
+      {
+        "name": "extractedInlineElements",
+        "type": "json",
+        "source": "Transform 5 extractedInlineElements"
+      },
+      {
+        "name": "verseTextMap",
+        "type": "json",
+        "source": "Transform 5 verseTextMap"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "perf",
+        "type": "json"
+      },
+      {
+        "name": "unreconciledMarkup",
+        "type": "json"
+      }
+    ],
+    "description": "PERF=>PERF: Reconciles verse perf inline elements with verse contents"
+  },
+  {
+    "id": 14,
+    "title": "Verse Elements Reconciled",
+    "type": "Display",
+    "inputType": "json",
+    "inputSource": "Transform 13 perf"
+  },
+  {
+    "id": 15,
+    "title": "Unreconciled Markup",
+    "type": "Display",
+    "inputType": "json",
+    "inputSource": "Transform 13 unreconciledMarkup"
+  },
+  {
+    "id": 16,
+    "title": "Prepare Alignment Reconciled Diff",
+    "name": "prepareJsonDiff",
+    "type": "Transform",
+    "inputs": [
+      {
+        "name": "original",
+        "type": "json",
+        "source": "Transform 3 perf"
+      },
+      {
+        "name": "modified",
+        "type": "json",
+        "source": "Transform 10 perf"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "diffPrepared",
+        "type": "json"
+      }
+    ],
+    "description": "PERF=>JSON: Prepares inputs for alignment reconciled diff display"
+  },
+  {
+    "id": 17,
+    "title": "Alignment Reconciled Diff",
+    "type": "Display",
+    "inputType": "json",
+    "inputSource": "Transform 16 diffPrepared"
+  },
+  {
+    "id": 18,
+    "title": "Prepare Inline Elements Reconciled Diff",
+    "name": "prepareJsonDiff",
+    "type": "Transform",
+    "inputs": [
+      {
+        "name": "original",
+        "type": "json",
+        "source": "Transform 3 perf"
+      },
+      {
+        "name": "modified",
+        "type": "json",
+        "source": "Transform 13 perf"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "diffPrepared",
+        "type": "json"
+      }
+    ],
+    "description": "PERF=>JSON: Prepares inputs for inline elements reconciled diff display"
+  },
+  {
+    "id": 19,
+    "title": "Inline Elements Reconciled Diff",
+    "type": "Display",
+    "inputType": "json",
+    "inputSource": "Transform 18 diffPrepared"
+  }
+]
